@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 //* ---- LOGIN -----
 const loginUser = async (req, res) => {
     try {
-        
+        const {email, password} = req.body;
     } catch (error) {
         
     }
@@ -18,7 +18,7 @@ const logoutUser = async (req,res) => {
         res.clearCookie('authToken');
         res.json({message: "Sesion cerrada"});
     } catch (error) {
-        res.json({message: "ERROR: Hubo un error al cerrar sesión"});
+        res.status(404).json({message: "ERROR: Hubo un error al cerrar sesión"});
     }
 }
 
