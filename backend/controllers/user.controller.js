@@ -1,74 +1,93 @@
 //* Constantes
+const { User } = require('../models/User.js');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const path = require('path');
 const { connection } = require('mongoose');
 
+dotenv.config();
+
 //* ---- LOGIN -----
-const loginUser = async (req, res) => {
+const loginUser = async (req,res) => {
     try {
-        const {email, password} = req.body;
-
-        const [users] = await connection.query("SELECT * FROM usuarios WHERE email = ?", [email]);
-        if(users.length === 0){
-            return res.status(400).json({message: "Usuario no encontrado"});
+        const {email, password} = req.body
+        const user = await User.findOne({ where: { email }});
+        if(!user){
+            return res.status(400).json({message: "Uusario no encontrado" });
         }
-        const user = users[0];
-
-        const passOk = await bcrypt.compare(password, user.password);
+        const passOk = await user.comparePassword(password);
         if(!passOk){
-            return res.status(400).json({message: "Contraseña incorrecta"});
+            return res.status(400).json({ message: "Contraseña incorrecta" });
         }
+        // Crear el TOKEN
+        const token = jsonwebtoken.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        //Crear TOKEN
-        const token = jsonwebtoken.sign({userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {expires: '1h'});
-        //Enviar el token como cookie
-        res.cookie('authToken', token, {httpOnly:true, secure: false, maxAge: 3600000});
+        // Enviar el token como cookie
+        res.cookie('authToken', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 3600000, sameSite: "strict" });
 
-        res.status(200).json({message: "Login correcto", user});
-        
+        // ENo devolver la contraseña en la respuesta
+        const userData = user.get({ plain: true });
+        delete userData.password;
+
+        res.status(200).json({ message: "Login correcto", user: userData });
     } catch (error) {
+        console.log("Error en el login", error);
         res.status(500).json({message: "Error al iniciar sesión"});
     }
 }
 
+
 const logoutUser = async (req,res) => {
     try {
-        res.clearCookie('authToken');
-        res.json({message: "Sesion cerrada"});
+        res.clearCookie('authToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        res.json({ message: "Sesion cerrada" });
     } catch (error) {
-        res.status(404).json({message: "ERROR: Hubo un error al cerrar sesión"});
+        res.status(404).json({ message: "ERROR: Hubo un error al cerrar sesión" });
     }
 }
 
 const registerUser = async (req,res) => {
     try {
-        const { name, email, password1, password2} = req.body;
+        const { name, email, password1, password2 } = req.body;
 
         if(!name || !email || !password1 || !password2){
-            return res.status(400).json({message: "Todos los campos son obligatorios"});
+            return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
+
         if(password1 !== password2){
-            return res.status(400).json({message: "ERROR: Las contraseñas no coinciden"});
-            
+            return res.status(400).json({ message: "Las contraseñas no coinciden" });
         }
-        //Comprobamos si el usuario existe
-        const [existingUser] = await connection.query("SELECT * FROM usuarios WHERE email = ?", [email]);
-        if(existingUser.length > 0){
-            return res.sendFile(Path2D.join(__dirname, 'public', 'login.html'));
+
+        // Comprobamos que el usuario existe
+        const existingUser = await User.findOne({ where: { email } });
+        if(existingUser){
+            return res.status(400).json({ message: "El email ya está registrado" });
         }
+
+
+        // Sequelize automáticamente encripta la contraseña antes de guardar
+        const newUser = await User.create({
+            name,
+            email,
+            password: password1
+        });
+
+        // No devolver la contraseña en la respuesta
+        const userData = newUser.get({ plat: true });
+        delete userData.password;
         
-        const salt = await bcrypt.genSalt(5);
-        const hashPassword = await bcrypt.hash(password1, salt);
-        
-        const [result] = await connection.execute('INSERT INTO usuarios (name, email, password) VALUES (?, ?, ?)', [name, email, hashPassword]);
+        res.status(201).json(userData);
 
-
-        const [newUser] = await connection.query("SELECT id, name, email FROM usuarios WHERE id = ?", [result.id]);
-
-        return res.status(201).json(newUser);
     } catch (error) {
+        console.log("ERROR: Error en el registro");
+        if(error.name === 'SequelizeUniqueConstrainError'){
+            return res.status(400).json({ message: "El email ya está registrado" });
+        }
+        if(error.name === 'SequelizeValidationError'){
+            return res.status(400).json({ message: "Error de validación", error: error.message });
+        }
         res.status(500).json({message: error.message });
     }
 }
