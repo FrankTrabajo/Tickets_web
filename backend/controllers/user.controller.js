@@ -1,11 +1,14 @@
 //* Constantes
-const { User } = require('../models/User.js');
+const sequelize = require('../config/database.js');
+const { DataTypes } = require('sequelize');
+const User = require('../models/User.js')(sequelize, DataTypes); // <-- aquí se pasa sequelize y DataTypes
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const path = require('path');
-const { connection } = require('mongoose');
+
 
 dotenv.config();
 
@@ -49,10 +52,11 @@ const logoutUser = async (req,res) => {
 }
 
 const registerUser = async (req,res) => {
+    const transaction = await sequelize.transaction();
     try {
-        const { name, email, password1, password2 } = req.body;
-
-        if(!name || !email || !password1 || !password2){
+        const { nombre, email, password1, password2 } = req.body;
+        console.log(nombre, email, password1);
+        if(!nombre || !email || !password1 || !password2){
             return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
 
@@ -69,10 +73,13 @@ const registerUser = async (req,res) => {
 
         // Sequelize automáticamente encripta la contraseña antes de guardar
         const newUser = await User.create({
-            name,
+            nombre,
             email,
             password: password1
-        });
+        }, { transaction });
+        console.log("Usuario registrado");
+        
+        await transaction.commit();
 
         // No devolver la contraseña en la respuesta
         const userData = newUser.get({ plat: true });
@@ -81,7 +88,8 @@ const registerUser = async (req,res) => {
         res.status(201).json(userData);
 
     } catch (error) {
-        console.log("ERROR: Error en el registro");
+        await transaction.rollback();
+        console.log("ERROR: Error en el registro", error);
         if(error.name === 'SequelizeUniqueConstrainError'){
             return res.status(400).json({ message: "El email ya está registrado" });
         }

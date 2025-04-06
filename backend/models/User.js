@@ -1,48 +1,53 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const User = Sequelize.afterDefine('User', {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true
+      }
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false
     },
     rol: {
-        type: DataTypes.STRING,
-        defaultValue: 'USER'
+      type: DataTypes.STRING,
+      defaultValue: 'USER'
     },
     fecha_registro: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
-}, {
+  }, {
     tableName: 'usuarios',
+    timestamps: false,
     hooks: {
-        beforeCreate: async (user) => {
-            if(user.password){
-                const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(user.password, salt);
-            }
+      beforeCreate: async (user) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
         }
+      }
     }
-});
-// Este metodo lo que hace es comparar las contraseñas
-User.prototype.comparePassword = async function (password) {
+  });
+
+  User.prototype.comparePassword = async function(password) {
     return await bcrypt.compare(password, this.password);
   };
 
-module.exports = User;
+  return User;
+};

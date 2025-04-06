@@ -9,3 +9,4 @@ Proyecto TFG DAW
 - JsonWebToken
 - BcryptJS
 - Sequelize
+- MariaDB
