@@ -1,53 +1,34 @@
-const { DataTypes } = require('sequelize');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    rol: {
-      type: DataTypes.STRING,
-      defaultValue: 'USER'
-    },
-    fecha_registro: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    }
-  }, {
-    tableName: 'usuarios',
-    timestamps: false,
-    hooks: {
-      beforeCreate: async (user) => {
-        if (user.password) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      }
-    }
-  });
+const userSchema = new mongoose.Schema(
+  {
+    nombre: { type: String, required: true},
+    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
+    password: { type: String, required: true },
+    rol: { type: [String], default: ['USER'] },
+    fecha_registro: { type: Date, default: Date.now }
+  },
+  {
+    collection: 'usuarios',
+    versionKey: false
+  }
+);
 
-  User.prototype.comparePassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
-  };
+// Hook para hashear el password antes de guardar
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next();
+});
 
-  return User;
+// Método para comparar contraseñas
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

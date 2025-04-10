@@ -49,10 +49,19 @@ function registerForm(){
     labelPassword.textContent = "Contraseña";
     let inputPassword = document.createElement('input');
     inputPassword.type = 'password';
-    inputPassword.name = 'password';
-    inputPassword.id = 'password';
+    inputPassword.name = 'password1';
+    inputPassword.id = 'password1';
     inputPassword.placeholder = "Contraseña";
     inputPassword.required = true;
+
+    let labelPassword2 = document.createElement('label'); 
+    labelPassword2.textContent = "Contraseña";
+    let inputPassword2 = document.createElement('input');
+    inputPassword2.type = 'password';
+    inputPassword2.name = 'password2';
+    inputPassword2.id = 'password2';
+    inputPassword2.placeholder = "Confirme su contraseña";
+    inputPassword2.required = true;
 
     //Mensaje de error de la contraseña
     let errorPwd = document.createElement('p');
@@ -79,6 +88,8 @@ function registerForm(){
     form.appendChild(errorEmail);
     form.appendChild(labelPassword);
     form.appendChild(inputPassword);
+    form.appendChild(labelPassword2);
+    form.appendChild(inputPassword2);
     form.appendChild(errorPwd);
     form.appendChild(inputSubmit);
 
@@ -96,7 +107,8 @@ function registerForm(){
 function validarFormulario(){
     let name = document.getElementById('nombre').value.trim();
     let email = document.getElementById('email').value.trim();
-    let password = document.getElementById('password').value.trim();
+    let password = document.getElementById('password1').value.trim();
+    let password2 = document.getElementById('password2').value.trim();
     let valido = true;
 
     let errorName = document.getElementById('errorName');
@@ -119,8 +131,16 @@ function validarFormulario(){
     }
 
     let errorPwd = document.getElementById('errorPwd');
-    if(password.length < 6){
+    if(password.length < 6 && password2.length < 6){
         errorPwd.textContent = 'La contreña debe tener al menos 6 caracteres';
+        errorPwd.style.display = 'block';
+        valido = false;
+    }else{
+        errorPwd.style.display = 'none';
+    }
+
+    if(password !== password2){
+        errorPwd.textContent = 'Las contraseñas no coinciden';
         errorPwd.style.display = 'block';
         valido = false;
     }else{
@@ -143,8 +163,8 @@ function registrar() {
         body: JSON.stringify({
             nombre: document.getElementById('nombre').value,
             email: document.getElementById('email').value,
-            password1: document.getElementById('password').value,
-            password2: document.getElementById('password').value
+            password1: document.getElementById('password1').value,
+            password2: document.getElementById('password2').value
         })
     })
     .then(message => message.json())
