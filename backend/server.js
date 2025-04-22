@@ -41,12 +41,47 @@ app.get("/register", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'register.html'));
 });
 
-// ruta de administrador
-app.get("/admin", (req, res) => {
+// ruta de administrador //Aqui deberia de llevar al perfil del administrador del evento, por ejemplo /admin_dashboard/:id.
+app.get("/admin_dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'admin.html'));
 });
 
 app.listen(PORT, () => {
     console.log("Servidor escuchando por http://localhost:" + PORT);
 });
+
+
+// Ruta para comprobar si el usuario está logueado o no
+app.get("/check-auth", (req, res) => {
+    if(req.cookies.authToken) {
+        res.status(200).json({ logueado: true });
+    }else {
+        res.status(200).json({ logueado: false });
+    }
+});
+
+// Ruta para comprobar si el usuario logueado es admin o no
+app.get("/check-admin", (req, res) => {
+    const token = req.cookies.authToken;
+
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+
+        res.json({ admin: decode.role.includes('ROLE_ADMIN')});
+
+    } catch (error) {
+        res.json({ admin: false});
+    }
+});
+
+//Ruta para comprobar si el usuario esta activo o no
+app.get('/check-active', (req,res) => {
+    const token = req.cookies.authToken;
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+        res.json({ active: decode.active });
+    } catch (error) {
+        res.json({ active: decode.active });
+    }
+})
 

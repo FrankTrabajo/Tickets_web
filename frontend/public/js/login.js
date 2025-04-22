@@ -83,7 +83,7 @@ function loginUser(){
             .then(response => response.json())
             .then(data => {
                 if(data.admin){
-                    window.location.href = "/admin-dashboard";
+                    window.location.href = "/admin_dashboard";
                 }else{
                     fetch('/check-active')
                     .then(response => response.json())
