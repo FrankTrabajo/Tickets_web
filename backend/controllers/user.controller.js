@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+//* ----------- AQUI HAY USUARIOS CLIENTES Y ADMINISTRADORES DE EVENTOS -------------
+
+
 //* ---- LOGIN -----
 const User = require('../models/User.js');
 
