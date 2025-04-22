@@ -1,14 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
+
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const path = require('path');
 
 
 dotenv.config();
 
 //* ---- LOGIN -----
-const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models/User.js');
 
 const loginUser = async (req, res) => {

@@ -2,6 +2,7 @@ const mariadb = require('mariadb');
 const dotenv = require('dotenv');
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 dotenv.config();
 
 //middleware
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // route de usuarios
 app.use('/api/user', userRoute);
 
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@prueba1.8u19y.mongodb.net/?Tickets_WebretryWrites=true&w=majority&appName=Prueba1`)
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@prueba1.8u19y.mongodb.net/Tickets_Web?retryWrites=true&w=majority&appName=Prueba1`)
     .then(() => {
         console.log("Conectado");
     })
@@ -38,6 +39,11 @@ app.get("/login", (req,res) => {
 // ruta de register
 app.get("/register", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'register.html'));
+});
+
+// ruta de administrador
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'admin.html'));
 });
 
 app.listen(PORT, () => {
