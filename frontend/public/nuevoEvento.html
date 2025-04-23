@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuevo Evento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="p-4">
+
+    <nav class="mb-4">
+        <button class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
+    </nav>
+
+    <div class="container">
+        <h2 class="mb-4">Crear nuevo evento</h2>
+
+        <form id="eventoForm">
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label for="nombreEvento" class="form-label">Nombre del evento</label>
+                <input type="text" class="form-control" id="nombreEvento" name="nombreEvento" required>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+                <label for="descripcionEvento" class="form-label">Descripción del evento</label>
+                <textarea class="form-control" id="descripcionEvento" name="descripcionEvento" rows="3"
+                    required></textarea>
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-3">
+                <label for="fechaEvento" class="form-label">Fecha del evento</label>
+                <input type="date" class="form-control" id="fechaEvento" name="fechaEvento" required>
+            </div>
+
+            <!-- Lugar / Mapa -->
+            <!-- Esto de momento está creado con un mapa de google, lo cambiaremos en un futuro a leaflet-->
+            <div class="mb-3">
+                <label class="form-label">Lugar del evento</label>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <button type="button" class="btn btn-outline-primary" id="mapaEventoBtn">Mostrar mapa</button>
+                </div>
+                <div id="mapaEventoContainer" style="display: none;">
+                    <iframe id="mapaIframe"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3036.231760818229!2d-3.7037906846011487!3d40.4167751793638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42287c7f7c2103%3A0xf19e2e14fcd94ee2!2sMadrid!5e0!3m2!1ses!2ses!4v1713900079321!5m2!1ses!2ses"
+                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade" class="rounded"></iframe>
+                </div>
+            </div>
+
+
+            <!-- Capacidad -->
+            <div class="mb-3">
+                <label for="capacidadEvento" class="form-label">Capacidad del evento</label>
+                <input type="number" class="form-control" id="capacidadEvento" name="capacidadEvento" required>
+            </div>
+
+            <!-- Imagen -->
+            <div class="mb-3">
+                <label for="imagenEvento" class="form-label">Imagen del evento</label>
+                <input type="file" class="form-control" id="imagenEvento" name="imagenEvento" accept="image/*">
+            </div>
+
+            <hr>
+
+            <!-- Entradas -->
+            <h4>Grupos de entradas</h4>
+            <div id="gruposContainer" class="mb-3"></div>
+
+            <div class="mb-4">
+                <button type="button" class="btn btn-success" id="nuevoGrupoEntradas">+ Nuevo grupo</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mostrar / Ocultar Mapa
+        const mapaBtn = document.getElementById('mapaEventoBtn');
+        const mapaContainer = document.getElementById('mapaEventoContainer');
+
+        mapaBtn.addEventListener('click', () => {
+            const visible = mapaContainer.style.display === 'block';
+            mapaContainer.style.display = visible ? 'none' : 'block';
+            mapaBtn.textContent = visible ? 'Mostrar mapa' : 'Ocultar mapa';
+        });
+
+        // Agregar grupo de entradas
+        const nuevoGrupoBtn = document.getElementById('nuevoGrupoEntradas');
+        const gruposContainer = document.getElementById('gruposContainer');
+
+        nuevoGrupoBtn.addEventListener('click', () => {
+            const grupo = document.createElement('div');
+            grupo.classList.add('border', 'p-3', 'mb-3', 'rounded');
+
+            grupo.innerHTML = `
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="tipoEntrada[]" placeholder="Tipo de entrada" required>
+          </div>
+          <div class="col-md-4">
+            <input type="number" class="form-control" name="cantidadEntradas[]" placeholder="Cantidad" required>
+          </div>
+          <div class="col-md-4">
+            <input type="number" class="form-control" name="precioEntradas[]" placeholder="Precio" required>
+          </div>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm mt-3 eliminarGrupo">Eliminar grupo</button>
+      `;
+
+            grupo.querySelector('.eliminarGrupo').addEventListener('click', () => {
+                grupo.remove();
+            });
+
+            gruposContainer.appendChild(grupo);
+        });
+
+        // Simular envío de formulario
+        document.getElementById('eventoForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Formulario enviado correctamente.');
+        });
+    </script>
+</body>
+
+</html>
