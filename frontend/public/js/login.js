@@ -66,7 +66,7 @@ function loginUser(){
         mostrarError("Todos los campos son obligatorios");
     }
 
-    fetch("/user/login", {
+    fetch("api/user/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -93,7 +93,7 @@ function loginUser(){
                         }else{
                             //No se loguea y aparece un mensaje de error de usuario inactivo 
                             mostrarError("Tu cuenta esta inactiva. Contacta con el aministrador. (admin@correo.com)");
-                            return fetch('/user/logout', { 
+                            return fetch('api/user/logout', { 
                                     method: "POST",
                                     credentials: 'include'
                                 
@@ -106,6 +106,7 @@ function loginUser(){
                     
                 }
             })
+            .catch(error => console.error("ERROR: " + error));
         }else{
             mostrarError("Error al iniciar sesion, compruebe su contraseña y su email");
             return;

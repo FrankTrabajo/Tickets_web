@@ -46,6 +46,10 @@ app.get("/admin_dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'admin.html'));
 });
 
+app.get("/admin_dashboard/new_event", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'nuevoEvento.html'));
+});
+
 app.listen(PORT, () => {
     console.log("Servidor escuchando por http://localhost:" + PORT);
 });
@@ -63,11 +67,11 @@ app.get("/check-auth", (req, res) => {
 // Ruta para comprobar si el usuario logueado es admin o no
 app.get("/check-admin", (req, res) => {
     const token = req.cookies.authToken;
-
+    console.log(token);
     try {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
-
-        res.json({ admin: decode.role.includes('ROLE_ADMIN')});
+        console.log(decode);
+        res.json({ admin: decode.rol.includes('ADMIN')});
 
     } catch (error) {
         res.json({ admin: false});

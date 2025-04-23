@@ -157,7 +157,7 @@ registerForm();
  */
 function registrar() {
     // Aqui tenemos que llamar al evento de crear usuario
-    fetch("/user/", {
+    fetch("api/user/", {
         method: 'POST',
         headers: { "Content-Type": "application/json " },
         body: JSON.stringify({

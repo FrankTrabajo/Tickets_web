@@ -25,22 +25,11 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
-    const token = jsonwebtoken.sign(
-      { userId: user._id, email: user.email, role: user.rol },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jsonwebtoken.sign({userId: user._id.toString(), email: user.email, rol: user.rol}, process.env.JWT_SECRET, {expiresIn: '1h'});
 
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000,
-      sameSite: 'strict'
-    });
+    res.cookie('authToken', token, {httpOnly:true, secure: false, maxAge: 3600000});
 
-    const { password: _, ...userData } = user.toObject();
-
-    res.status(200).json({ message: "Login correcto", user: userData });
+    res.status(200).json({ message: "Login correcto", user});
 
   } catch (error) {
     console.log("Error en el login", error);
