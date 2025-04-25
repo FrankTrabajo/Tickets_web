@@ -67,16 +67,20 @@ app.get("/check-auth", (req, res) => {
 // Ruta para comprobar si el usuario logueado es admin o no
 app.get("/check-admin", (req, res) => {
     const token = req.cookies.authToken;
-    console.log(token);
+    if (!token) {
+        console.warn("No auth token provided");
+        return res.status(401).json({ admin: false });
+    }
+
     try {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(decode);
-        res.json({ admin: decode.rol.includes('ADMIN')});
-
+        res.json({ admin: decode.rol.includes('ADMIN') });
     } catch (error) {
-        res.json({ admin: false});
+        console.error("Token inválido:", error);
+        res.status(401).json({ admin: false });
     }
 });
+
 
 //Ruta para comprobar si el usuario esta activo o no
 app.get('/check-active', (req,res) => {

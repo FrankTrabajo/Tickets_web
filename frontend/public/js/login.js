@@ -79,7 +79,10 @@ function loginUser(){
     .then(message => message.json())
     .then(data => {
         if(data.message === 'Login correcto'){
-            fetch("/check-admin")
+            fetch("/check-admin", {
+                method: 'GET',
+                credentials: "include"
+            })
             .then(response => response.json())
             .then(data => {
                 if(data.admin){
@@ -111,9 +114,6 @@ function loginUser(){
             mostrarError("Error al iniciar sesion, compruebe su contraseña y su email");
             return;
         }
-
-
-        
     })
     .catch(err => console.error(err));
 
