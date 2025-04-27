@@ -88,6 +88,26 @@ app.get("/check-admin", (req, res) => {
 });
 
 
+// Ruta para comprobar si el usuario está logueado o no
+app.get("/check-auth", (req, res) => {
+    const token = req.cookies.authToken;
+
+    if (!token) {
+        return res.status(200).json({ logueado: false });  // No token, no autenticado
+    }
+
+    try {
+        // Verificamos el token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // Si la verificación es exitosa, respondemos que el usuario está autenticado
+        res.status(200).json({ logueado: true, usuario: decoded.email });
+    } catch (error) {
+        // Si el token no es válido o ha expirado, respondemos que no está autenticado
+        res.status(200).json({ logueado: false });
+    }
+});
+
+
 //Ruta para comprobar si el usuario esta activo o no
 // app.get('/check-active', (req,res) => {
 //     const token = req.cookies.authToken;

@@ -15,16 +15,12 @@ const eventoSchema = new mongoose.Schema({
     tipo: { type: String, required: true},
     cantidad: { type: Number, required: true},
     precio: { type: Number, required: true}
-  }], // Aqui guardará el tipo de entrada, la cantidad de entradas que hay y el precio
-  /**
-   * por ejemplo
-   * { tipo: grada ,
-   *    cantidad: 100,
-   *    precio: 70€ },
-   * { tipo: pista ,
-   *    cantidad: 160,
-   *    precio: 90€ },
-   */
+  }],
+  creador:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
 }, {
   timestamps: true
 });

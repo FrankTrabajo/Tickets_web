@@ -5,6 +5,12 @@ const newEvent = async (req,res) => {
     try{
         const { nombre, descripcion, fecha, lugar, capacidad, imagen, entradas } = req.body;
 
+        const createdBy = req.cookies.userId;
+
+        if(!createdBy){
+            res.sendFile(path.join(__dirname, '../frontend/public', 'register.html'));
+        }
+
         const nuevoEvento = new Evento({
             nombre,
             descripcion,
@@ -12,7 +18,8 @@ const newEvent = async (req,res) => {
             lugar,
             capacidad,
             imagen,
-            entradas
+            entradas,
+            creador: createdBy
         });
 
         await nuevoEvento.save();

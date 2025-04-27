@@ -105,7 +105,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
 
     // Crear la URL de la imagen (solo para vista previa local, no se debe guardar como URL local)
     let imagenUrl = '';
-    if(imagenEvento){
+    if (imagenEvento) {
         imagenUrl = URL.createObjectURL(imagenEvento);  // Para vista previa, no es la URL final
     }
 
@@ -119,7 +119,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     // Crear un arreglo con los grupos de entradas
     const entradas = [];
     const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
-    
+
     entradasGrupos.forEach(grupo => {
         const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
         const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
@@ -150,22 +150,35 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
         imagen: imagenUrl,  // Enviar la URL de la imagen
         entradas: entradas
     };
-    console.log(eventoData);
-    // Enviar los datos al backend usando fetch
-    fetch("/api/event/new_event", {
-        method: 'POST',
-        headers: {
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify(eventoData)  // Convertir el objeto a JSON
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.mensaje);  // Mostrar mensaje de éxito
-        console.log(data);  // Mostrar respuesta en consola
-    })
-    .catch(error => {
-        console.error("ERROR:", error);  // Mostrar error en consola
-        alert("Hubo un problema al crear el evento");  // Mostrar alerta en caso de error
-    });
+
+
+    fetch('/check-auth')
+        .then(response => response.json())
+        .then(data => {
+            if (data.logueado) {
+                // Enviar los datos al backend usando fetch
+                fetch("/api/event/new_event", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify(eventoData)  // Convertir el objeto a JSON
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.mensaje);  // Mostrar mensaje de éxito
+                        console.log(data);  // Mostrar respuesta en consola
+                    })
+                    .catch(error => {
+                        console.error("ERROR:", error);  // Mostrar error en consola
+                        alert("Hubo un problema al crear el evento");  // Mostrar alerta en caso de error
+                    });
+            }else{
+                alert("No estás autenticado, por favor, vuelve a loguearte");
+                window.location.href = "/login";
+            }
+        })
+        .catch(error => console.error("ERROR:", error));
+
+
 });
