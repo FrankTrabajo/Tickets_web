@@ -11,14 +11,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.static('../frontend/public'));
-const userRoute = require('./routes/userRoute.js');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
 //Routes
-// route de usuarios
+const userRoute = require('./routes/userRoute.js');
+const eventRoute = require('./routes/eventRoute.js');
 app.use('/api/user', userRoute);
+app.use("/api/event", eventRoute);
 
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@prueba1.8u19y.mongodb.net/Tickets_Web?retryWrites=true&w=majority&appName=Prueba1`)
     .then(() => {

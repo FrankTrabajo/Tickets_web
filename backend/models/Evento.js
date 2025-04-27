@@ -4,8 +4,18 @@ const eventoSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
   descripcion: { type: String },
   fecha: { type: Date, required: true },
-  lugar: { type: String, required: true },
-  entradas: { type: [Object] }, // Aqui guardará el tipo de entrada, la cantidad de entradas que hay y el precio
+  lugar: { 
+    nombre: { type: String, required: true},
+    lat: { type: Number, required: true},
+    lon: { type: Number, required: true}
+  },
+  capacidad: { type: Number, required: true },
+  imagen: { type: String },
+  entradas: { 
+    tipo: { type: String, required: true},
+    cantidad: { type: Number, required: true},
+    precio: { type: Number, required: true}
+  }, // Aqui guardará el tipo de entrada, la cantidad de entradas que hay y el precio
   /**
    * por ejemplo
    * { tipo: grada ,
@@ -15,12 +25,8 @@ const eventoSchema = new mongoose.Schema({
    *    cantidad: 160,
    *    precio: 90€ },
    */
-  capacidad: { type: Number, required: true },
-  imagen: { type: String },
-  creado_por: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' }
 }, {
-  collection: 'eventos',
-  versionKey: false
+  timestamps: true
 });
 
 module.exports = mongoose.model('Evento', eventoSchema);
