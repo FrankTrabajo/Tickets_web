@@ -11,11 +11,11 @@ const eventoSchema = new mongoose.Schema({
   },
   capacidad: { type: Number, required: true },
   imagen: { type: String },
-  entradas: { 
+  entradas: [{ 
     tipo: { type: String, required: true},
     cantidad: { type: Number, required: true},
     precio: { type: Number, required: true}
-  }, // Aqui guardará el tipo de entrada, la cantidad de entradas que hay y el precio
+  }], // Aqui guardará el tipo de entrada, la cantidad de entradas que hay y el precio
   /**
    * por ejemplo
    * { tipo: grada ,

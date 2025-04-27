@@ -67,13 +67,13 @@ nuevoGrupoBtn.addEventListener('click', () => {
     grupo.innerHTML = `
         <div class="row g-3">
           <div class="col-md-4">
-            <input type="text" class="form-control" id="tipoEntrada"  placeholder="Tipo de entrada" required>
+            <input type="text" class="form-control" name="tipoEntrada[]"  placeholder="Tipo de entrada" required>
           </div>
           <div class="col-md-4">
-            <input type="number" class="form-control" id="cantidadEntradas" placeholder="Cantidad" required>
+            <input type="number" class="form-control" name="cantidadEntradas[]" placeholder="Cantidad" required>
           </div>
           <div class="col-md-4">
-            <input type="number" class="form-control" id="precioEntradas" placeholder="Precio" required>
+            <input type="number" class="form-control" name="precioEntradas[]" placeholder="Precio" required>
           </div>
         </div>
         <button type="button" class="btn btn-danger btn-sm mt-3 eliminarGrupo">Eliminar grupo</button>
@@ -99,56 +99,73 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
 
     const nombreEvento = document.getElementById('nombreEvento').value;
     const descripcionEvento = document.getElementById('descripcionEvento').value;
-    const fechaEvento = document.getElementById('fechaEvento');
-    const capacidadEvento = document.getElementById('capacidadEvento');
-    const imagenEvento = document.getElementById('imagenEvento').files[0];
+    const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
+    const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
+    const imagenEvento = document.getElementById('imagenEvento').files[0];  // Obtener archivo de imagen
 
+    // Crear la URL de la imagen (solo para vista previa local, no se debe guardar como URL local)
+    let imagenUrl = '';
+    if(imagenEvento){
+        imagenUrl = URL.createObjectURL(imagenEvento);  // Para vista previa, no es la URL final
+    }
+
+    // Obtener la ubicación del mapa
     const lugarEvento = {
-        nombre: nombre_lugar_evento,
+        nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
         lat: marker.getLatLng().lat,
         lon: marker.getLatLng().lng
     };
 
-    let imagenUrl = '';
-    if(imagenEvento){
-        imagenUrl = URL.createObjectURL(imagenEvento);
-    }
-
+    // Crear un arreglo con los grupos de entradas
     const entradas = [];
-
     const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
+    
     entradasGrupos.forEach(grupo => {
-        const tipo = grupo.getElementById('tipoEntrada');
-        const cantidad = grupo.getElementById('cantidadEntradas');
-        const precio = grupo.getElementById('precioEntrada');
+        const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
+        const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
+        const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);  // Seleccionar el input de precio
 
-        entradas.push({ tipo, cantidad, precio });
+        // Verificar que los campos no estén vacíos
+        if (tipo && cantidad && precio) {
+            entradas.push({ tipo, cantidad, precio });
+        } else {
+            alert('Todos los campos de las entradas son obligatorios');
+            return;
+        }
     });
 
+    // Si las entradas están vacías, no permitir el envío del formulario
+    if (entradas.length === 0) {
+        alert('Debes agregar al menos un grupo de entradas');
+        return;
+    }
+
+    // Crear el objeto eventoData
     const eventoData = {
         nombre: nombreEvento,
         descripcion: descripcionEvento,
         fecha: fechaEvento,
         lugar: lugarEvento,
         capacidad: capacidadEvento,
-        imagen: imagenEvento,
+        imagen: imagenUrl,  // Enviar la URL de la imagen
         entradas: entradas
     };
-
-    fetch("/api/evento/new_event", {
+    console.log(eventoData);
+    // Enviar los datos al backend usando fetch
+    fetch("/api/event/new_event", {
         method: 'POST',
         headers: {
             'Content-Type': "application/json"
         },
-        body: JSON.stringify(eventoData)
+        body: JSON.stringify(eventoData)  // Convertir el objeto a JSON
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.mensaje);
-        console.log(data);
+        alert(data.mensaje);  // Mostrar mensaje de éxito
+        console.log(data);  // Mostrar respuesta en consola
     })
-    .catch(error => { console.error("ERROR:", error); alert("Hubo un problema al crear el evento"); });
-
-
-
+    .catch(error => {
+        console.error("ERROR:", error);  // Mostrar error en consola
+        alert("Hubo un problema al crear el evento");  // Mostrar alerta en caso de error
+    });
 });
