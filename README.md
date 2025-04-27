@@ -8,5 +8,4 @@ Proyecto TFG DAW
 - Express 
 - JsonWebToken
 - BcryptJS
-- Sequelize
-- MariaDB
+- Cookie Parser

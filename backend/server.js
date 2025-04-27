@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 dotenv.config();
 
 //middleware
@@ -12,6 +14,7 @@ app.use(express.static('../frontend/public'));
 const userRoute = require('./routes/userRoute.js');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //Routes
 // route de usuarios
@@ -66,6 +69,7 @@ app.get("/check-auth", (req, res) => {
 
 // Ruta para comprobar si el usuario logueado es admin o no
 app.get("/check-admin", (req, res) => {
+    console.log(req.cookies);
     const token = req.cookies.authToken;
     if (!token) {
         console.warn("No auth token provided");
@@ -83,13 +87,13 @@ app.get("/check-admin", (req, res) => {
 
 
 //Ruta para comprobar si el usuario esta activo o no
-app.get('/check-active', (req,res) => {
-    const token = req.cookies.authToken;
-    try {
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        res.json({ active: decode.active });
-    } catch (error) {
-        res.json({ active: decode.active });
-    }
-})
+// app.get('/check-active', (req,res) => {
+//     const token = req.cookies.authToken;
+//     try {
+//         const decode = jwt.verify(token, process.env.JWT_SECRET);
+//         res.json({ active: decode.active });
+//     } catch (error) {
+//         res.json({ active: decode.active });
+//     }
+// })
 

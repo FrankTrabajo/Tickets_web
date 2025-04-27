@@ -87,27 +87,28 @@ function loginUser(){
             .then(data => {
                 if(data.admin){
                     window.location.href = "/admin_dashboard";
-                }else{
-                    fetch('/check-active')
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.active){
-                            window.location.href = "/";
-                        }else{
-                            //No se loguea y aparece un mensaje de error de usuario inactivo 
-                            mostrarError("Tu cuenta esta inactiva. Contacta con el aministrador. (admin@correo.com)");
-                            return fetch('api/user/logout', { 
-                                    method: "POST",
-                                    credentials: 'include'
-                                
-                            }).then(response => response.json())
-                            .then(data => {
-                                console.log("Sesion cerrada automaticamente");
-                            });
-                        }
-                    })
-                    
                 }
+                // else{
+                //     fetch('/check-active')
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         if(data.active){
+                //             window.location.href = "/";
+                //         }else{
+                //             //No se loguea y aparece un mensaje de error de usuario inactivo 
+                //             mostrarError("Tu cuenta esta inactiva. Contacta con el aministrador. (admin@correo.com)");
+                //             return fetch('api/user/logout', { 
+                //                     method: "POST",
+                //                     credentials: 'include'
+                                
+                //             }).then(response => response.json())
+                //             .then(data => {
+                //                 console.log("Sesion cerrada automaticamente");
+                //             });
+                //         }
+                //     })
+                    
+                // }
             })
             .catch(error => console.error("ERROR: " + error));
         }else{
