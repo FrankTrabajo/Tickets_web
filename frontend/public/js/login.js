@@ -87,6 +87,8 @@ function loginUser(){
             .then(data => {
                 if(data.admin){
                     window.location.href = "/admin_dashboard";
+                }else{
+                    window.location.href = "/";
                 }
                 // else{
                 //     fetch('/check-active')
