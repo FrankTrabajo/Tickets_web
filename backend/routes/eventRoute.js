@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { newEvent } = require('../controllers/event.controller.js');
+const { newEvent, get_all_events_from_user, getEstadisticasUsuario, removeEvent } = require('../controllers/event.controller.js');
 
 router.post("/new_event", newEvent);
+
+router.get("/get_all_events_from_user", get_all_events_from_user);
+
+router.get("/get_estadisticas_usuario", getEstadisticasUsuario);
+
+router.delete("/delete_event/:id", removeEvent);
 
 module.exports = router;

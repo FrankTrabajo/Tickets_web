@@ -162,11 +162,13 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
                     headers: {
                         'Content-Type': "application/json"
                     },
-                    body: JSON.stringify(eventoData)  // Convertir el objeto a JSON
+                    credentials: 'include',  // Incluir cookies en la solicitud
+                    body: JSON.stringify(eventoData)  // Convertir el objeto a JSON,
                 })
                     .then(response => response.json())
                     .then(data => {
                         alert(data.mensaje);  // Mostrar mensaje de éxito
+                        window.location.href = "/admin_dashboard";  // Redirigir al dashboard del administrador
                         console.log(data);  // Mostrar respuesta en consola
                     })
                     .catch(error => {

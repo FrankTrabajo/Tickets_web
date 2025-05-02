@@ -139,25 +139,46 @@
         gap: 0.5rem;
       }
     }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #logout-button {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
   </style>
 </head>
 <body>
   <header>
-    <h1>Panel de Administración - Eventos</h1>
+    <div class="header-content">
+      <h1>Panel de Administración - Eventos</h1>
+      <button id="logout-button">Cerrar sesión</button>
+    </div>
   </header>
+  
   <div class="container">
     <div class="stats">
       <div class="stat-card">
         <h3>Total Eventos</h3>
-        <p>12</p>
+        <p id="total-eventos"></p>
       </div>
       <div class="stat-card">
         <h3>Entradas Vendidas</h3>
-        <p>854</p>
+        <p id="total-entradas"></p>
       </div>
       <div class="stat-card">
         <h3>Ingresos</h3>
-        <p>$15,230</p>
+        <p id="total-ingresos"></p>
       </div>
     </div>
 
@@ -173,34 +194,10 @@
           <th>Fecha</th>
           <th>Lugar</th>
           <th>Capacidad</th>
-          <th>Precio</th>
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Concierto Rock</td>
-          <td>2025-04-20</td>
-          <td>Estadio Nacional</td>
-          <td>10,000</td>
-          <td>$50</td>
-          <td>
-            <button class="btn edit">Editar</button>
-            <button class="btn delete">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Festival Jazz</td>
-          <td>2025-05-10</td>
-          <td>Parque Central</td>
-          <td>3,000</td>
-          <td>$30</td>
-          <td>
-            <button class="btn edit">Editar</button>
-            <button class="btn delete">Eliminar</button>
-          </td>
-        </tr>
-        <!-- Puedes agregar más eventos aquí -->
+      <tbody class="tbody">
       </tbody>
     </table>
   </div>
