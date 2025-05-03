@@ -9,3 +9,4 @@ Proyecto TFG DAW
 - JsonWebToken
 - BcryptJS
 - Cookie Parser
+- Multer

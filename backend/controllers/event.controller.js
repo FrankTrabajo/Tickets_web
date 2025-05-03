@@ -19,6 +19,11 @@ const newEvent = async (req,res) => {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
 
+        //* Aqui verificamos que la suma de capacidad de las entradas no supere la capacidad del evento
+        let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
+        if (totalEntradas > capacidad) {
+            return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
+        }
 
         const nuevoEvento = new Evento({
             nombre,
