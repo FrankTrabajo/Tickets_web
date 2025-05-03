@@ -103,6 +103,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
     const imagenEvento = document.getElementById('imagenEvento').files[0];  // Obtener archivo de imagen
 
+
     // Obtener la ubicación del mapa
     const lugarEvento = {
         nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
@@ -148,27 +149,16 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     }
 
 
-    // // Crear el objeto eventoData
-    // const eventoData = {
-    //     nombre: nombreEvento,
-    //     descripcion: descripcionEvento,
-    //     fecha: fechaEvento,
-    //     lugar: lugarEvento,
-    //     capacidad: capacidadEvento,
-    //     imagen: imagenUrl,  // Enviar la URL de la imagen
-    //     entradas: entradas
-    // };
-
-    const formData = new FormData();
-    formData.append("nombre", nombreEvento);
-    formData.append("descripcion", descripcionEvento);
-    formData.append("fecha", fechaEvento);
-    formData.append("lugar", JSON.stringify(lugarEvento));  // Convertir el objeto lugar a JSON
-    formData.append("capacidad", capacidadEvento);
-    formData.append("imagen", imagenEvento);  // Enviar el archivo de imagen
-    formData.append("entradas", JSON.stringify(entradas));  // Convertir el arreglo de entradas a JSON
-
-
+    // Crear el objeto eventoData
+    const eventoData = {
+        nombre: nombreEvento,
+        descripcion: descripcionEvento,
+        fecha: fechaEvento,
+        lugar: lugarEvento,
+        capacidad: capacidadEvento,
+        imagen: imagenUrl,  // Enviar la URL de la imagen
+        entradas: entradas
+    };
 
 
     fetch('/check-auth')
@@ -182,7 +172,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
                         'Content-Type': "application/json"
                     },
                     credentials: 'include',  // Incluir cookies en la solicitud
-                    body: formData  // Convertir el objeto a JSON,
+                    body: JSON.stringify(eventoData)  // Convertir el objeto a JSON,
                 })
                     .then(response => response.json())
                     .then(data => {

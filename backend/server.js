@@ -55,7 +55,7 @@ app.get("/admin_dashboard/new_event", (req,res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'nuevoEvento.html'));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log("Servidor escuchando por http://localhost:" + PORT);
 });
 
