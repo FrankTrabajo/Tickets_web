@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 dotenv.config();
+const cors = require('cors');
 
 //middleware
 const app = express();
@@ -14,6 +15,10 @@ app.use(express.static('../frontend/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors({
+    origin: 'https://www.ticketsweb.es',
+    credentials: true,
+}));
 
 
 //Routes

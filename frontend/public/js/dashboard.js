@@ -1,5 +1,7 @@
 import { showItems, hideItems } from "./utils.js";
 
+const URL  = 'https://www.ticketsweb.es';
+
 // Mostrar / Ocultar Mapa
 const mapaBtn = document.getElementById('mapaEventoBtn');
 const mapaContainer = document.getElementById('mapContainer');
@@ -161,12 +163,12 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     };
 
 
-    fetch('/check-auth')
+    fetch(URL + '/check-auth')
         .then(response => response.json())
         .then(data => {
             if (data.logueado) {
                 // Enviar los datos al backend usando fetch
-                fetch("/api/event/new_event", {
+                fetch(URL + "/api/event/new_event", {
                     method: 'POST',
                     headers: {
                         'Content-Type': "application/json"
