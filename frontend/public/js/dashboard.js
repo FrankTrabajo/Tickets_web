@@ -156,7 +156,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
         fecha: fechaEvento,
         lugar: lugarEvento,
         capacidad: capacidadEvento,
-        imagen: imagenUrl,  // Enviar la URL de la imagen
+        imagen: imagenEvento, 
         entradas: entradas
     };
 
