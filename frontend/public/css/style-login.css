@@ -80,5 +80,21 @@ label{
     overflow: hidden;
 }
 
+@media (max-width: 600px) {
+    .form-container {
+      padding: 2rem 1.5rem;
+    }
+  
+    input,
+    #submit {
+      padding: 12px 20px;
+      font-size: 1rem;
+    }
+  
+    body {
+      font-size: 1rem;
+    }
+  }
+
 
 
