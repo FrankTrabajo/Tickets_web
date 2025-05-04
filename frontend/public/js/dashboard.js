@@ -103,7 +103,8 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     const descripcionEvento = document.getElementById('descripcionEvento').value;
     const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
     const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
-    const imagenEvento = document.getElementById('imagenEvento').files[0];  // Obtener archivo de imagen
+    const imagenEvento = document.getElementById('imagenEvento').value;
+
 
 
     // Obtener la ubicación del mapa
@@ -163,12 +164,12 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     };
 
 
-    fetch(URL + '/check-auth')
+    fetch('/check-auth')
         .then(response => response.json())
         .then(data => {
             if (data.logueado) {
                 // Enviar los datos al backend usando fetch
-                fetch(URL + "/api/event/new_event", {
+                fetch("/api/event/new_event", {
                     method: 'POST',
                     headers: {
                         'Content-Type': "application/json"
