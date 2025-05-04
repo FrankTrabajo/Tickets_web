@@ -136,7 +136,7 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     }
 
     //* Esto lo que hace es validar la suma de las entradas y asegurarse que las entradas no superen la capacidad del evento 
-    let totalEntradas = entradas.redice((total, grupo) => total + (grupo.cantidad || 0), 0);
+    let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
     if (totalEntradas > capacidadEvento) {
         alert('La capacidad total de entradas no puede superar la capacidad del evento');
         return;
