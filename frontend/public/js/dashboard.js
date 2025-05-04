@@ -103,7 +103,8 @@ document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     const descripcionEvento = document.getElementById('descripcionEvento').value;
     const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
     const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
-    const imagenEvento = document.getElementById('imagenEvento').value;
+    const imagenEvento = document.getElementById('imagenEvento').name;
+    console.log(imagenEvento); // Obtener el valor de la imagen
 
 
 
