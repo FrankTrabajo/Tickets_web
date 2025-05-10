@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Evento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .event-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .event-banner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: crisp-edges;
+        }
+
+        .banner-content {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .event-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .event-description {
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            line-height: 1.5;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-content {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .event-location {
+            margin-top: 20px;
+        }
+
+
+        @media (max-width: 768px) {
+            .event-banner {
+                height: 300px;
+            }
+            
+            .banner-content {
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                padding: 15px;
+            }
+            
+            .event-title {
+                font-size: 1.8rem;
+            }
+            
+            .event-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="event-container">
+        <!-- Banner del evento con imagen -->
+        <div class="event-banner">
+            <img id="imagenEvento" alt="Imagen del evento" class="event-banner-img">
+            <div class="banner-content">
+                <h1 id="eventTitle" class="event-title">Cargando...</h1>
+                <p id="eventDescription" class="event-description">Cargando...</p>
+            </div>
+        </div>
+
+        <!-- Detalles del evento -->
+        <div class="event-details">
+            <div>
+                <div class="detail-section">
+                    <div class="detail-title">Fecha</div>
+                    <div id="eventDate" class="detail-content">Cargando...</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Hora</div>
+                    <div id="eventTime" class="detail-content">Cargando...</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Lugar</div>
+                    <div id="eventLocation" class="detail-content">Cargando...</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Capacidad</div>
+                    <div id="eventCapacity" class="detail-content">Cargando...</div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="detail-section">
+                    <div class="detail-title">Entradas disponibles</div>
+                    <div id="eventTickets" class="detail-content">Cargando...</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Precio desde</div>
+                    <div id="eventPrice" class="detail-content">Cargando...</div>
+                </div>
+            </div>
+            
+            <div class="event-location">
+                <div class="detail-title">Ubicación en mapa</div>
+                <div id="eventMap" style="height: 200px; background: #eee; border-radius: 8px; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="module" src="/js/details.js" defer></script>
+</html>

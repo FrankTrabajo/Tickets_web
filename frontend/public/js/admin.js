@@ -93,6 +93,9 @@ document.querySelector('.event-table tbody').addEventListener('click', (e) => {
                 console.error("Error al eliminar el evento:", error);
             });
         }
+    } else if (e.target.classList.contains('details')){
+        const eventoId = e.target.dataset.id;
+        window.location.href = `/admin_dashboard/details/${eventoId}`;
     }
     
 });

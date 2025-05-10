@@ -49,6 +49,20 @@ const newEvent = async (req, res) => {
     }
 };
 
+const getEvento = async (req, res) => {
+    try {
+        const eventoId = req.params.id;
+
+        const evento = await Evento.findOne({ _id: eventoId });
+        if(!evento){
+            return res.status(404).json({ message: "Evento no encontrado" });
+        }
+        res.status(200).json({ evento });
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener el evento" });
+    }
+}
+
 const removeEvent = async (req,res) => {
     try {
         const token = req.cookies.authToken;
@@ -134,6 +148,7 @@ const getEstadisticasUsuario = async (req, res) => {
 
 module.exports = {
     newEvent,
+    getEvento,
     get_all_events_from_user,
     getEstadisticasUsuario,
     removeEvent

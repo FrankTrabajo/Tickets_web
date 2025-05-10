@@ -56,6 +56,10 @@ app.get("/admin_dashboard/new_event", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'nuevoEvento.html'));
 });
 
+app.get("/admin_dashboard/details/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'detallesEvento.html'));
+});
+
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
     const token = req.cookies.authToken;

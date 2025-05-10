@@ -26,7 +26,7 @@ mapaBtn.addEventListener('click', () => {
 });
 
 // Función para inicializar el mapa
-function drawMap() {
+export function drawMap() {
     map = L.map('mapaEventoContainer').setView([40.4168, -3.7038], 13); // Centro en Madrid
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
