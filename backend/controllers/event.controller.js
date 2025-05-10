@@ -7,42 +7,46 @@ const Ticket = require("../models/Ticket");
 
 dotenv.config();
 
-const newEvent = async (req,res) => {
-
-    try{
-        const { nombre, descripcion, fecha, lugar, capacidad, imagen, entradas } = req.body;
-
+const newEvent = async (req, res) => {
+    try {
+        // Parsear los campos que vienen como strings JSON
+        const lugar = JSON.parse(req.body.lugar);
+        const entradas = JSON.parse(req.body.entradas);
+        
+        const { nombre, descripcion, fecha, capacidad } = req.body;
         const token = req.cookies.authToken;
-            if (!token) {
-              return res.status(401).json({ message: "No autorizado" });
-            }
+        
+        if (!token) return res.status(401).json({ message: "No autorizado" });
+        
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
 
-        //* Aqui verificamos que la suma de capacidad de las entradas no supere la capacidad del evento
-        let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
-        if (totalEntradas > capacidad) {
+        // Validar capacidad vs entradas
+        const totalEntradas = entradas.reduce((total, grupo) => total + parseInt(grupo.cantidad || 0), 0);
+        if (totalEntradas > parseInt(capacidad)) {
             return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
         }
+
+        // Ruta de la imagen
+        const imagenPath = req.file ? '/img/eventos/' + req.file.filename : null;
 
         const nuevoEvento = new Evento({
             nombre,
             descripcion,
             fecha,
             lugar,
-            capacidad,
-            imagen,
+            capacidad: parseInt(capacidad),
+            imagen: imagenPath,
             entradas,
             creador: userId
         });
 
         await nuevoEvento.save();
-        res.status(201).json({ mensaje: "Evento creado correctamente", evento: nuevoEvento});
-    }catch(e){
-        console.error("ERROR: Ha habido un error al crear el nuevo evento:", e);
-        res.status(500).json({ error: 'Hubo un problema al guardar el evento' });
+        res.status(201).json({ mensaje: "Evento creado correctamente", evento: nuevoEvento });
+    } catch (e) {
+        console.error("Error al crear evento:", e);
+        res.status(500).json({ error: e.message || 'Error al guardar el evento' });
     }
-
 };
 
 const removeEvent = async (req,res) => {

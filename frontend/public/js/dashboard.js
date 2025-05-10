@@ -1,6 +1,6 @@
 import { showItems, hideItems } from "./utils.js";
 
-const URL  = 'https://www.ticketsweb.es';
+const URL = 'https://www.ticketsweb.es';
 
 // Mostrar / Ocultar Mapa
 const mapaBtn = document.getElementById('mapaEventoBtn');
@@ -98,104 +98,98 @@ document.getElementById('eventoForm').addEventListener('submit', function (e) {
 // Creacion de eventos
 document.getElementById("eventoForm").addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const nombreEvento = document.getElementById('nombreEvento').value;
-    const descripcionEvento = document.getElementById('descripcionEvento').value;
-    const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
-    const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
-    const imagenEvento = document.getElementById('imagenEvento').name;
-    console.log(imagenEvento); // Obtener el valor de la imagen
+    createEvent();
+});
 
 
-
-    // Obtener la ubicación del mapa
-    const lugarEvento = {
-        nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
-        lat: marker.getLatLng().lat,
-        lon: marker.getLatLng().lng
-    };
-
-    // Crear un arreglo con los grupos de entradas
-    const entradas = [];
-    const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
-
-    entradasGrupos.forEach(grupo => {
-        const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
-        const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
-        const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);  // Seleccionar el input de precio
-
-        // Verificar que los campos no estén vacíos
-        if (tipo && cantidad && precio) {
-            entradas.push({ tipo, cantidad, precio });
-        } else {
-            alert('Todos los campos de las entradas son obligatorios');
-            return;
-        }
-    });
-
-    // Si las entradas están vacías, no permitir el envío del formulario
-    if (entradas.length === 0) {
-        alert('Debes agregar al menos un grupo de entradas');
-        return;
-    }
-
-    //* Esto lo que hace es validar la suma de las entradas y asegurarse que las entradas no superen la capacidad del evento 
-    let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
-    if (totalEntradas > capacidadEvento) {
-        alert('La capacidad total de entradas no puede superar la capacidad del evento');
-        return;
-    }
-
-    //* Esto lo que hace es validar que haya entradas en el evento
-    if(entradas.length === 0){
-        alert('Debes agregar al menos un grupo de entradas');
-        return;
-    }
-
-
-    // Crear el objeto eventoData
-    const eventoData = {
-        nombre: nombreEvento,
-        descripcion: descripcionEvento,
-        fecha: fechaEvento,
-        lugar: lugarEvento,
-        capacidad: capacidadEvento,
-        imagen: imagenEvento, 
-        entradas: entradas
-    };
-
-
+export function createEvent() {
+    // Valido si el usuario está autenticado para poder crear un nuevo evento
     fetch('/check-auth')
         .then(response => response.json())
         .then(data => {
             if (data.logueado) {
+                const nombreEvento = document.getElementById('nombreEvento').value;
+                const descripcionEvento = document.getElementById('descripcionEvento').value;
+                const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
+                const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
+
+                // Obtener la ubicación del mapa
+                const lugarEvento = {
+                    nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
+                    lat: marker.getLatLng().lat,
+                    lon: marker.getLatLng().lng
+                };
+
+                // Crear un arreglo con los grupos de entradas
+                const entradas = [];
+                const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
+
+                entradasGrupos.forEach(grupo => {
+                    const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
+                    const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
+                    const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);  // Seleccionar el input de precio
+
+                    // Verificar que los campos no estén vacíos
+                    if (tipo && cantidad && precio) {
+                        entradas.push({ tipo, cantidad, precio });
+                    } else {
+                        alert('Todos los campos de las entradas son obligatorios');
+                        return;
+                    }
+                });
+
+                // Si las entradas están vacías, no permitir el envío del formulario
+                if (entradas.length === 0) {
+                    alert('Debes agregar al menos un grupo de entradas');
+                    return;
+                }
+
+                //* Esto lo que hace es validar la suma de las entradas y asegurarse que las entradas no superen la capacidad del evento 
+                let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
+                if (totalEntradas > capacidadEvento) {
+                    alert('La capacidad total de entradas no puede superar la capacidad del evento');
+                    return;
+                }
+
+                //* Esto lo que hace es validar que haya entradas en el evento
+                if (entradas.length === 0) {
+                    alert('Debes agregar al menos un grupo de entradas');
+                    return;
+                }
+
+
+                const formData = new FormData();
+                formData.append('nombre', nombreEvento);
+                formData.append('descripcion', descripcionEvento);
+                formData.append('fecha', fechaEvento);
+                formData.append('lugar', JSON.stringify(lugarEvento));
+                formData.append('capacidad', capacidadEvento.toString());
+                formData.append('entradas', JSON.stringify(entradas));
+
+                const imagenInput = document.getElementById('imagenEvento');
+                if(imagenInput.files.length > 0){
+                    formData.append('imagen', imagenInput.files[0]);
+                }
+
                 // Enviar los datos al backend usando fetch
                 fetch("/api/event/new_event", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': "application/json"
-                    },
                     credentials: 'include',  // Incluir cookies en la solicitud
-                    body: JSON.stringify(eventoData)  // Convertir el objeto a JSON,
+                    body: formData
                 })
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.mensaje);  // Mostrar mensaje de éxito
+                        alert(data.mensaje || "Evento creado correctamente");  // Mostrar mensaje de éxito
                         window.location.href = "/admin_dashboard";  // Redirigir al dashboard del administrador
-                        console.log(data);  // Mostrar respuesta en consola
                     })
                     .catch(error => {
                         console.error("ERROR:", error);  // Mostrar error en consola
-                        alert("Hubo un problema al crear el evento");  // Mostrar alerta en caso de error
+                        alert(error.mensaje || "Hubo un problema al crear el evento");  // Mostrar alerta en caso de error
                     });
-            }else{
+            } else {
                 alert("No estás autenticado, por favor, vuelve a loguearte");
                 window.location.href = "/login";
             }
         })
         .catch(error => console.error("ERROR:", error));
-
-
-});
-
-
+}

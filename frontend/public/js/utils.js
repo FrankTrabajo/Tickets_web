@@ -9,3 +9,7 @@ export function showItems(arr){
         element.classList.remove('d-none');
     });
 }
+
+export function modal_alert(header, body, action){
+
+}

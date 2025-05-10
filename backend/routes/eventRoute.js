@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
+const upload = require("../middlewares/uploads.js");
 const { newEvent, get_all_events_from_user, getEstadisticasUsuario, removeEvent } = require('../controllers/event.controller.js');
 
-router.post("/new_event", newEvent);
+router.post("/new_event", upload.single('imagen'), newEvent);
 
 router.get("/get_all_events_from_user", get_all_events_from_user);
 
