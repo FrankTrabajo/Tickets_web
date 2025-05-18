@@ -1,11 +1,11 @@
-import { centrarMapa } from "./map";
+import { centrarMapa, pintarSite } from "./map.js";
 
-function getElevent(){
+function getEvent(){
     const id = getIdFromPath();
+    console.log("Entra");
     fetch(`/api/event/details/${id}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data.evento.evento);
             document.getElementById("imagenEvento").src = data.evento.imagen || "";
             document.getElementById("eventTitle").textContent = data.evento.nombre;
             document.getElementById("eventDescription").textContent = data.evento.descripcion;
@@ -28,6 +28,7 @@ function getElevent(){
                 
             // Inicializar mapa (requiere API de Google Maps o similar)
             centrarMapa(data.evento.lugar.lat, data.evento.lugar.lon);
+            pintarSite([data.evento.lugar.lat, data.evento.lugar.lon], data.evento.lugar.nombre);
 
         })
         .catch(error => console.error("ERROR:", error));
@@ -52,5 +53,5 @@ function getIdFromPath() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    getElevent();
+    getEvent();
 });

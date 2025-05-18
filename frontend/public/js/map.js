@@ -1,21 +1,12 @@
 const popup = document.getElementById("popup"); 
-const popupContent = popup.querySelector(".popup-content")
 const LONGITUD_MADRID = -3.703790;
 const LATITUD_MADRID = 40.416775;
 const ZOOM_PREDETERMINADO = 13;
-const UBICACION = "https://overpass-api.de/api/interpreter?data=[out:json];node[\"historic\"=\"monument\"](around:5000,40.416775,-3.703790);out;";
 const RESTO_UBICACIONES= `https://cdn-icons-png.flaticon.com/512/252/252025.png`;
 const mapContainer = document.getElementById("map");
 let map = null;
 
-/**
- * Función para mostrar un popup con información proporcionada
- * @param {string} infoHTML 
- */
-function mostrarPopup(infoHTML) {
-    popupContent.innerHTML = infoHTML; // Insertar contenido en el popup
-    popup.style.display = "flex"; // Mostrar popup
-}
+
 
 let coordenadas = null;
 
@@ -62,8 +53,6 @@ function cargarLibrerias() {
     script.crossOrigin="";
     script.onload = () => {
         if(cargarMapa()){
-            cargarDatos();
-            cargarSitios();
         }
     }
     document.head.appendChild(script);
@@ -104,7 +93,7 @@ function pintarUbicacion(coords,icono, titulo) {
  * @param {array} coords 
  * @param {string} titulo 
  */
-function pintarSite(coords, titulo) {
+export function pintarSite(coords, titulo) {
 
     let marcador = L.marker(coords)
     .bindPopup()
@@ -122,46 +111,6 @@ function pintarSite(coords, titulo) {
 }
 
 
-/**
- * Funcion que carga los datos de la api y los pinta en el mapa
- */
-function cargarDatos(){
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET" , UBICACION , true);
-    xhr.responseType = "text";
-    xhr.onload = function(){
-        switch(xhr.status){
-            case 200:
-                console.log(JSON.parse(xhr.response)['elements']);
-                const ubicaciones = JSON.parse(xhr.response)['elements'];
-
-                ubicaciones.forEach(element => {
-                    pintarUbicacion([element['lat'],element['lon']], RESTO_UBICACIONES,element['tags']['name']);
-                });
-
-                break;
-            default:
-                break;
-        }
-    };
-
-    xhr.send();
-}
-
-/**
- * Función para obtener sitios de la API  y mostrarlos en el mapa
- */
-function cargarSitios(){
-    fetch("/api/site/")
-    .then(response => response.json())
-    .then(data => {
-        for(let ubicacion of data){
-            pintarSite([ubicacion.lat, ubicacion.lon],ubicacion.siteName);
-        }
-        
-    })
-    .catch(err => console.error(err));
-}
 
 //esto hace que se ejecute esto nada más cargar la pagina
 document.addEventListener("DOMContentLoaded", function () { 

@@ -12,12 +12,12 @@ const newEvent = async (req, res) => {
         // Parsear los campos que vienen como strings JSON
         const lugar = JSON.parse(req.body.lugar);
         const entradas = JSON.parse(req.body.entradas);
-        
+
         const { nombre, descripcion, fecha, capacidad } = req.body;
         const token = req.cookies.authToken;
-        
+
         if (!token) return res.status(401).json({ message: "No autorizado" });
-        
+
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
 
@@ -49,12 +49,62 @@ const newEvent = async (req, res) => {
     }
 };
 
+const updateEvent = async (req, res) => {
+    try {
+        const { nombre, descripcion, fecha, capacidad } = req.body;
+
+        const id = req.body.id;
+        const lugar = JSON.parse(req.body.lugar);
+        const entradas = JSON.parse(req.body.entradas);
+
+        const token = req.cookies.authToken;
+        if (!token) return res.status(401).json({ message: "No autorizado" });
+
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.userId;
+
+        const eventToUpdate = await Evento.findById(id);
+        if (!eventToUpdate) return res.status(404).json({ message: "Evento no encontrado" });
+
+        // Validar capacidad vs entradas
+        const totalEntradas = entradas.reduce((total, grupo) => total + parseInt(grupo.cantidad || 0), 0);
+        if (totalEntradas > parseInt(capacidad)) {
+            return res.status(400).json({
+                message: 'La cantidad total de entradas no puede superar la capacidad del evento'
+            });
+        }
+
+        // Ruta de la imagen si se subió una nueva
+        const imagenPath = req.file ? '/img/eventos/' + req.file.filename : eventToUpdate.imagen;
+
+        // Actualizar campos
+        eventToUpdate.nombre = nombre;
+        eventToUpdate.descripcion = descripcion;
+        eventToUpdate.fecha = fecha;
+        eventToUpdate.capacidad = capacidad;
+        eventToUpdate.imagen = imagenPath;
+        eventToUpdate.entradas = entradas;
+        eventToUpdate.lugar = lugar;
+
+        await eventToUpdate.save();
+
+        res.status(200).json({
+            mensaje: "Evento actualizado correctamente",
+            evento: eventToUpdate
+        });
+    } catch (e) {
+        console.error("Error al actualizar evento:", e);
+        res.status(500).json({ error: e.message || 'Error al guardar el evento' });
+    }
+};
+
+
 const getEvento = async (req, res) => {
     try {
         const eventoId = req.params.id;
 
         const evento = await Evento.findOne({ _id: eventoId });
-        if(!evento){
+        if (!evento) {
             return res.status(404).json({ message: "Evento no encontrado" });
         }
         res.status(200).json({ evento });
@@ -63,7 +113,7 @@ const getEvento = async (req, res) => {
     }
 }
 
-const removeEvent = async (req,res) => {
+const removeEvent = async (req, res) => {
     try {
         const token = req.cookies.authToken;
         if (!token) {
@@ -73,7 +123,7 @@ const removeEvent = async (req,res) => {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
         const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
-        
+
         // Verificar si el evento existe y pertenece al usuario
         const evento = await Evento.findOne({ _id: eventoId, creador: userId });
         if (!evento) {
@@ -88,14 +138,10 @@ const removeEvent = async (req,res) => {
     }
 }
 
-const updateEvent = async (req,res) => {
-    
-}
-
 
 
 const get_all_events_from_user = async (req, res) => {
-    try{
+    try {
         //Los datos de los usuarios se obtienen de la cookie authToken
         const token = req.cookies.authToken;
         if (!token) {
@@ -109,8 +155,8 @@ const get_all_events_from_user = async (req, res) => {
         if (!eventos) {
             return res.status(404).json({ message: "No se encontraron eventos" });
         }
-        res.status(200).json({eventos});
-    }catch(error){
+        res.status(200).json({ eventos });
+    } catch (error) {
         console.log("ERROR: Error al obtener los eventos del usuario", error);
         res.status(500).json({ message: error.message });
     }
@@ -129,7 +175,7 @@ const getEstadisticasUsuario = async (req, res) => {
         const eventos = await Evento.find({ creador: userId });
         const eventoIds = eventos.map(evento => evento._id);
 
-        if(eventoIds.length === 0){
+        if (eventoIds.length === 0) {
             return res.status(200).json({ totalEventos: 0, totalEntradasVendidas: 0, totalIngresos: 0 });
         }
 
@@ -144,10 +190,11 @@ const getEstadisticasUsuario = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-   
+
 
 module.exports = {
     newEvent,
+    updateEvent,
     getEvento,
     get_all_events_from_user,
     getEstadisticasUsuario,

@@ -96,6 +96,9 @@ document.querySelector('.event-table tbody').addEventListener('click', (e) => {
     } else if (e.target.classList.contains('details')){
         const eventoId = e.target.dataset.id;
         window.location.href = `/admin_dashboard/details/${eventoId}`;
+    } else if (e.target.classList.contains("edit")) {
+        const eventoId = e.target.dataset.id;
+        window.location.href = `/admin_dashboard/update/${eventoId}`;
     }
     
 });
