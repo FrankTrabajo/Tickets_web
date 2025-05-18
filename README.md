@@ -10,3 +10,4 @@ Proyecto TFG DAW
 - BcryptJS
 - Cookie Parser
 - Multer
+- Uuid

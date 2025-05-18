@@ -77,6 +77,7 @@ function getEvent(id) {
                     localStorage.setItem('tipoEntrada', zona.tipo);
                     localStorage.setItem('precioEntrada', zona.precio);
                     localStorage.setItem('cantidadEntrada', zona.cantidad);
+                    localStorage.setItem('idEvento', id);
                     window.location.href = '/comprar'; // O la ruta real del archivo
                 });
 

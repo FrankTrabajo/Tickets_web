@@ -4,6 +4,7 @@ const zonaSeleccionada = {
     precio: parseFloat(localStorage.getItem('precioEntrada')) || 30,
     cantidad: parseInt(localStorage.getItem('cantidadEntrada')) || 100,
 };
+const idEvento = localStorage.getItem('idEvento');
 
 // Mostrar datos
 document.getElementById('zonaNombre').textContent = zonaSeleccionada.tipo;
@@ -34,6 +35,7 @@ document.getElementById('formCompra').addEventListener('submit', function (e) {
     successMsg.textContent = `¡Compra realizada! Has comprado ${cantidad} entrada(s) para la zona ${zonaSeleccionada.tipo}. Total: ${cantidad * zonaSeleccionada.precio}€`;
 
     // Aquí podrías hacer un fetch POST a tu backend para guardar la compra
+    
 });
 
 
