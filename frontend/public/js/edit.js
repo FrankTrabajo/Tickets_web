@@ -2,6 +2,7 @@ import { centrarMapa, pintarSite } from "./map.js"; // Asegúrate de importar co
 import { hideItems, showItems } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    checkToken();
     const id = window.location.pathname.split('/').pop();
     if (id) {
         getEvent(id);
@@ -31,7 +32,18 @@ mapaBtn.addEventListener('click', () => {
 
 });
 
+function checkToken() {
+    fetch("/check-auth")
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logueado) {
+                window.location.href = "/login";
+            }
+        })
+}
 
+let lat;
+let lon;
 let evento;
 function getEvent(id) {
     fetch(`/api/event/details/${id}`)
@@ -43,10 +55,11 @@ function getEvent(id) {
             document.getElementById("descripcionEvento").value = evento.descripcion;
             document.getElementById("fechaEvento").value = evento.fecha.split("T")[0];
             document.getElementById("capacidadEvento").value = evento.capacidad;
-
+            document.getElementById("buscadorLugar").value = evento.lugar.nombre;
+            lat = evento.lugar.lat;
+            lon = evento.lugar.lon;
             if (evento.lugar && evento.lugar.lat && evento.lugar.lon) {
-                //document.getElementById("mapContainer").classList.remove("d-none");
-
+                
                 centrarMapa(evento.lugar.lat, evento.lugar.lon);
                 pintarSite([evento.lugar.lat, evento.lugar.lon], evento.lugar.nombre);
             }
@@ -59,26 +72,87 @@ function getEvent(id) {
 }
 
 
+
+
 function updateEvent(id) {
-    const form = document.getElementById("eventoForm");
-    const formData = new FormData(form);
-    console.log(JSON.stringify(formData));
-    fetch(`/api/event/update/${id}`, {
-        method: "PUT",
-        body: formData // Asegúrate que tu backend acepta multipart/form-data
-    })
-        .then(res => res.json()
-        )
+
+    fetch('/check-auth')
+        .then(response => response.json())
         .then(data => {
-            if(data.ok){
-               alert("Evento actualizado correctamente");
-                window.location.href = "/admin_dashboard"; // Redirige a donde quieras 
+            if (data.logueado) {
+                const nombreEvento = document.getElementById('nombreEvento').value;
+                const descripcionEvento = document.getElementById('descripcionEvento').value;
+                const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
+                const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
+                const nombre_lugar_evento = document.getElementById("buscadorLugar").value;
+                // Obtener la ubicación del mapa
+                const lugarEvento = {
+                    nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
+                    lat: lat,
+                    lon: lon
+                };
+
+                // Crear un arreglo con los grupos de entradas
+                const entradas = [];
+                const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
+
+                entradasGrupos.forEach(grupo => {
+                    const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
+                    const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
+                    const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);  // Seleccionar el input de precio
+
+                    // Verificar que los campos no estén vacíos
+                    if (tipo && cantidad && precio) {
+                        entradas.push({ tipo, cantidad, precio });
+                    } else {
+                        alert('Todos los campos de las entradas son obligatorios');
+                        return;
+                    }
+                });
+
+
+                //* Esto lo que hace es validar la suma de las entradas y asegurarse que las entradas no superen la capacidad del evento 
+                let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
+                if (totalEntradas > capacidadEvento) {
+                    alert('La capacidad total de entradas no puede superar la capacidad del evento');
+                    return;
+                }
+
+
+                const formData = new FormData();
+                formData.append('nombre', nombreEvento);
+                formData.append('descripcion', descripcionEvento);
+                formData.append('fecha', fechaEvento);
+                formData.append('lugar', JSON.stringify(lugarEvento));
+                formData.append('capacidad', capacidadEvento.toString());
+                formData.append('entradas', JSON.stringify(entradas));
+
+                const imagenInput = document.getElementById('imagenEvento');
+                if (imagenInput.files.length > 0) {
+                    formData.append('imagen', imagenInput.files[0]);
+                }
+
+                fetch(`/api/event/update/${id}`, {
+                    method: "PUT",
+                    body: formData // Asegúrate que tu backend acepta multipart/form-data
+                })
+                    .then(response => response.json()
+                    )
+                    .then(data => {
+                        if (data.ok) {
+                            alert("Evento actualizado correctamente");
+                            window.location.href = "/admin_dashboard"; // Redirige a donde quieras 
+                        } else {
+                            console.log("Ha habido un error", data);
+                        }
+
+                    })
+                    .catch(error => console.error("ERROR al actualizar evento:", error));
             } else {
-                console.log("Ha habido un error", data);
+                window.location.href = "/login";
             }
-            
         })
-        .catch(error => console.error("ERROR al actualizar evento:", error));
+
 }
 
 function cargarGruposDeEntradas(entradas) {
@@ -90,8 +164,11 @@ function cargarGruposDeEntradas(entradas) {
         grupo.className = "mb-3";
         grupo.innerHTML = `
             <label class="form-label">Grupo ${index + 1}</label>
+            <label>Tipo de entrada</label>
             <input type="text" class="form-control mb-1" name="grupos[${index}][nombre]" value="${entrada.tipo}" placeholder="Nombre del grupo" required>
+            <label>Precio de entrada</label>
             <input type="number" class="form-control mb-1" name="grupos[${index}][precio]" value="${entrada.precio}" placeholder="Precio" required>
+            <label>Cantidad de entradas</label>
             <input type="number" class="form-control mb-1" name="grupos[${index}][cantidad]" value="${entrada.cantidad}" placeholder="Cantidad" required>
         `;
         container.appendChild(grupo);

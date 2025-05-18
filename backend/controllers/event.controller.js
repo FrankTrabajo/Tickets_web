@@ -53,7 +53,7 @@ const updateEvent = async (req, res) => {
     try {
         const { nombre, descripcion, fecha, capacidad } = req.body;
 
-        const id = req.body.id;
+        const id = req.params.id;
         const lugar = JSON.parse(req.body.lugar);
         const entradas = JSON.parse(req.body.entradas);
 
@@ -64,7 +64,7 @@ const updateEvent = async (req, res) => {
         const userId = decoded.userId;
 
         const eventToUpdate = await Evento.findById(id);
-        if (!eventToUpdate) return res.status(404).json({ message: "Evento no encontrado" });
+        if (!eventToUpdate) return res.status(404).json({ message: `Evento no encontrado ${id}` });
 
         // Validar capacidad vs entradas
         const totalEntradas = entradas.reduce((total, grupo) => total + parseInt(grupo.cantidad || 0), 0);
@@ -90,7 +90,8 @@ const updateEvent = async (req, res) => {
 
         res.status(200).json({
             mensaje: "Evento actualizado correctamente",
-            evento: eventToUpdate
+            evento: eventToUpdate,
+            ok: true
         });
     } catch (e) {
         console.error("Error al actualizar evento:", e);
