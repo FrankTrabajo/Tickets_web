@@ -74,7 +74,10 @@ function getEvent(id) {
                 })
 
                 rect.addEventListener('click', () => {
-                    console.log("Le has dado a comprar la entrada");
+                    localStorage.setItem('tipoEntrada', zona.tipo);
+                    localStorage.setItem('precioEntrada', zona.precio);
+                    localStorage.setItem('cantidadEntrada', zona.cantidad);
+                    window.location.href = '/comprar'; // O la ruta real del archivo
                 });
 
                 svg.appendChild(rect);
