@@ -64,6 +64,10 @@ app.get("/admin_dashboard/update/:id", (req,res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'editEvento.html'));
 });
 
+app.get("/vistaEntradas/:id", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'vistaEntradas.html'));
+});
+
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
     const token = req.cookies.authToken;
