@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tickely</title>
+  <link rel="stylesheet" href="css/style-index.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <a href="mapa.html">
+        <img src="assets/mapa.png" alt="Mapa" class="icon" />
+      </a>
+      <button id="filtroTicket">
+        <img src="assets/filtro.png" alt="Filtro" class="icon" />
+      </button>
+    </div>
+  
+    <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
+  
+    <nav id="auth-buttons">
+      <button id="loginBtn">Iniciar sesión</button>
+      <button id="registerBtn">Registrarse</button>
+    </nav>
+  </header>
+  
+  <aside id="filtroAside" class="filtro-aside hidden">
+    <!-- Aqui dentro iran los filtros -->
+  </aside>
+  
+  <main class="container">
+    <section class="eventos">
+      <!-- evento div prueba de q funciona -->
+      <div class="evento">
+        <img src="assets/concierto.jpg" alt="Evento 1" />
+        <div class="info">
+          <h3>Nombre del Evento</h3>
+          <p>Descripción evento</p>
+          <button class="comprar-btn">Comprar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/index.js"></script>
+</body>
+</html>
