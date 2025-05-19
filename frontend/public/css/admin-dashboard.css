@@ -143,6 +143,92 @@
     font-size: 0.9rem;
   }
 
+
+  .event-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.event-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+.event-card:hover {
+  transform: scale(1.02);
+}
+
+.event-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.event-details {
+  font-size: 0.95rem;
+  color: var(--gray);
+  margin-bottom: 1rem;
+}
+
+.expandable {
+  display: none;
+  margin-top: 0.8rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.8rem;
+}
+
+.expandable.active {
+  display: block;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  gap: 0.5rem;
+}
+
+button.ver-mas-btn {
+  background-color: #f1f5f9;
+  color: #1f2937;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+}
+
+button.ver-mas-btn:hover {
+  background-color: #e2e8f0;
+}
+
+button.comprar-btn {
+  background-color: var(--secondary);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+button.comprar-btn:hover {
+  background-color: #2563eb;
+}
+
+
   /* Responsive Styles */
   @media (max-width: 768px) {
     header h1 {
