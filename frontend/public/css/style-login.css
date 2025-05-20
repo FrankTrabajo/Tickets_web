@@ -1,100 +1,143 @@
 html {
-    --s: 200px; /* control the size*/
-    --c1: #fff9f5;
-    --c2: #c0e1f2;
-    
-    --_g: #0000 8%,var(--c1) 0 17%,#0000 0 58%;
-    background: 
-      linear-gradient(135deg,#0000 20.5%,var(--c1) 0 29.5%,#0000 0) 0 calc(var(--s)/4),
-      linear-gradient( 45deg,var(--_g)) calc(var(--s)/2) 0,
-      linear-gradient(135deg,var(--_g),var(--c1) 0 67%,#0000 0),        
-      linear-gradient( 45deg,var(--_g),var(--c1) 0 67%,#0000 0 83%,var(--c1) 0 92%,#0000 0),
-      var(--c2); 
-    background-size: var(--s) var(--s);
-  }
+  --s: 56px; /* control the size*/
+  --c1: #ffa5ac;
+  --c2: #1c1c50;
+  
+  --_c1: var(--c1) 99%,#0000 101%;
+  --_c2: var(--c2) 99%,#0000 101%;
+  
+  --r:calc(var(--s)*.866); 
+  --g0:radial-gradient(var(--s),var(--_c1));
+  --g1:radial-gradient(var(--s),var(--_c2));
+  --f:radial-gradient(var(--s) at calc(100% + var(--r)) 50%,var(--_c1));
+  --p:radial-gradient(var(--s) at 100% 50%,var(--_c2));
+  background:
+    var(--f) 0 calc(-5*var(--s)/2),
+    var(--f) calc(-2*var(--r)) calc(var(--s)/2),
+    var(--p) 0 calc(-2*var(--s)),
+    var(--g0) var(--r) calc(-5*var(--s)/2),
+    var(--g1) var(--r) calc( 5*var(--s)/2),
+    radial-gradient(var(--s) at 100% 100%,var(--_c1)) 0 calc(-1*var(--s)),   
+    radial-gradient(var(--s) at 0%   50% ,var(--_c1)) 0 calc(-4*var(--s)),
+    var(--g1) calc(-1*var(--r)) calc(-7*var(--s)/2),
+    var(--g0) calc(-1*var(--r)) calc(-5*var(--s)/2),
+    var(--p) calc(-2*var(--r)) var(--s),
+    var(--g0) calc(-1*var(--r)) calc(var(--s)/ 2),
+    var(--g1) calc(-1*var(--r)) calc(var(--s)/-2),
+    var(--g0) 0 calc(-1*var(--s)),
+    var(--g1) var(--r) calc(var(--s)/-2),
+    var(--g0) var(--r) calc(var(--s)/ 2) 
+    var(--c2);
+  background-size: calc(4*var(--r)) calc(6*var(--s));
+}
 
 
 body{
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100svh; /* La altura mas pequeña de la pantalla */
-    font-size: larger;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100svh;
+  font-size: larger;
+}
+
+h1{
+  margin-top: 0px;
+  font-size: 40px;
+  color: white;
+  text-align: center;
 }
 
 .form-container{
-    width: 500px;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 50px;
+  width: 500px;
+  background-color: #28285e;
+  border-radius: 10px;
+  padding: 50px;
 }
 
 form{
-    display:flex;
-    flex-direction: column;
-    gap: 10px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 form+p form p{
-    text-align: center;
+  text-align: center;
 }
 
 input{
-    border-radius: 4px;
-    border: unset;
-    background-color: rgb(0,0,0,0.1);
-    padding: 15px 30px;
-    font-size: larger;
+  border-radius: 4px;
+  border: unset;
+  background-color: rgb(0,0,0,0.1);
+  padding: 15px 30px;
+  font-size: larger;
 }
 
 .error{
-    color: red;
+  color: red;
 }
 
 .hide{
-    display:none;
+  display:none;
 }
 
 #submit{
-    background-color: #007bff;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #007bff;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-    border: unset;
-    padding: 15px 30px;
-    font-size: larger;
+  background-color: #ffffff;
+  color:#ff5f6d;
+  font-weight: bold;
+  cursor: pointer;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  border: unset;
+  padding: 15px 30px;
+  font-size: larger;
 }
 
 
 label{
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 @media (max-width: 600px) {
-    .form-container {
-      padding: 2rem 1.5rem;
-    }
-  
-    input,
-    #submit {
-      padding: 12px 20px;
-      font-size: 1rem;
-    }
-  
-    body {
-      font-size: 1rem;
-    }
+  .form-container {
+    padding: 2rem 1.5rem;
   }
+
+  input,
+  #submit {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+}
+
+.texto-login {
+  margin-top: 1em;
+  font-size: 14px;
+  color: #c5b6b6;
+  text-align: center;
+}
+
+.link-login {
+  color: #ff5f6d;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-login:hover {
+  text-decoration: underline;
+  color: #e03849;
+}
 
 
 

@@ -19,7 +19,7 @@ function registerForm(){
     inputName.type = 'text';
     inputName.name = 'nombre';
     inputName.id = 'nombre';
-    inputName.placeholder = 'Nombre de ususario';
+    inputName.placeholder = 'Nombre de usuario';
     inputName.required = true;
 
     //Mensaje de error del nombre
@@ -96,10 +96,12 @@ function registerForm(){
     formContainer.appendChild(form);
 
     let p = document.createElement('p');
+    p.classList.add('texto-login');
     let a = document.createElement('a');
-    p.textContent = '¿Ya tienes cuenta?';
+    p.textContent = '¿Ya tienes cuenta? ';
     a.textContent = 'Iniciar sesión';
     a.href = '/login';
+    a.classList.add('link-login');
     p.appendChild(a);
     formContainer.appendChild(p);
 }

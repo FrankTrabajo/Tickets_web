@@ -40,11 +40,12 @@ function loginForm(){
     formContainer.appendChild(form);
 
     let p = document.createElement('p');
-
+    p.classList.add('texto-login');
     let a = document.createElement('a');
-    p.textContent = '¿Aún no tienes cuenta?';
+    p.textContent = '¿Aún no tienes cuenta? ';
     a.textContent = 'Registrarse';
     a.href = '/register';
+    a.classList.add('link-login');
     p.appendChild(a);
     formContainer.appendChild(p);
 
