@@ -3,6 +3,7 @@ const zonaSeleccionada = {
     tipo: localStorage.getItem('tipoEntrada') || 'Pista',
     precio: parseFloat(localStorage.getItem('precioEntrada')) || 30,
     cantidad: parseInt(localStorage.getItem('cantidadEntrada')) || 100,
+    idEvento: localStorage.getItem('idEvento')
 };
 const idEvento = localStorage.getItem('idEvento');
 
@@ -33,7 +34,21 @@ document.getElementById('formCompra').addEventListener('submit', function (e) {
 
     // Simular una compra exitosa
     successMsg.textContent = `¡Compra realizada! Has comprado ${cantidad} entrada(s) para la zona ${zonaSeleccionada.tipo}. Total: ${cantidad * zonaSeleccionada.precio}€`;
-
+    fetch("/api/compra/nueva_compra", {
+      method: "POST",
+      headers: { "Content-Type" : "application/json" },
+      body: JSON.stringify({
+        idEvento: zonaSeleccionada.idEvento,
+        tipoEntrada: zonaSeleccionada.tipo,
+        cantidad: cantidad,
+        metodoPago: "tarjeta"
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Compra confirmada", data);
+      })
+      .catch(error => console.error("ERROR:", error));
     // Aquí podrías hacer un fetch POST a tu backend para guardar la compra
     
 });

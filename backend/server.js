@@ -32,8 +32,10 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 // Routes
 const userRoute = require('./routes/userRoute');
 const eventRoute = require('./routes/eventRoute');
+const compraRoute = require("./routes/compraRoute.js");
 app.use('/api/user', userRoute);
 app.use("/api/event", eventRoute);
+app.use("/api/compra", compraRoute);
 
 // Rutas de vistas
 app.get('/', (req, res) => {

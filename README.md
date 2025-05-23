@@ -11,3 +11,4 @@ Proyecto TFG DAW
 - Cookie Parser
 - Multer
 - Uuid
+- Nodemailer
