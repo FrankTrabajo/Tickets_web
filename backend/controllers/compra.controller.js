@@ -5,6 +5,9 @@ const Pedido = require("../models/Pedido.js");
 const PedidoTicket = require("../models/PedidoTicket.js");
 const jsonwebtoken = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid');
+const QRCode = require('qrcode');
+const pdf = require('pdfkit')
+const nodemailer = require('nodemailer');
 
 const compra = async (req,res) => {
     try {
@@ -16,6 +19,7 @@ const compra = async (req,res) => {
         if (!token) return res.status(401).json({ message: "No autorizado" });
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const id_usuario = decoded.userId;
+        const email_uduario = decoded.email;
 
         if(cantidad < 1 || cantidad > 6){
             return res.status(400).json({ error: "La cantidad debe estar entre 1 y 6 entradas." });
@@ -73,6 +77,11 @@ const compra = async (req,res) => {
             tickets.push(ticket);
         }
 
+        //Cambiamos el estado del pedido
+        // Una vez se crea el pago se le cambia el estado del pedido a pagado
+        pedido.estado = 'pagado';
+        await pedido.save();
+
         // Ahora tenemos que actualizar la cantidad de entradas disponibles del evento
         zona.cantidad -= cantidad;
         await evento.save();
@@ -85,10 +94,63 @@ const compra = async (req,res) => {
             fecha_pago: new Date()
         });
 
-        //Cambiamos el estado del pedido
-        // Una vez se crea el pago se le cambia el estado del pedido a pagado
-        pedido.estado = 'pagado';
-        await pedido.save();
+
+        // Vamos a generar los pdf con los QR de cada entrada
+        const documento = new pdf();
+        let buffers = [];
+        documento.on('data', buffers.push.bind(buffers));
+        documento.on('end', async () => {
+            const pdfData = Buffer.concat(buffers);
+
+            // Aqui generaremos el envío de email al usuario con las entradas
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.GMAIL_APP_ACCOUNT,
+                    pass: process.env.GMAIL_APP_PASS
+                }
+            });
+
+            const mailOptions = {
+                from: 'tickelyticketsweb@gmail.com',
+                to: email_uduario,
+                subject: "Tus entradas",
+                text: "Adjuntamos tus entradas en PDF. Gracias por su compra",
+                attachments: [
+                    {
+                        filename: "entradas.pdf",
+                        content: pdfData
+                    }
+                ]
+            };
+
+            // Envio del correo
+            transporter.sendMail(mailOptions, (error, info) => {
+                if(error){
+                    console.error("Ha habido un error al enviar el correo", error);
+                } else {
+                    console.log("Correo enviado");
+                }
+            });
+        });
+
+        //Escribir datos en PDF
+        documento.fontSize(18).text('Tus entradas', { align: 'center' });
+        documento.moveDown();
+        for (const ticket of tickets) {
+            documento.fontSize(12).text(`Evento: ${evento.nombre}`);
+            documento.text(`Zona: ${zona.tipo}`);
+            documento.text(`Precio: ${ticket.precio} €`);
+            documento.text(`Código: ${ticket.codigo}`);
+            // Generar QR y añadirlo al PDF
+            const qrDataUrl = await QRCode.toDataURL(ticket.codigo);
+            const qrImage = qrDataUrl.replace(/^data:image\/png;base64,/, "");
+            documento.image(Buffer.from(qrImage, 'base64'), { width: 100 });
+            documento.moveDown();
+        }
+        documento.end();
+
+        
 
         res.status(201).json({ mensaje: "Compra completada con éxito.", pedido, tickets });
 

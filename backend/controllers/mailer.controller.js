@@ -8,7 +8,6 @@ const nodemailer = require('nodemailer');
 
 const send_mail = (req,res) => {
 
-
     const token = req.cookies.authToken;
     
     if (!token) return res.status(401).json({ message: "No autorizado" });

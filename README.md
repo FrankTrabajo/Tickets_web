@@ -12,3 +12,5 @@ Proyecto TFG DAW
 - Multer
 - Uuid
 - Nodemailer
+- Pdfkit
+- Qrcode
