@@ -1,41 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const authButtons = document.getElementById('auth-buttons');
-  const usuarioLogueado = localStorage.getItem('usuarioLogueado') === 'true';
+import { hideItems, showItems } from "./utils.js";
 
-  if(usuarioLogueado) {
-    authButtons.innerHTML = `<button id="logoutBtn">Cerrar sesión</button>`;
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('usuarioLogueado');
-      location.reload();
+
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+function checkUser() {
+
+  fetch("/check-auth")
+    .then(response => response.json())
+    .then(data => {
+      if (!data.logueado) {
+        hideItems([logoutBtn]);
+        showItems([loginBtn, registerBtn]);
+
+      } else {
+        hideItems([loginBtn, registerBtn]);
+        showItems([logoutBtn]);
+      }
     });
-  }else{
-    authButtons.innerHTML = `
-      <button id="loginBtn">Iniciar sesión</button>
-      <button id="registerBtn">Registrarse</button>
-    `;
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      window.location.href = './login.html';
-    });
-    document.getElementById('registerBtn').addEventListener('click', () => {
-      window.location.href = './register.html';
-    });
-  }
-  
-  //Botones de compra
-  setTimeout(() => {
-    document.querySelectorAll('.comprar-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if(usuarioLogueado) {
-          window.location.href = './compra.html';
-        }else{
-          window.location.href = './login.html';
-        }
-      });
-    });
-  }, 500);
+}
+
+loginBtn.addEventListener('click', () => {
+  window.location.href = './login';
+});
+registerBtn.addEventListener('click', () => {
+  window.location.href = './register';
+});
+logoutBtn.addEventListener('click', async () => {
+  await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
+  window.location.href = '/';
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
+  checkUser();
   const toggleBtn = document.getElementById('filtroTicket');
   const cerrarBtn = document.getElementById('cerrarFiltro');
   const aside = document.getElementById('filtroAside');
@@ -48,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
   cerrarBtn.addEventListener('click', toggleAside);
 });
 
-function cargarEventos() {
-  fetch("http://localhost:3000/api/eventos")
-    .then(response => response.json())
-    .then(eventos => pintarEventos(eventos))
-    .catch(err => console.error("Error cargando eventos", err));
-}
+// function cargarEventos() {
+//   fetch("http://localhost:3000/api/eventos")
+//     .then(response => response.json())
+//     .then(eventos => pintarEventos(eventos))
+//     .catch(err => console.error("Error cargando eventos", err));
+// }
 
 function pintarEventos(eventos) {
   const contenedor = document.querySelector('.eventos');
@@ -72,6 +70,7 @@ function pintarEventos(eventos) {
           <p>${e.descripcion}</p>
           <p><strong>Lugar:</strong> ${e.lugar.nombre}</p>
           <p><strong>Fecha:</strong> ${fechaFormateada}</p>
+          <button id="detallesEvento" class="btn details" data-id="${e._id}">Detalles del evento</button>
           <button class="comprar-btn">Comprar</button>
         </div>
       </div>
@@ -79,4 +78,4 @@ function pintarEventos(eventos) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', cargarEventos);
+//document.addEventListener('DOMContentLoaded', cargarEventos);

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tickely</title>
   <link rel="stylesheet" href="css/style-index.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="icon" type="image/png" href="assets/favicon.png">
 </head >
 <body>
@@ -21,8 +22,9 @@
     <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
   
     <nav id="auth-buttons">
-      <button id="loginBtn">Iniciar sesión</button>
-      <button id="registerBtn">Registrarse</button>
+      <button class="d-none" id="loginBtn">Iniciar sesión</button>
+      <button class="d-none" id="registerBtn">Registrarse</button>
+      <button class="d-none" id="logoutBtn">Cerrar sesión</button>
     </nav>
   </header>
   
@@ -44,6 +46,6 @@
     </section>
   </main>
 
-  <script src="js/index.js"></script>
+  <script type="module" src="js/index.js"></script>
 </body>
 </html>

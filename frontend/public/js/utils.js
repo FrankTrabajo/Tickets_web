@@ -10,6 +10,3 @@ export function showItems(arr){
     });
 }
 
-export function modal_alert(header, body, action){
-
-}

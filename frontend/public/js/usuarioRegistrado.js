@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 btnVerMas.textContent = "Ver más";
                 btnVerMas.className = "btn btn-secondary btn-sm me-2";
                 btnVerMas.addEventListener("click", function () {
-                window.location.href = `/detallesEvento.html?id=${evento._id}`;
+                window.location.href = `/admin_dashboard/details/${evento._id}`;
                 });
 
                 const btnComprar = document.createElement("button");
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     .then(data => {
                         if (data && data.logueado) {
                         // ✅ Usuario autenticado, redirigir a la compra
-                        window.location.href = `/comprar.html?id=${evento._id}`;
+                        window.location.href = `/vistaEntradas/${evento._id}`;
                         } else {
                         // 🔒 No autenticado, redirigir a login
                         window.location.href = "/login.html";
