@@ -4,6 +4,7 @@ Proyecto TFG DAW
 ## Paquetes de instalacion ##
 
 - Nodemon 
+- Mongoose
 - Dotenv 
 - Express 
 - JsonWebToken
