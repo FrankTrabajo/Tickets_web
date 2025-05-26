@@ -50,7 +50,7 @@
                 <div id="mapContainer" class="d-none">
                     <div id="mapaEventoContainer" style="height: 400px;" class="rounded"></div>
                     <input type="text" id="buscadorLugar" placeholder="Buscar un lugar..." class="form-control my-2">
-                    <button id="buscarBtn" class="btn btn-primary">Buscar</button>
+                    <button id="buscarBtn" type="button" class="btn btn-primary">Buscar</button>
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
             <!-- Capacidad -->
             <div class="mb-3">
                 <label for="capacidadEvento" class="form-label">Capacidad del evento</label>
-                <input type="number" class="form-control" id="capacidadEvento" name="capacidadEvento" required>
+                <input type="number" min="1" class="form-control" id="capacidadEvento" name="capacidadEvento" required>
             </div>
 
             <!-- Imagen -->

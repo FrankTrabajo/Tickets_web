@@ -1,5 +1,13 @@
-import { centrarMapa, pintarSite } from "./map.js"; // Asegúrate de importar correctamente si usas módulos
 import { hideItems, showItems } from "./utils.js";
+
+let map;
+let marker;
+let nombre_lugar_evento = '';
+let lat, lon;
+let evento;
+
+const mapaBtn = document.getElementById('mapaEventoBtn');
+const mapaContainer = document.getElementById('mapContainer');
 
 document.addEventListener("DOMContentLoaded", () => {
     checkToken();
@@ -12,24 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         updateEvent(id);
     });
-});
 
-// Mostrar / Ocultar Mapa
-const mapaBtn = document.getElementById('mapaEventoBtn');
-const mapaContainer = document.getElementById('mapContainer');
-let map = document.getElementById("map"); // Variable para el mapa;
-
-mapaBtn.addEventListener('click', () => {
-    const isVisible = !mapaContainer.classList.contains('d-none'); // si NO tiene 'd-none', entonces está visible
-    if (isVisible) {
-        hideItems([mapaContainer]);
-        mapaBtn.textContent = 'Mostrar mapa';
-    } else {
-        showItems([mapaContainer]);
-        mapaBtn.textContent = 'Ocultar mapa';
-
-    }
-
+    mapaBtn.addEventListener('click', () => {
+        const isVisible = !mapaContainer.classList.contains('d-none');
+        if (isVisible) {
+            hideItems([mapaContainer]);
+            mapaBtn.textContent = 'Mostrar mapa';
+        } else {
+            showItems([mapaContainer]);
+            mapaBtn.textContent = 'Ocultar mapa';
+            if (!map) {
+                drawMap();
+            }
+        }
+    });
 });
 
 function checkToken() {
@@ -39,31 +43,60 @@ function checkToken() {
             if (!data.logueado) {
                 window.location.href = "/login";
             }
-        })
+        });
 }
 
-let lat;
-let lon;
-let evento;
+function drawMap() {
+    map = L.map('map').setView([lat || 40.4168, lon || -3.7038], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Si ya hay lat/lon, coloca el marcador
+    if (lat && lon) {
+        marker = L.marker([lat, lon]).addTo(map)
+            .bindPopup(nombre_lugar_evento || "Lugar actual")
+            .openPopup();
+    }
+
+    document.getElementById('buscarBtn').addEventListener('click', async () => {
+        const lugar = document.getElementById('buscadorLugar').value;
+        if (!lugar) return alert('Escribe un lugar para buscar');
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(lugar)}`);
+        const data = await res.json();
+        if (data.length > 0) {
+            const { lat: newLat, lon: newLon, display_name } = data[0];
+            nombre_lugar_evento = display_name;
+            lat = parseFloat(newLat);
+            lon = parseFloat(newLon);
+            if (marker) marker.remove();
+            marker = L.marker([lat, lon]).addTo(map)
+                .bindPopup(display_name)
+                .openPopup();
+            map.setView([lat, lon], 16);
+        } else {
+            alert('No encontrado');
+        }
+    });
+}
+
 function getEvent(id) {
     fetch(`/api/event/details/${id}`)
         .then(response => response.json())
         .then(data => {
             evento = data.evento;
-            console.log(evento);
             document.getElementById("nombreEvento").value = evento.nombre;
             document.getElementById("descripcionEvento").value = evento.descripcion;
             document.getElementById("fechaEvento").value = evento.fecha.split("T")[0];
             document.getElementById("capacidadEvento").value = evento.capacidad;
             document.getElementById("buscadorLugar").value = evento.lugar.nombre;
+            nombre_lugar_evento = evento.lugar.nombre;
             lat = evento.lugar.lat;
             lon = evento.lugar.lon;
-            if (evento.lugar && evento.lugar.lat && evento.lugar.lon) {
-                
-                centrarMapa(evento.lugar.lat, evento.lugar.lon);
-                pintarSite([evento.lugar.lat, evento.lugar.lon], evento.lugar.nombre);
+            // Si el mapa ya está visible, inicialízalo
+            if (!map && !mapaContainer.classList.contains('d-none')) {
+                drawMap();
             }
-
             if (evento.entradas && evento.entradas.length > 0) {
                 cargarGruposDeEntradas(evento.entradas);
             }
@@ -71,23 +104,23 @@ function getEvent(id) {
         .catch(error => console.error("ERROR al obtener evento:", error));
 }
 
-
-
-
 function updateEvent(id) {
-
     fetch('/check-auth')
         .then(response => response.json())
         .then(data => {
             if (data.logueado) {
                 const nombreEvento = document.getElementById('nombreEvento').value;
                 const descripcionEvento = document.getElementById('descripcionEvento').value;
-                const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
-                const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
-                const nombre_lugar_evento = document.getElementById("buscadorLugar").value;
-                // Obtener la ubicación del mapa
+                const fechaEvento = document.getElementById('fechaEvento').value;
+                const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);
+
+                // Si el usuario no ha buscado un nuevo lugar, usa el del input
+                if (!nombre_lugar_evento) {
+                    nombre_lugar_evento = document.getElementById("buscadorLugar").value;
+                }
+
                 const lugarEvento = {
-                    nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
+                    nombre: nombre_lugar_evento,
                     lat: lat,
                     lon: lon
                 };
@@ -97,11 +130,10 @@ function updateEvent(id) {
                 const entradasGrupos = document.querySelectorAll('#gruposContainer .row');
 
                 entradasGrupos.forEach(grupo => {
-                    const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;  // Seleccionar el input de tipo
-                    const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);  // Seleccionar el input de cantidad
-                    const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);  // Seleccionar el input de precio
+                    const tipo = grupo.querySelector('input[name="tipoEntrada[]"]').value;
+                    const cantidad = parseInt(grupo.querySelector('input[name="cantidadEntradas[]"]').value);
+                    const precio = parseInt(grupo.querySelector('input[name="precioEntradas[]"]').value);
 
-                    // Verificar que los campos no estén vacíos
                     if (tipo && cantidad && precio) {
                         entradas.push({ tipo, cantidad, precio });
                     } else {
@@ -110,14 +142,11 @@ function updateEvent(id) {
                     }
                 });
 
-
-                //* Esto lo que hace es validar la suma de las entradas y asegurarse que las entradas no superen la capacidad del evento 
                 let totalEntradas = entradas.reduce((total, grupo) => total + (grupo.cantidad || 0), 0);
                 if (totalEntradas > capacidadEvento) {
                     alert('La capacidad total de entradas no puede superar la capacidad del evento');
                     return;
                 }
-
 
                 const formData = new FormData();
                 formData.append('nombre', nombreEvento);
@@ -134,43 +163,84 @@ function updateEvent(id) {
 
                 fetch(`/api/event/update/${id}`, {
                     method: "PUT",
-                    body: formData // Asegúrate que tu backend acepta multipart/form-data
+                    body: formData
                 })
-                    .then(response => response.json()
-                    )
+                    .then(response => response.json())
                     .then(data => {
                         if (data.ok) {
                             alert("Evento actualizado correctamente");
-                            window.location.href = "/admin_dashboard"; // Redirige a donde quieras 
+                            window.location.href = "/admin_dashboard";
                         } else {
                             console.log("Ha habido un error", data);
                         }
-
                     })
                     .catch(error => console.error("ERROR al actualizar evento:", error));
             } else {
                 window.location.href = "/login";
             }
-        })
-
+        });
 }
 
+// Permitir agregar nuevo grupo de entradas
+const nuevoGrupoBtn = document.getElementById("nuevoGrupoEntradas");
+const gruposContainer = document.getElementById('gruposContainer');
+
+if (nuevoGrupoBtn && gruposContainer) {
+    nuevoGrupoBtn.addEventListener("click", () => {
+        const grupo = document.createElement("div");
+        grupo.className = 'row mb-3';
+        grupo.innerHTML = `
+            <div class="col-md-4">
+                <label>Tipo de entrada:</label>
+                <input type="text" class="form-control" name="tipoEntrada[]" placeholder="Tipo de entrada" required>
+            </div>
+            <div class="col-md-4">
+            <label>Cantidad de entradas:</label>
+                <input type="number" class="form-control" name="cantidadEntradas[]" placeholder="Cantidad" required>
+            </div>
+            <div class="col-md-4">
+            <label>Precio por entrada:</label>
+                <input type="number" class="form-control" name="precioEntradas[]" placeholder="Precio" required>
+            </div>
+            <div class="col-12 mt-2">
+                <button type="button" class="btn btn-danger btn-sm eliminarGrupo">Eliminar grupo</button>
+            </div>
+        `;
+        grupo.querySelector('.eliminarGrupo').addEventListener('click', () => {
+            grupo.remove();
+        });
+        gruposContainer.appendChild(grupo);
+    });
+}
+
+// Cargar grupo de entradas si ya existen
 function cargarGruposDeEntradas(entradas) {
     const container = document.getElementById("gruposContainer");
     container.innerHTML = "";
 
     entradas.forEach((entrada, index) => {
         const grupo = document.createElement("div");
-        grupo.className = "mb-3";
+        grupo.className = "row mb-3";
         grupo.innerHTML = `
-            <label class="form-label">Grupo ${index + 1}</label>
-            <label>Tipo de entrada</label>
-            <input type="text" class="form-control mb-1" name="grupos[${index}][nombre]" value="${entrada.tipo}" placeholder="Nombre del grupo" required>
-            <label>Precio de entrada</label>
-            <input type="number" class="form-control mb-1" name="grupos[${index}][precio]" value="${entrada.precio}" placeholder="Precio" required>
-            <label>Cantidad de entradas</label>
-            <input type="number" class="form-control mb-1" name="grupos[${index}][cantidad]" value="${entrada.cantidad}" placeholder="Cantidad" required>
+            <div class="col-md-4">
+                <label>Tipo de entrada:</label>
+                <input type="text" class="form-control" name="tipoEntrada[]" value="${entrada.tipo}" placeholder="Tipo de entrada" required>
+            </div>
+            <div class="col-md-4">
+                <label>Cantidad de entrada:</label>
+                <input type="number" class="form-control" name="cantidadEntradas[]" value="${entrada.cantidad}" placeholder="Cantidad" required>
+            </div>
+            <div class="col-md-4">
+                <label>Precio por entrada:</label>
+                <input type="number" class="form-control" name="precioEntradas[]" value="${entrada.precio}" placeholder="Precio" required>
+            </div>
+            <div class="col-12 mt-2">
+                <button type="button" class="btn btn-danger btn-sm eliminarGrupo">Eliminar grupo</button>
+            </div>
         `;
+        grupo.querySelector('.eliminarGrupo').addEventListener('click', () => {
+            grupo.remove();
+        });
         container.appendChild(grupo);
     });
 }

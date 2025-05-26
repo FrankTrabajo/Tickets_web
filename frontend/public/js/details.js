@@ -6,7 +6,7 @@ function getEvent(){
     fetch(`/api/event/details/${id}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById("imagenEvento").src = data.evento.imagen || "";
+            document.getElementById("imagenEvento").src = data.evento.imagen || "../img/eventos/banner-_no_img.png";
             document.getElementById("eventTitle").textContent = data.evento.nombre;
             document.getElementById("eventDescription").textContent = data.evento.descripcion;
             document.getElementById("eventDate").textContent = formatDate(data.evento.fecha);

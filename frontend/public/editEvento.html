@@ -50,7 +50,7 @@
                 <div id="mapContainer" class="d-none">
                     <div id="map" style="height: 400px;" class="rounded"></div>
                     <input type="text" id="buscadorLugar" placeholder="Buscar un lugar..." class="form-control my-2">
-                    <button id="buscarBtn" class="btn btn-primary">Buscar</button>
+                    <button id="buscarBtn" type="button" class="btn btn-primary">Buscar</button>
                 </div>
             </div>
 
@@ -70,12 +70,9 @@
             <hr>
 
             <!-- Entradas -->
-            <h4>Grupos de entradas</h4>
+            <button type="button" id="nuevoGrupoEntradas" class="btn btn-primary mb-3">Añadir grupo de entradas</button>
             <div id="gruposContainer" class="mb-3"></div>
 
-            <div class="mb-4">
-                <button type="button" class="btn btn-success" id="nuevoGrupoEntradas">+ Nuevo grupo</button>
-            </div>
 
             <button type="submit" class="btn btn-primary">Actualizar</button>
         </form>

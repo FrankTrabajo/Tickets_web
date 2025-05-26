@@ -1,4 +1,6 @@
 const new_event_btn = document.getElementById("new-event");
+let eventosAgrupados = [];
+const eventosPorId = {};
 
 new_event_btn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -12,6 +14,44 @@ function getEstadisticasUsuario() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        const tickets = data.ticketsVendidos;
+        // Agrupo por fechas
+        const agrupado = {};
+        tickets.forEach(ticket => {
+            if(!ticket.fecha_compra) return;
+            const fecha = ticket.fecha_compra.slice(0, 10); // YYYY-MM-DD
+            const nombreEvento = eventosPorId[ticket.id_evento];
+            if (!agrupado[fecha]) agrupado[fecha] = {};
+            agrupado[fecha][nombreEvento] = (agrupado[fecha][nombreEvento] || 0) + 1;
+        });
+
+        const labels = Object.keys(agrupado).sort();
+        const nombresEventos = Array.from(new Set(Object.values(eventosPorId)));
+
+        let datasets = nombresEventos.map((nombre, index) => ({
+            label: nombre,
+            data: labels.map(fecha => agrupado[fecha][nombre] || 0),
+        }));
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Fecha de compra' } },
+                    y: { title: { display: true, text: 'Cantidad' }, beginAtZero: true }
+                }
+            }
+        });
+
         if(data.message === "No autorizado"){
             window.location.href = "/login";
         } // Verifica la respuesta del servidor
@@ -26,6 +66,9 @@ function getEstadisticasUsuario() {
 
 
 
+eventosAgrupados.forEach(evento => {
+    eventosPorId[evento._id] = evento;
+});
 function getEventos() {
     fetch('/api/event/get_all_events_from_user', {
         credentials: 'include'
@@ -34,9 +77,13 @@ function getEventos() {
     .then(data => {
         console.log(data); // Verifica la respuesta del servidor
         const eventos = data.eventos || []; // Asegura que eventos sea un array
+        eventosAgrupados = eventos; // Actualiza el array global
+        Object.keys(eventosPorId).forEach(key => delete eventosPorId[key]); // Limpia el objeto antes de llenarlo de nuevo
+        eventos.forEach(evento => {
+            eventosPorId[evento._id] = evento.nombre; // Guarda el nombre del evento por su ID
+        });
         const tbody = document.querySelector('.event-table tbody');
         tbody.innerHTML = ''; // Limpiar contenido anterior
-
         eventos.forEach(evento => {
             if (eventos.length === 0) {
                 const row = document.createElement('tr');
@@ -103,9 +150,24 @@ document.querySelector('.event-table tbody').addEventListener('click', (e) => {
     
 });
   
-
+async function checkAuth() {
+    return fetch('/check-auth', {
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.logueado) {
+            window.location.href = '/login';
+        }
+    })
+    .catch(error => {
+        console.error("Error al verificar autenticación:", error);
+        window.location.href = '/login';
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     getEventos();
     getEstadisticasUsuario();
 });

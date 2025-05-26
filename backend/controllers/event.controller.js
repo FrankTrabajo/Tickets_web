@@ -26,9 +26,14 @@ const newEvent = async (req, res) => {
         if (totalEntradas > parseInt(capacidad)) {
             return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
         }
-
+        let img = ''
         // Ruta de la imagen
-        const imagenPath = req.file ? '/img/eventos/' + req.file.filename : null;
+        if(!req.file) {
+            img = '/img/eventos/banner_no_img.png';
+        }else{
+            img = req.file ? '/img/eventos/' + req.file.filename : null;
+        }
+        
 
         const nuevoEvento = new Evento({
             nombre,
@@ -36,16 +41,16 @@ const newEvent = async (req, res) => {
             fecha,
             lugar,
             capacidad: parseInt(capacidad),
-            imagen: imagenPath,
+            imagen: img,
             entradas,
             creador: userId
         });
 
         await nuevoEvento.save();
-        res.status(201).json({ mensaje: "Evento creado correctamente", evento: nuevoEvento });
+        res.status(201).json({ mensaje: "Evento creado correctamente", evento: nuevoEvento, ok: true });
     } catch (e) {
         console.error("Error al crear evento:", e);
-        res.status(500).json({ error: e.message || 'Error al guardar el evento' });
+        res.status(500).json({ error: e.message || 'Error al guardar el evento' , ok: false  });
     }
 };
 
@@ -81,7 +86,7 @@ const updateEvent = async (req, res) => {
         eventToUpdate.nombre = nombre;
         eventToUpdate.descripcion = descripcion;
         eventToUpdate.fecha = fecha;
-        eventToUpdate.capacidad = capacidad;
+        eventToUpdate.capacidad = parseInt(capacidad);
         eventToUpdate.imagen = imagenPath;
         eventToUpdate.entradas = entradas;
         eventToUpdate.lugar = lugar;
@@ -185,7 +190,7 @@ const getEstadisticasUsuario = async (req, res) => {
 
         const ingresos = ticketsVendidos.reduce((total, ticket) => total + parseFloat(ticket.precio), 0);
 
-        res.status(200).json({ totalEventos: eventoIds.length, totalEntradasVendidas: ticketsVendidos.length, totalIngresos: ingresos });
+        res.status(200).json({ totalEventos: eventoIds.length, totalEntradasVendidas: ticketsVendidos.length, totalIngresos: ingresos, ticketsVendidos });
     } catch (error) {
         console.error("ERROR: Error al obtener las estadísticas del usuario", error);
         res.status(500).json({ message: error.message });

@@ -88,11 +88,6 @@ nuevoGrupoBtn.addEventListener('click', () => {
     gruposContainer.appendChild(grupo);
 });
 
-// Simular envío de formulario
-document.getElementById('eventoForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    alert('Formulario enviado correctamente.');
-});
 
 
 // Creacion de eventos
@@ -112,8 +107,14 @@ export function createEvent() {
                 const descripcionEvento = document.getElementById('descripcionEvento').value;
                 const fechaEvento = document.getElementById('fechaEvento').value;  // Obtener el valor de la fecha
                 const capacidadEvento = parseInt(document.getElementById('capacidadEvento').value);  // Obtener el valor de la capacidad
-
+                
                 // Obtener la ubicación del mapa
+                if (!marker) {
+                    alert('Debes seleccionar un lugar en el mapa');
+                    return;
+                }
+
+                
                 const lugarEvento = {
                     nombre: nombre_lugar_evento, // Suponiendo que 'nombre_lugar_evento' es una variable global con el nombre del lugar
                     lat: marker.getLatLng().lat,
@@ -157,6 +158,8 @@ export function createEvent() {
                     return;
                 }
 
+                
+
 
                 const formData = new FormData();
                 formData.append('nombre', nombreEvento);
@@ -179,8 +182,13 @@ export function createEvent() {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.mensaje || "Evento creado correctamente");  // Mostrar mensaje de éxito
-                        window.location.href = "/admin_dashboard";  // Redirigir al dashboard del administrador
+                        if(data.ok){
+                            alert(data.mensaje || "Evento creado correctamente");  // Mostrar mensaje de éxito
+                            window.location.href = "/admin_dashboard";  // Redirigir al dashboard del administrador
+                        }else{
+                            throw new Error(data.error || "Error al crear el evento");
+                        }
+                        
                     })
                     .catch(error => {
                         console.error("ERROR:", error);  // Mostrar error en consola
@@ -191,5 +199,9 @@ export function createEvent() {
                 window.location.href = "/login";
             }
         })
-        .catch(error => console.error("ERROR:", error));
+        .catch(error => {
+            console.error("Error verificando autenticación:", error);
+            // alert("Hubo un problema al verificar tu autenticación, por favor, vuelve a loguearte");
+            // window.location.href = "/login";
+        });
 }
