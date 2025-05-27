@@ -152,7 +152,7 @@ const compra = async (req,res) => {
 
         
 
-        res.status(201).json({ mensaje: "Compra completada con éxito.", pedido, tickets });
+        res.status(201).json({ mensaje: "Compra completada con éxito.", pedido, tickets, ok: true });
 
     } catch (error) {
         console.error(error);

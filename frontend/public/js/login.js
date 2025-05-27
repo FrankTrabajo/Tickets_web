@@ -135,3 +135,24 @@ function mostrarError(mensaje){
     pError.textContent = mensaje;
     
 }
+
+async function checkAuth() {
+    return fetch('/check-auth', {
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.logueado) {
+            window.location.href = '/login';
+        }
+    })
+    .catch(error => {
+        console.error("Error al verificar autenticación:", error);
+        window.location.href = '/login';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuth();
+    // Aquí podrías cargar más datos si es necesario
+});

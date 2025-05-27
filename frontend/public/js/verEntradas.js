@@ -87,3 +87,24 @@ function getEvent(id) {
             });
         })
 }
+
+
+async function checkAuth() {
+    return fetch('/check-auth', {
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.logueado) {
+            window.location.href = '/login';
+        }
+    })
+    .catch(error => {
+        console.error("Error al verificar autenticación:", error);
+        window.location.href = '/login';
+    });
+}
+
+document.getElementById('DOMContentLoaded', async () => {
+    await checkAuth();
+});

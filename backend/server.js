@@ -74,6 +74,10 @@ app.get("/comprar", (req,res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'comprarEntrada.html'));
 });
 
+app.get("/compra_exito", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'compraExito.html'));
+});
+
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
     const token = req.cookies.authToken;
