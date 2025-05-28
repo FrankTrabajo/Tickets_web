@@ -75,7 +75,7 @@ app.get("/comprar", (req,res) => {
 });
 
 app.get("/compra_exito", (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/public', 'compraExito.html'));
+    res.sendFile(path.join(__dirname, '../frontend/public', 'compraExitosa.html'));
 });
 
 // Rutas de autenticación

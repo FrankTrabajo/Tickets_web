@@ -1,10 +1,21 @@
 // Simular datos que vienen al hacer clic en una zona
 const zonaSeleccionada = {
-  tipo: localStorage.getItem('tipoEntrada') || 'Pista',
-  precio: parseFloat(localStorage.getItem('precioEntrada')) || 30,
-  cantidad: parseInt(localStorage.getItem('cantidadEntrada')) || 100,
+  tipo: localStorage.getItem('tipoEntrada'),
+  precio: parseFloat(localStorage.getItem('precioEntrada')),
+  cantidad: parseInt(localStorage.getItem('cantidadEntrada')),
   idEvento: localStorage.getItem('idEvento')
 };
+
+//Redirige a la pagina principal si los datos de la entrada a comprar están vacíos
+// Redirigir si no hay datos de compra en localStorage
+if (
+    !localStorage.getItem('tipoEntrada') ||
+    !localStorage.getItem('precioEntrada') ||
+    !localStorage.getItem('cantidadEntrada') ||
+    !localStorage.getItem('idEvento')
+) {
+    window.location.href = '/';
+}
 const idEvento = localStorage.getItem('idEvento');
 
 // Mostrar datos
@@ -48,7 +59,13 @@ document.getElementById('formCompra').addEventListener('submit', function (e) {
     .then(data => {
       console.log("Compra confirmada", data);
       if (data.ok) {
-        window.location.href = "/compra_exito"; // Redirigir a una página de éxito
+        if (data.ok) {
+            localStorage.removeItem('tipoEntrada');
+            localStorage.removeItem('precioEntrada');
+            localStorage.removeItem('cantidadEntrada');
+            localStorage.removeItem('idEvento');
+            window.location.href = "/compra_exito";
+        }
       } else {
         alert("Ha habido un error al procesar la compra.");
       }

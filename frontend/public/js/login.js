@@ -23,18 +23,49 @@ function loginForm(){
     inputPassword.id = 'password';
     inputPassword.placeholder = "Contraseña";
 
+    // Botón para mostrar/ocultar contraseña usando Bootstrap Icons
+    let togglePassword = document.createElement('button');
+    togglePassword.type = 'button';
+    togglePassword.style.marginLeft = '8px';
+    togglePassword.style.background = 'none';
+    togglePassword.style.border = 'none';
+    togglePassword.style.cursor = 'pointer';
+
+    let iconEye = document.createElement('i');
+    iconEye.className = 'bi bi-eye';
+    togglePassword.appendChild(iconEye);
+
+    togglePassword.addEventListener('click', function() {
+        if (inputPassword.type === 'password') {
+            inputPassword.type = 'text';
+            iconEye.className = 'bi bi-eye-slash';
+        } else {
+            inputPassword.type = 'password';
+            iconEye.className = 'bi bi-eye';
+        }
+    });
+
     let inputSubmit = document.createElement('input');
     inputSubmit.type = "submit";
     inputSubmit.id = 'submit';
+    inputSubmit.value = "Iniciar sesión";
     inputSubmit.addEventListener('click', function(e){
         e.preventDefault();
         loginUser();
-    })
+    });
 
     form.appendChild(labelEmail);
     form.appendChild(inputEmail);
     form.appendChild(labelPassword);
-    form.appendChild(inputPassword);
+
+    // Contenedor para input y botón juntos
+    let passwordContainer = document.createElement('div');
+    passwordContainer.style.display = 'flex';
+    passwordContainer.style.alignItems = 'center';
+    passwordContainer.appendChild(inputPassword);
+    passwordContainer.appendChild(togglePassword);
+
+    form.appendChild(passwordContainer);
     form.appendChild(inputSubmit);
 
     formContainer.appendChild(form);
@@ -48,9 +79,7 @@ function loginForm(){
     a.classList.add('link-login');
     p.appendChild(a);
     formContainer.appendChild(p);
-
 }
-
 
 loginForm();
 
@@ -65,6 +94,7 @@ function loginUser(){
     const pError = document.getElementById('pError');
     if(!email || !password){
         mostrarError("Todos los campos son obligatorios");
+        return;
     }
 
     fetch("api/user/login", {
@@ -91,27 +121,6 @@ function loginUser(){
                 }else{
                     window.location.href = "/";
                 }
-                // else{
-                //     fetch('/check-active')
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         if(data.active){
-                //             window.location.href = "/";
-                //         }else{
-                //             //No se loguea y aparece un mensaje de error de usuario inactivo 
-                //             mostrarError("Tu cuenta esta inactiva. Contacta con el aministrador. (admin@correo.com)");
-                //             return fetch('api/user/logout', { 
-                //                     method: "POST",
-                //                     credentials: 'include'
-                                
-                //             }).then(response => response.json())
-                //             .then(data => {
-                //                 console.log("Sesion cerrada automaticamente");
-                //             });
-                //         }
-                //     })
-                    
-                // }
             })
             .catch(error => console.error("ERROR: " + error));
         }else{
@@ -120,7 +129,6 @@ function loginUser(){
         }
     })
     .catch(err => console.error(err));
-
 }
 
 /**
@@ -128,12 +136,10 @@ function loginUser(){
  * @param {string} mensaje 
  */
 function mostrarError(mensaje){
-
     let pError = document.getElementById('pError');
     pError.classList.remove('hide');
     pError.classList.add('error');
     pError.textContent = mensaje;
-    
 }
 
 async function checkAuth() {
