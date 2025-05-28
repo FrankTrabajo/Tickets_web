@@ -20,6 +20,11 @@ header {
   z-index: 1000;
 }
 
+h3{
+  color: #ff5f6d;
+  margin-top: 10px;
+}
+
 .logo {
   height: 50px;
 }
@@ -49,29 +54,59 @@ nav button {
 }
 
 .eventos {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2em;
+  padding: 2em;
 }
 
 .evento {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
   display: flex;
-  gap: 1em;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1em;
-  background-color: #fff5f5;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
 }
 
 .evento img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 130px;
   object-fit: cover;
-  border-radius: 8px;
+  border-bottom: 2px solid #eee;
+}
+
+.evento:hover {
+  transform: scale(1.02);
+}
+
+.info {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
 }
 
 .comprar-btn {
+  margin-top: 10px;
+  margin:10px;
+  padding: 0.5em 1em;
+  background-color: #ff5f6d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.comprar-btn button {
+  width: 100%;
+}
+
+.verMas-btn{
   margin-top: 0.5em;
   padding: 0.5em 1em;
   background-color: #ff5f6d;
@@ -79,6 +114,11 @@ nav button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  gap: 8px;
+}
+
+.verMas-btn button {
+  width: 100%;
 }
 
 .header-left {
@@ -107,10 +147,11 @@ nav button {
   height: 100vh;
   background-color: #1c1c50;
   box-shadow: 3px 0 10px rgba(0,0,0,0.1);
-  padding: 1em;
+  padding: 5em 1em 1em;
   z-index: 999;
   transition: transform 0.3s ease-in-out;
   transform: translateX(-100%);
+  overflow-y: auto;
 }
 
 .filtro-aside:not(.hidden) {
@@ -128,6 +169,55 @@ nav button {
   margin-bottom: 1em;
 }
 
+.buscador-container {
+  display: flex;
+  justify-content: center;
+  margin: 2em 0;
+}
+
+#buscarEvento {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8em 1.2em;
+  border: 2px solid #ff5f6d;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+#buscarEvento::placeholder {
+  color: #999;
+}
+
+#buscarEvento:focus {
+  border-color: #e04a59;
+  box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
+}
+
 .hidden {
   display: none;
+}
+
+#lista-lugares {
+  list-style: none;
+  margin-top: 10px;
+}
+
+#lista-lugares li {
+  margin-bottom: 0.5em;
+}
+
+.filtro-link {
+  color: white;
+  text-decoration: none;
+  font-weight:normal;
+  font-size: 0.95em;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.filtro-link:hover {
+  color: #ffa5ac;
 }

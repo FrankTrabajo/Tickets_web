@@ -12,11 +12,12 @@
   <header>
     <div class="header-left">
       <a href="usuarioRegistrado.html">
-        <img src="assets/perfil.png" alt="Mapa" class="icon" />
+        <img src="assets/perfil.png" alt="Perfil" class="icon" id="perfilImg"/>
       </a>
       <button id="filtroTicket">
         <img src="assets/filtro.png" alt="Filtro" class="icon" />
       </button>
+      <input type="text" id="buscarEvento" placeholder="Buscar eventos" >
     </div>
   
     <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
@@ -29,7 +30,8 @@
   </header>
   
   <aside id="filtroAside" class="filtro-aside hidden">
-    <!-- Aqui dentro iran los filtros -->
+    <h3>Lugares de eventos</h3>
+    <ul id="lista-lugares"></ul>
   </aside>
   
   <main class="container">
