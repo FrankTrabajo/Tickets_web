@@ -21,7 +21,6 @@ app.use(cors({
     origin: 'https://www.ticketsweb.es',
     credentials: true,
 }));
-app.use(favicon(path.join(__dirname, '../frontend/public/assets', 'favicon.ico')));
 
 // Conexión a MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@prueba1.8u19y.mongodb.net/Tickets_Web?retryWrites=true&w=majority&appName=Prueba1`)
