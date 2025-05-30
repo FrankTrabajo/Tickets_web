@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const upload = require("../middlewares/uploads.js");
+const { storage } = require("../middlewares/cloudinary.js");
+const multer = require('multer');
 const { newEvent, get_all_events_from_user, getEstadisticasUsuario, removeEvent, getEvento, updateEvent , getAllEvents, getEventByIdPublic} = require('../controllers/event.controller.js');
 
 router.post("/new_event", upload.single('imagen'), newEvent);

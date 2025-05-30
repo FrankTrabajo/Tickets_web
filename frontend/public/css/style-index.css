@@ -55,7 +55,7 @@ nav button {
 
 .eventos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
   gap: 2em;
   padding: 2em;
 }
@@ -220,4 +220,92 @@ nav button {
 
 .filtro-link:hover {
   color: #ffa5ac;
+}
+
+
+/* ...existing code... */
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    padding: 1em;
+    gap: 1em;
+  }
+  .mapa img {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+  }
+  .eventos {
+    grid-template-columns: 1fr;
+    gap: 1em;
+    padding: 1em;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.7em;
+    gap: 0.5em;
+  }
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+  }
+  .logo {
+    height: 38px;
+  }
+  .container {
+    padding: 0.5em;
+    gap: 0.5em;
+  }
+  .mapa img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  .eventos {
+    padding: 0.5em;
+    gap: 0.7em;
+  }
+  .evento img {
+    height: 90px;
+  }
+  .evento {
+    font-size: 0.97em;
+  }
+  .comprar-btn,
+  .verMas-btn {
+    padding: 0.4em 0.7em;
+    font-size: 0.97em;
+  }
+  .filtro-aside {
+    width: 80vw;
+    min-width: 180px;
+    padding: 4em 0.7em 1em;
+  }
+  .buscador-container {
+    margin: 1em 0;
+  }
+  #buscarEvento {
+    padding: 0.6em 1em;
+    font-size: 0.97em;
+    max-width: 98vw;
+  }
+}
+
+/* Mejoras para pantallas muy pequeñas */
+@media (max-width: 400px) {
+  .filtro-aside {
+    width: 98vw;
+    padding: 3em 0.3em 1em;
+  }
+  .evento img {
+    height: 60px;
+  }
 }

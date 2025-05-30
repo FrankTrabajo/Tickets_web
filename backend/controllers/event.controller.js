@@ -26,13 +26,13 @@ const newEvent = async (req, res) => {
         if (totalEntradas > parseInt(capacidad)) {
             return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
         }
-        let img = ''
-        // Ruta de la imagen
+        let img = '';
         if(!req.file) {
-            img = '/img/eventos/banner_no_img.png';
-        }else{
-            img = req.file ? '/img/eventos/' + req.file.filename : null;
+            img = `https://res.cloudinary.com/djw6bi2vz/image/upload/v1234567890/eventos/banner_no_img.png`;
+        } else {
+            img = req.file.path; // esta es la URL pública de Cloudinary
         }
+
         
 
         const nuevoEvento = new Evento({

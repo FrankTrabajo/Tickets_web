@@ -7,8 +7,6 @@ const jwt = require("jsonwebtoken");
 dotenv.config();
 const cors = require('cors');
 
-// Importar middleware de upload configurado
-const upload = require('./middlewares/uploads.js');
 
 // Configuración de Express
 const app = express();
@@ -23,6 +21,7 @@ app.use(cors({
     origin: 'https://www.ticketsweb.es',
     credentials: true,
 }));
+app.use(favicon(path.join(__dirname, '../frontend/public/assets', 'favicon.ico')));
 
 // Conexión a MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@prueba1.8u19y.mongodb.net/Tickets_Web?retryWrites=true&w=majority&appName=Prueba1`)

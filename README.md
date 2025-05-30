@@ -15,3 +15,6 @@ Proyecto TFG DAW
 - Nodemailer
 - Pdfkit
 - Qrcode
+- Serve Favicon
+- Cloudinary
+- Multer Storage Cloudinary
