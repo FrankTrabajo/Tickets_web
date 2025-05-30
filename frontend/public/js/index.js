@@ -47,10 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cargarEventos();
 
-  if (toggleBtn && cerrarBtn && aside) {
-    toggleBtn.addEventListener('click', toggleAside);
-    cerrarBtn.addEventListener('click', toggleAside);
-  }
+  toggleBtn.addEventListener('click', toggleAside);
+  cerrarBtn.addEventListener('click', toggleAside);
 });
 
 buscarEvento.addEventListener('keyup', () => {
