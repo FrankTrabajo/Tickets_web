@@ -3,6 +3,7 @@ const path = require('path');
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const Ticket = require("../models/Ticket");
+const { cloudinary } = require("../middlewares/cloudinary");
 
 
 dotenv.config();
@@ -12,7 +13,6 @@ const newEvent = async (req, res) => {
         // Parsear los campos que vienen como strings JSON
         const lugar = JSON.parse(req.body.lugar);
         const entradas = JSON.parse(req.body.entradas);
-
         const { nombre, descripcion, fecha, capacidad } = req.body;
         const token = req.cookies.authToken;
 
@@ -26,11 +26,15 @@ const newEvent = async (req, res) => {
         if (totalEntradas > parseInt(capacidad)) {
             return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
         }
+
+        
         let img = '';
+        let img_public_id = '';
         if(!req.file) {
             img = `https://res.cloudinary.com/djw6bi2vz/image/upload/v1234567890/eventos/banner_no_img.png`;
         } else {
             img = req.file.path; // esta es la URL pública de Cloudinary
+            img_public_id = req.file.filename;
         }
 
         
@@ -42,6 +46,7 @@ const newEvent = async (req, res) => {
             lugar,
             capacidad: parseInt(capacidad),
             imagen: img,
+            imagen_id: img_public_id,
             entradas,
             creador: userId
         });
@@ -79,17 +84,31 @@ const updateEvent = async (req, res) => {
             });
         }
 
-        // Ruta de la imagen si se subió una nueva
-        const imagenPath = req.file ? '/img/eventos/' + req.file.filename : eventToUpdate.imagen;
+        let imagenUrl = eventToUpdate.imagen;
+        let imagenId = eventToUpdate.imagen_id;
+
+        if (req.file) {
+            if (imagenId) {
+                await cloudinary.uploader.destroy(imagenId);
+            }
+
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: "eventos"
+            });
+
+            imagenUrl = result.secure_url;
+            imagenId = result.public_id;
+        }
 
         // Actualizar campos
         eventToUpdate.nombre = nombre;
         eventToUpdate.descripcion = descripcion;
         eventToUpdate.fecha = fecha;
         eventToUpdate.capacidad = parseInt(capacidad);
-        eventToUpdate.imagen = imagenPath;
-        eventToUpdate.entradas = entradas;
         eventToUpdate.lugar = lugar;
+        eventToUpdate.entradas = entradas;
+        eventToUpdate.imagen = imagenUrl;
+        eventToUpdate.imagen_id = imagenId;
 
         await eventToUpdate.save();
 
@@ -135,6 +154,11 @@ const removeEvent = async (req, res) => {
         if (!evento) {
             return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
         }
+
+        if(evento.imagen_id && !evento.imagen.includes("banner_no_img")){
+            await cloudinary.uploader.destroy(evento.imagen_id);
+        }
+
         // Eliminar el evento
         await Evento.deleteOne({ _id: eventoId });
         res.status(200).json({ message: "Evento eliminado correctamente" });

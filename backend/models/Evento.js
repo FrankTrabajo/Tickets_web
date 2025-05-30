@@ -11,6 +11,7 @@ const eventoSchema = new mongoose.Schema({
   },
   capacidad: { type: Number, required: true },
   imagen: { type: String },
+  imagen_id: { type: String },
   entradas: [{ 
     tipo: { type: String, required: true},
     cantidad: { type: Number, required: true},
