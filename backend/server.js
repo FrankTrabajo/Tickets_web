@@ -60,6 +60,10 @@ app.get("/admin_dashboard/details/:id", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'detallesEvento.html'));
 });
 
+app.get("/details/:id", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'detallesEvento.html'));
+})
+
 app.get("/admin_dashboard/update/:id", (req,res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'editEvento.html'));
 });

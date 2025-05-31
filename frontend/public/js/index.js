@@ -33,14 +33,14 @@ logoutBtn.addEventListener('click', async () => {
   await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
   window.location.href = '/';
 });
+const toggleBtn = document.getElementById('filtroTicket');
+const cerrarBtn = document.getElementById('cerrarFiltro');
+const aside = document.getElementById('filtroAside');
 
 document.addEventListener('DOMContentLoaded', () => {
   checkUser();
 
-  const toggleBtn = document.getElementById('filtroTicket');
-  const cerrarBtn = document.getElementById('cerrarFiltro');
-  const aside = document.getElementById('filtroAside');
-
+  
   const toggleAside = () => {
     aside.classList.toggle('hidden');
   };
@@ -122,7 +122,7 @@ function mostrarEventos(lista) {
     btnVerMas.textContent = "Ver más";
     btnVerMas.className = "verMas-btn";
     btnVerMas.addEventListener("click", () => {
-      window.location.href = `/detallesEvento.html?id=${evento._id}`;
+      window.location.href = `/details/${evento._id}`;
     });
 
     const btnComprar = document.createElement("button");
@@ -135,9 +135,9 @@ function mostrarEventos(lista) {
       .then(data => {
         btnComprar.addEventListener("click", () => {
           if (!data.logueado) {
-            window.location.href = "/login.html";
+            window.location.href = "/login";
           } else {
-            window.location.href = `./vistaEntradas.html?id=${evento._id}`;
+            window.location.href = `./vistaEntradas/${evento._id}`;
           }
         });
       });
@@ -166,6 +166,7 @@ function filtrado(eventos) {
   liTodos.addEventListener('click', e => {
     e.preventDefault();
     mostrarEventos(eventosCargados);
+    aside.classList.add('hidden');
   });
   lista.appendChild(liTodos);
 
@@ -177,6 +178,7 @@ function filtrado(eventos) {
       const lugarCompleto = e.target.dataset.lugar;
       const filtrados = eventosCargados.filter(ev => ev.lugar?.nombre === lugarCompleto);
       mostrarEventos(filtrados);
+      aside.classList.add('hidden');
     });
     lista.appendChild(li);
   });
