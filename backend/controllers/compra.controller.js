@@ -141,7 +141,8 @@ const compra = async (req,res) => {
             documento.fontSize(12).text(`Evento: ${evento.nombre}`);
             documento.text(`Zona: ${zona.tipo}`);
             documento.text(`Precio: ${ticket.precio} €`);
-            documento.text(`Código: ${ticket.codigo}`);
+            documento.text(`Fecha: ${evento.fecha}`);
+            documento.text(`Lugar: ${evento.lugar.nombre}`);
             // Generar QR y añadirlo al PDF
             const qrDataUrl = await QRCode.toDataURL(ticket.codigo);
             const qrImage = qrDataUrl.replace(/^data:image\/png;base64,/, "");
