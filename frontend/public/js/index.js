@@ -56,8 +56,9 @@ buscarEvento.addEventListener('keyup', () => {
   const filtrados = eventosCargados.filter(e =>
     e.nombre.toLowerCase().includes(texto)
   );
-  mostrarFiltrados(filtrados);
+  mostrarEventos(filtrados);
 });
+
 
 function cargarEventos() {
   fetch("/api/event/get_all_events")
