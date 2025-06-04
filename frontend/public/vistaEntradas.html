@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Entradas por Zona</title>
   <link rel="icon" type="image/png" href="../assets/favicon.ico">
   <style>
@@ -18,6 +19,34 @@
       padding: 2rem;
     }
 
+    .header-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .evento-info {
+      flex: 1;
+      margin-left: 3rem;
+    }
+
+    .btn.btn-secondary {
+      font-size: 1.1rem;
+      padding: 12px 24px;
+      background-color: white;
+      color: #ff5f6d;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn.btn-secondary:hover {
+      background-color: #f1eaea;
+    }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
@@ -28,6 +57,7 @@
       margin-bottom: 0.5rem;
       font-size: 1rem;
     }
+
     #mapaZonas {
       width: 100%;
       max-width: 800px;
@@ -62,26 +92,62 @@
       display: none;
       z-index: 999;
     }
+
+    .zona-container {
+      position: relative;
+      padding: 1rem;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
     @media (max-width: 768px) {
       body {
-        padding: 1rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .header-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .evento-info {
+        margin-left: 0;
       }
 
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.3rem;
       }
 
       p {
         font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .btn.btn-secondary {
+        font-size: 1rem;
+        padding: 10px 16px;
       }
 
       #mapaZonas {
-        height: 300px;
+        width: 100%;
+        height: auto;
+        max-width: 800px;
+        aspect-ratio: 16 / 10;
+        scale: 0.8;
       }
-
       .tooltip, #tooltip {
         font-size: 12px;
-        padding: 4px 8px;
+        padding: 4px 6px;
+      }
+
+      .zona-container {
+        padding: 1.5rem 0.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
       }
     }
 
@@ -97,13 +163,17 @@
   </style>
 </head>
 <body>
+  <div class="header-info">
+    <button class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
+    <div class="evento-info">
+      <h1 id="nombreEvento">Cargando evento...</h1>
+      <p id="descripcionEvento"></p>
+      <p><strong>Fecha:</strong> <span id="fechaEvento"></span></p>
+    </div>
+  </div>
 
-  <h1 id="nombreEvento">Cargando evento...</h1>
-  <p id="descripcionEvento"></p>
-  <p><strong>Fecha:</strong> <span id="fechaEvento"></span></p>
-
-  <div style="position: relative;">
-    <svg id="mapaZonas" width="800" height="500" style="border: 1px solid #ccc;"></svg>
+  <div class="zona-container">
+    <svg id="mapaZonas" width="100%" height="auto" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet" style="border: 1px solid #ccc;"></svg>
     <div id="tooltip" style="position: absolute; background: #fff; border: 1px solid #333; padding: 8px; display: none; pointer-events: none; z-index: 10;"></div>
   </div>
 

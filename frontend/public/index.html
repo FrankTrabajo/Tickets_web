@@ -9,6 +9,10 @@
   <link rel="icon" type="image/png" href="../assets/favicon.ico">
 </head >
 <body>
+  <div class="topbar">
+    <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
+  </div>
+  
   <header>
     <div class="header-left">
       <a href="usuarioRegistrado.html">
@@ -19,9 +23,9 @@
       </button>
       <input type="text" id="buscarEvento" placeholder="Buscar eventos" >
     </div>
-  
-    <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
-  
+    
+    <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo logo-header" />
+
     <nav id="auth-buttons">
       <button class="d-none" id="loginBtn">Iniciar sesión</button>
       <button class="d-none" id="registerBtn">Registrarse</button>
@@ -34,6 +38,8 @@
     <ul id="lista-lugares"></ul>
   </aside>
   
+  <div id="filtroOverlay" class="filtro-overlay hidden"></div>
+
   <main class="container">
     <section class="eventos">
       <!-- evento div prueba de q funciona -->

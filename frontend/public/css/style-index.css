@@ -10,6 +10,14 @@ body {
   color: #333;
 }
 
+.topbar {
+  display: none;
+}
+
+.logo-header {
+  display: block;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -38,6 +46,10 @@ nav button {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+}
+
+nav button:hover {
+  background-color: #f1eaea;
 }
 
 .container {
@@ -106,6 +118,10 @@ nav button {
   width: 100%;
 }
 
+.comprar-btn:hover {
+  background-color: #e1414e;
+}
+
 .verMas-btn{
   margin-top: 0.5em;
   padding: 0.5em 1em;
@@ -119,6 +135,10 @@ nav button {
 
 .verMas-btn button {
   width: 100%;
+}
+
+.verMas-btn:hover {
+  background-color: #e1414e;
 }
 
 .header-left {
@@ -167,6 +187,10 @@ nav button {
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 1em;
+}
+
+.cerrar-btn:hover{
+  background-color: #d73442;
 }
 
 .buscador-container {
@@ -245,59 +269,91 @@ nav button {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0.7em;
-    gap: 0.5em;
+    position: relative;
+    z-index: 1000;
   }
-  .header-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5em;
+
+  .topbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #28285e;
+    padding: 1em;
   }
-  .logo {
-    height: 38px;
+
+  .logo-header {
+    display: none;
   }
-  .container {
-    padding: 0.5em;
-    gap: 0.5em;
-  }
-  .mapa img {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 8px;
-  }
-  .eventos {
-    padding: 0.5em;
-    gap: 0.7em;
-  }
-  .evento img {
-    height: 90px;
-  }
-  .evento {
-    font-size: 0.97em;
-  }
-  .comprar-btn,
-  .verMas-btn {
-    padding: 0.4em 0.7em;
-    font-size: 0.97em;
-  }
+
   .filtro-aside {
-    width: 80vw;
-    min-width: 180px;
-    padding: 4em 0.7em 1em;
+    position: static; /* ya no es fixed ni absolute */
+    width: 100%;
+    background-color: #1c1c50;
+    padding: 1.5em 1em;
+    margin-top: 0;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    overflow-y: auto;
+    max-height: 70vh;
+    display: none; /* oculto por defecto */
   }
-  .buscador-container {
-    margin: 1em 0;
-  }
-  #buscarEvento {
-    padding: 0.6em 1em;
-    font-size: 0.97em;
-    max-width: 98vw;
+
+  .filtro-aside:not(.hidden) {
+    display: block;
   }
 }
+
+@media (max-width: 600px) {
+  header {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    padding: 0.8em 1em;
+  }
+
+  .header-left {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .header-left img.icon,
+  .logo {
+    flex-shrink: 0;
+    height: 32px;
+  }
+
+  #buscarEvento {
+    flex: 1;
+    padding: 0.5em 1em;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    max-width: none;
+    min-width: 0;
+  }
+
+  nav {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  nav button {
+    flex: 1 1 auto;
+    padding: 0.5em;
+    font-size: 0.9rem;
+  }
+}
+
+
 
 /* Mejoras para pantallas muy pequeñas */
 @media (max-width: 400px) {
