@@ -2,7 +2,7 @@
 /**
  * Funcion crear el formulario del registro
  */
-function registerForm(){
+function registerForm() {
     //nombre, email y password
 
     let formContainer = document.getElementById('form-container');
@@ -29,7 +29,7 @@ function registerForm(){
     errorName.style.display = 'none';
 
     //Correo eletrónico
-    let labelEmail = document.createElement('label'); 
+    let labelEmail = document.createElement('label');
     labelEmail.textContent = "Correo electrónico";
     let inputEmail = document.createElement('input');
     inputEmail.type = 'email';
@@ -45,7 +45,7 @@ function registerForm(){
     errorEmail.style.display = 'none';
 
     //Contraseña
-    let labelPassword = document.createElement('label'); 
+    let labelPassword = document.createElement('label');
     labelPassword.textContent = "Contraseña";
     let inputPassword = document.createElement('input');
     inputPassword.type = 'password';
@@ -54,7 +54,7 @@ function registerForm(){
     inputPassword.placeholder = "Contraseña";
     inputPassword.required = true;
 
-    let labelPassword2 = document.createElement('label'); 
+    let labelPassword2 = document.createElement('label');
     labelPassword2.textContent = "Contraseña";
     let inputPassword2 = document.createElement('input');
     inputPassword2.type = 'password';
@@ -73,9 +73,9 @@ function registerForm(){
     inputSubmit.type = "submit";
     inputSubmit.id = 'submit';
     inputSubmit.value = "Crear usuario";
-    inputSubmit.addEventListener('click', function(e){
+    inputSubmit.addEventListener('click', function (e) {
         e.preventDefault();
-        if(validarFormulario()){
+        if (validarFormulario()) {
             registrar();
         }
     })
@@ -106,7 +106,7 @@ function registerForm(){
     formContainer.appendChild(p);
 }
 
-function validarFormulario(){
+function validarFormulario() {
     let name = document.getElementById('nombre').value.trim();
     let email = document.getElementById('email').value.trim();
     let password = document.getElementById('password1').value.trim();
@@ -114,40 +114,39 @@ function validarFormulario(){
     let valido = true;
 
     let errorName = document.getElementById('errorName');
-    if(name.length < 3 || name.length > 20){
-        errorName.textContent= 'El nombre tiene q tener entre 3 y 20 caracteres'
+    if (name.length < 3 || name.length > 20) {
+        errorName.textContent = 'El nombre tiene q tener entre 3 y 20 caracteres'
         errorName.style.display = 'block';
         valido = false;
-    }else{
+    } else {
         errorName.style.display = 'none';
     }
 
     let errorEmail = document.getElementById('errorEmail');
     let contenidoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!contenidoEmail.test(email)){
+    if (!contenidoEmail.test(email)) {
         errorEmail.textContent = 'El email es incorrecto';
         errorEmail.style.display = 'block';
         valido = false;
-    }else{
+    } else {
         errorEmail.style.display = 'none';
     }
 
     let errorPwd = document.getElementById('errorPwd');
-    if(password.length < 6 && password2.length < 6){
-        errorPwd.textContent = 'La contreña debe tener al menos 6 caracteres';
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    if (!regexPassword.test(password)) {
+        errorPwd.textContent = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.';
         errorPwd.style.display = 'block';
         valido = false;
-    }else{
+    } else if (password !== password2) {
+        errorPwd.textContent = 'Las contraseñas no coinciden.';
+        errorPwd.style.display = 'block';
+        valido = false;
+    } else {
         errorPwd.style.display = 'none';
     }
 
-    if(password !== password2){
-        errorPwd.textContent = 'Las contraseñas no coinciden';
-        errorPwd.style.display = 'block';
-        valido = false;
-    }else{
-        errorPwd.style.display = 'none';
-    }
 
     return valido;
 }
@@ -169,10 +168,10 @@ function registrar() {
             password2: document.getElementById('password2').value
         })
     })
-    .then(message => message.json())
-    .then(data => {
-        console.log(data);
-        window.location.href = '/login';
-    })
-    .catch(err => console.error("Ha habido un error",err));
+        .then(message => message.json())
+        .then(data => {
+            console.log(data);
+            window.location.href = '/login';
+        })
+        .catch(err => console.error("Ha habido un error", err));
 }

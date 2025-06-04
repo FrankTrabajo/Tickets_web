@@ -71,9 +71,79 @@ document.getElementById('formCompra').addEventListener('submit', function (e) {
       }
     })
     .catch(error => console.error("ERROR:", error));
-  // Aquí podrías hacer un fetch POST a tu backend para guardar la compra
 
 });
+
+const metodoPago = document.getElementById('metodoPago');
+const datosTarjeta = document.getElementById('datosTarjeta');
+const numeroTarjeta = document.getElementById('numeroTarjeta');
+const fechaExpiracion = document.getElementById('fechaExpiracion');
+const cvv = document.getElementById('cvv');
+const bntComprar = document.querySelector('button[type="submit"]');
+
+metodoPago.addEventListener('change', () => {
+  datosTarjeta.style.display = metodoPago.value === 'tarjeta' ? 'block' : 'none';
+  validarFormulario();
+});
+
+// Formateo de tarjeta
+numeroTarjeta.addEventListener('input', (e) => {
+  let valor = e.target.value.replace(/\D/g, '').substring(0,16);
+  e.target.value = valor.replace(/(.{4})/g, '$1 ').trim();
+  validarFormulario();
+});
+
+// Formateo de fecha
+fechaExpiracion.addEventListener('input', (e) => {
+  let valor = e.target.value.replace(/\D/g, '').substring(0,4);
+  if(valor.length >= 3){
+    e.target.value = valor.substring(0,2) + '/' + valor.substring(2);
+  }else{
+    e.target.value = valor;
+  }
+  validarFormulario();
+});
+
+// Limite de dígitos en cvv
+cvv.addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/\D/g, '').substring(0,3);
+  validarFormulario();
+});
+
+function validarFormulario(){
+  let valido = true;
+
+  if(metodoPago.value === 'tarjeta'){
+    const num = numeroTarjeta.value.replace(/\s/g, '');
+    const fecha = fechaExpiracion.value;
+    const cvvVal = cvv.value;
+
+    // Validar número de tarjeta
+      if (!/^\d{16}$/.test(num)) {
+        valido = false;
+      }
+
+      // Validar fecha
+      if (!/^\d{2}\/\d{2}$/.test(fecha)) {
+        valido = false;
+      } else {
+        const [mes, año] = fecha.split('/').map(Number);
+        const ahora = new Date();
+        const añoActual = ahora.getFullYear() % 100;
+        const mesActual = ahora.getMonth() + 1;
+
+        if (año < añoActual || (año === añoActual && mes < mesActual) || mes < 1 || mes > 12) {
+          valido = false;
+        }
+      }
+
+      // Validar CVV
+      if (!/^\d{3}$/.test(cvvVal)) {
+        valido = false;
+      }
+    }
+    bntComprar.disabled = !valido;
+}
 
 
 document.getElementById("ventanaAnterior").addEventListener('click', () => {
@@ -108,5 +178,6 @@ async function checkAuth() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
+    validarFormulario();
     // Aquí podrías cargar más datos si es necesario
 });
