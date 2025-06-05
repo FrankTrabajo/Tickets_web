@@ -79,6 +79,16 @@ function loginForm(){
     a.classList.add('link-login');
     p.appendChild(a);
     formContainer.appendChild(p);
+
+    let forgot_p = document.createElement('p');
+    forgot_p.classList.add('texto-login');
+    let forgot_a = document.createElement('a');
+    forgot_p.textContent = '¿Olvidaste tu contraseña? Si es así pincha ';
+    forgot_a.textContent = 'aquí';
+    forgot_a.href = '/forgot-password';
+    forgot_a.classList.add('link-login');
+    forgot_p.appendChild(forgot_a);
+    formContainer.appendChild(forgot_p);
 }
 
 loginForm();

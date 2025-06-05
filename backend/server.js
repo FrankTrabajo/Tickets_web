@@ -80,6 +80,14 @@ app.get("/compra_exito", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'compraExitosa.html'));
 });
 
+app.get("/forgot-password", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'forgot-pass.html'));
+});
+
+app.get("/reset-password/:token", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'reset-pass.html'));
+});
+
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
     const token = req.cookies.authToken;

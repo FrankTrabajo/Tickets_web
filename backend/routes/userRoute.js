@@ -2,13 +2,16 @@
 const express = require('express');
 const router = express.Router();
 //importamos los controladores del usuario
-const {logoutUser, loginUser, registerUser} = require('../controllers/user.controller.js');
+const {logoutUser, loginUser, registerUser, forgotPassword, resetPassword} = require('../controllers/user.controller.js');
 
 // Definimos las rutas para poder realizar el CRUD de los posts
 
 router.post("/", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
+
+router.post('/forgot-pass', forgotPassword);
+router.post('/reset-pass/:token', resetPassword);
 
 
 // Exportamos el router

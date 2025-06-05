@@ -170,8 +170,16 @@ function registrar() {
     })
         .then(message => message.json())
         .then(data => {
+            if(data.ok){
+               window.location.href = '/login'; 
+            }else{
+                let errorPwd = document.getElementById('errorPwd');
+                errorPwd.textContent = data.message;
+                errorPwd.style.display = 'block';
+
+            }
             console.log(data);
-            window.location.href = '/login';
+            
         })
         .catch(err => console.error("Ha habido un error", err));
 }

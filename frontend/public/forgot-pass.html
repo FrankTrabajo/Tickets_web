@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recuperar contraseña</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100svh;
+      font-size: larger;
+      background-color: #1e1e2f;
+    }
+
+    h1 {
+      margin-top: 0px;
+      font-size: 40px;
+      color: white;
+      text-align: center;
+    }
+
+    .form-container {
+      width: 500px;
+      background-color: #28285e;
+      border-radius: 10px;
+      padding: 50px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input {
+      border-radius: 4px;
+      border: unset;
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 15px 30px;
+      font-size: larger;
+    }
+
+    #submit {
+      background-color: #ffffff;
+      color: #ff5f6d;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      border: unset;
+      padding: 15px 30px;
+      font-size: larger;
+    }
+
+    label {
+      position: absolute;
+      left: -10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 2rem 1.5rem;
+      }
+
+      input,
+      #submit {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+
+      body {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>¿Olvidaste tu contraseña?</h1>
+    <form id="forgot-form" method="POST">
+      <label for="email">Introduce tu correo electrónico:</label>
+      <input type="email" id="email" name="email" placeholder="Tu correo electrónico" required />
+      <button type="submit" id="submit">Enviar enlace de recuperación</button>
+    </form>
+  </div>
+  <script src="./js/forgot-pass.js"></script>
+</body>
+</html>

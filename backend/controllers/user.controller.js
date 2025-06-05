@@ -1,6 +1,7 @@
-
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 
 dotenv.config();
@@ -12,85 +13,148 @@ dotenv.config();
 const User = require('../models/User.js');
 
 const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Usuario no encontrado" });
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Usuario no encontrado" });
+        }
+
+        const passOk = await user.comparePassword(password);
+        if (!passOk) {
+            return res.status(400).json({ message: "Contraseña incorrecta" });
+        }
+
+        const token = jsonwebtoken.sign({ userId: user._id.toString(), email: user.email, rol: user.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.cookie('authToken', token, { httpOnly: true, secure: false, maxAge: 3600000 });
+
+        res.status(200).json({ message: "Login correcto", user });
+
+    } catch (error) {
+        console.log("Error en el login", error);
+        res.status(500).json({ message: "Error al iniciar sesión" });
     }
-
-    const passOk = await user.comparePassword(password);
-    if (!passOk) {
-      return res.status(400).json({ message: "Contraseña incorrecta" });
-    }
-
-    const token = jsonwebtoken.sign({userId: user._id.toString(), email: user.email, rol: user.rol}, process.env.JWT_SECRET, {expiresIn: '1h'});
-
-    res.cookie('authToken', token, {httpOnly:true, secure: false, maxAge: 3600000});
-
-    res.status(200).json({ message: "Login correcto", user});
-
-  } catch (error) {
-    console.log("Error en el login", error);
-    res.status(500).json({ message: "Error al iniciar sesión" });
-  }
 };
 
 
 
 const logoutUser = async (req, res) => {
     try {
-      res.clearCookie('authToken', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-      });
-      res.json({ message: "Sesión cerrada" });
+        res.clearCookie('authToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production'
+        });
+        res.json({ message: "Sesión cerrada" });
     } catch (error) {
-      res.status(500).json({ message: "ERROR: Hubo un error al cerrar sesión" });
+        res.status(500).json({ message: "ERROR: Hubo un error al cerrar sesión" });
     }
-  };
-  
+};
 
-  const registerUser = async (req, res) => {
+
+const registerUser = async (req, res) => {
     try {
-      const { nombre, email, password1, password2 } = req.body;
-  
-      if (!nombre || !email || !password1 || !password2) {
-        return res.status(400).json({ message: "Todos los campos son obligatorios" });
-      }
-  
-      if (password1 !== password2) {
-        return res.status(400).json({ message: "Las contraseñas no coinciden" });
-      }
-  
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({ message: "El email ya está registrado" });
-      }
-  
-      const newUser = new User({
-        nombre,
-        email,
-        password: password1
-      });
-  
-      await newUser.save();
-  
-      const { password, ...userData } = newUser.toObject();
-  
-      res.status(201).json(userData);
-  
+        const { nombre, email, password1, password2 } = req.body;
+
+        if (!nombre || !email || !password1 || !password2) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios", ok: false });
+        }
+
+        if (password1 !== password2) {
+            return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "El email ya está registrado", ok: false });
+        }
+
+        const newUser = new User({
+            nombre,
+            email,
+            password: password1
+        });
+
+        await newUser.save();
+
+        const { password, ...userData } = newUser.toObject();
+
+        res.status(201).json(userData);
+
     } catch (error) {
-      console.log("ERROR: Error en el registro", error);
-      if (error.code === 11000) {
-        return res.status(400).json({ message: "El email ya está registrado" });
-      }
-      res.status(500).json({ message: error.message });
+        console.log("ERROR: Error en el registro", error);
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "El email ya está registrado", ok: true });
+        }
+        res.status(500).json({ message: error.message });
     }
-  }; 
+};
+
+
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password, password2 } = req.body;
+
+    if(password !== password2){
+        return req.status(400).json({ message: "Las contraseñas no coinciden" });
+    }
+
+    const user = await User.findOne({
+        resetToken: token,
+        tokenExpiry: { $gt: Date.now() }
+    });
+
+    if(!user){
+        return res.status(400).json({ message: "Token inválido o expirado" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.tokenExpiry = undefined;
+    await user.save();
+
+    return res.status(201).json({ message: "Contraseña actualizada correctamente" });
+}
+
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email }); // => Aqui comprobamos que el usuario existe
+
+    if (!user) {
+        return res.status(400).json({ message: "Usuario no encontrado en nuestra base de datos" });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.tokenExpiry = Date.now() + 3600000; // 1 hora
+    await user.save();
+
+    const resetUrl = `https://www.ticketsweb.es/reset-password/${token}`;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_APP_ACCOUNT,
+            pass: process.env.GMAIL_APP_PASS
+        }
+    });
+
+    await transporter.sendMail({
+        to: user.email,
+        subject: "Recupera tu contraseña",
+        html: `<p>Haz click <a href="${resetUrl}">aquí</a> para restablecer tu contraseña</p>`
+    });
+
+    return res.status(201).json({ message: "Correo enviado" });
+
+}
+
 module.exports = {
     loginUser,
     logoutUser,
-    registerUser
+    registerUser,
+    resetPassword,
+    forgotPassword
 }
