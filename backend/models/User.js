@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
     password: { type: String, required: true },
     rol: { type: [String], default: ['USER'] },
-    fecha_registro: { type: Date, default: Date.now }
+    fecha_registro: { type: Date, default: Date.now },
+    resetToken: { type: String },
+    tokenExpiry: { type: Date }
   },
   {
     collection: 'usuarios',
