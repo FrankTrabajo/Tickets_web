@@ -97,7 +97,7 @@ const resetPassword = async (req, res) => {
     const { password, password2 } = req.body;
 
     if(password !== password2){
-        return req.status(400).json({ message: "Las contraseñas no coinciden" });
+        return req.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
     }
 
     const user = await User.findOne({
@@ -106,7 +106,7 @@ const resetPassword = async (req, res) => {
     });
 
     if(!user){
-        return res.status(400).json({ message: "Token inválido o expirado" });
+        return res.status(400).json({ message: "Token inválido o expirado", ok: false });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -115,7 +115,7 @@ const resetPassword = async (req, res) => {
     user.tokenExpiry = undefined;
     await user.save();
 
-    return res.status(201).json({ message: "Contraseña actualizada correctamente" });
+    return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
 }
 
 const forgotPassword = async (req, res) => {
@@ -123,7 +123,7 @@ const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email }); // => Aqui comprobamos que el usuario existe
 
     if (!user) {
-        return res.status(400).json({ message: "Usuario no encontrado en nuestra base de datos" });
+        return res.status(400).json({ message: "Usuario no encontrado en nuestra base de datos", ok: false });
     }
 
     const token = crypto.randomBytes(32).toString('hex');
@@ -147,7 +147,7 @@ const forgotPassword = async (req, res) => {
         html: `<p>Haz click <a href="${resetUrl}">aquí</a> para restablecer tu contraseña</p>`
     });
 
-    return res.status(201).json({ message: "Correo enviado" });
+    return res.status(201).json({ message: "Correo enviado", ok: true });
 
 }
 
