@@ -25,7 +25,6 @@ function getEntradas() {
                 <p><strong>Lugar:</strong> ${entrada.lugar}</p>
                 <p><strong>Fecha:</strong> ${new Date(entrada.fecha).toLocaleDateString()}</p>
                 <p><strong>Precio:</strong> ${entrada.precio.toFixed(2)} €</p>
-                <p><strong>Código:</strong> ${entrada.codigo}</p>
             `;
 
             container.appendChild(card);
