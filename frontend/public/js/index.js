@@ -190,3 +190,16 @@ function acortarLugar(nombre) {
   return nombre.split(',')[0];
 }
 
+//Evento del mapa
+const mapaEvento = document.getElementById('mapa-evento');
+mapaEvento.addEventListener('click', () => {
+  window.location.href= "/mapa-eventos";
+});
+
+mapaEvento.addEventListener('mouseover', () => {
+  mapaEvento.style.cursor = 'pointer';
+});
+
+mapaEvento.addEventListener('mouseleave', () => {
+  mapaEvento.style.cursor = '';
+});

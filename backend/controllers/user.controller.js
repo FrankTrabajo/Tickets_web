@@ -97,7 +97,7 @@ const resetPassword = async (req, res) => {
     const { password, password2 } = req.body;
 
     if(password !== password2){
-        return req.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
+        return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
     }
 
     const user = await User.findOne({

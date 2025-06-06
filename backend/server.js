@@ -88,6 +88,10 @@ app.get("/reset-password/:token", (req,res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'reset-pass.html'));
 });
 
+app.get("/mapa-eventos", (req,res)  => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'mapaEventos.html'));
+})
+
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
     const token = req.cookies.authToken;

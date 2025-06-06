@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tickely</title>
   <link rel="stylesheet" href="css/style-index.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="icon" type="image/png" href="../assets/favicon.ico">
-</head >
+</head>
+
 <body>
   <div class="topbar">
     <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
@@ -15,14 +17,15 @@
   <header>
     <div class="header-left">
       <a href="usuarioRegistrado.html">
-        <img src="assets/perfil.png" alt="Perfil" class="icon" id="perfilImg"/>
+        <img src="assets/perfil.png" alt="Perfil" class="icon" id="perfilImg" />
       </a>
       <button id="filtroTicket">
         <img src="assets/filtro.png" alt="Filtro" class="icon" />
       </button>
-      <input type="text" id="buscarEvento" placeholder="Buscar eventos" >
+      <input type="text" id="buscarEvento" placeholder="Buscar eventos">
+      <img src="assets/mapa.png" class="mapa" id="mapa-evento">
     </div>
-    
+
     <img src="assets/tickelyLogo.png" alt="Logo Tickely" class="logo logo-header" />
 
     <nav id="auth-buttons">
@@ -31,12 +34,12 @@
       <button class="d-none" id="logoutBtn">Cerrar sesión</button>
     </nav>
   </header>
-  
+
   <aside id="filtroAside" class="filtro-aside hidden">
     <h3>Lugares de eventos</h3>
     <ul id="lista-lugares"></ul>
   </aside>
-  
+
   <div id="filtroOverlay" class="filtro-overlay hidden"></div>
 
   <main class="container">
@@ -61,4 +64,5 @@
 
   <script type="module" src="js/index.js"></script>
 </body>
+
 </html>
