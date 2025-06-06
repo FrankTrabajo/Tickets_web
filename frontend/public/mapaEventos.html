@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa con Leaflet</title>
-
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+e2Y84N1E8V+0+W9N6Wjz+obOMg4pqcR3iE5Cztms="
-    crossorigin=""
-  />
-
-  <style>
-    #map {
-      height: 100vh;
-      width: 100%;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mapa con ubicación</title>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
+<style>
+  #mapContainer {
+    height: 100vh;
+    width: 100%;
+  }
+</style>
 </head>
 <body>
-  <div id="map"></div>
-  
+  <div id="mapContainer"></div>
+
 </body>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1jvBcbRY5h+H4UQzTKo+HfULNHRbB+LWl6A4YIks=" crossorigin=""></script>
-<script src="/js/mapaEventos.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="/js/mapaEventos.js" defer></script>
+
 </html>
