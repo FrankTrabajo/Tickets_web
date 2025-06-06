@@ -31,9 +31,14 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 const userRoute = require('./routes/userRoute');
 const eventRoute = require('./routes/eventRoute');
 const compraRoute = require("./routes/compraRoute.js");
+const entradaRoute = require('./routes/entradaRoute.js');
+const pedidoRoute = require('./routes/pedidoRoute.js');
+
 app.use('/api/user', userRoute);
 app.use("/api/event", eventRoute);
 app.use("/api/compra", compraRoute);
+app.use("/api/entradas", entradaRoute);
+app.use("/api/pedidos", pedidoRoute);
 
 // Rutas de vistas
 app.get('/', (req, res) => {
@@ -80,17 +85,13 @@ app.get("/compra_exito", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'compraExitosa.html'));
 });
 
-app.get("/forgot-password", (req,res) => {
-    res.sendFile(path.join(__dirname, '../frontend/public', 'forgot-pass.html'));
+app.get("/entradas", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'entradas.html'));
 });
 
-app.get("/reset-password/:token", (req,res) => {
-    res.sendFile(path.join(__dirname, '../frontend/public', 'reset-pass.html'));
+app.get("/pedidos", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'pedido.html'));
 });
-
-app.get("/mapa-eventos", (req,res)  => {
-    res.sendFile(path.join(__dirname, '../frontend/public', 'mapaEventos.html'));
-})
 
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {
@@ -117,6 +118,7 @@ app.get("/check-admin", (req, res) => {
         res.status(401).json({ admin: false });
     }
 });
+
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
