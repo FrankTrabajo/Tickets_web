@@ -24,6 +24,7 @@ formularioReset.addEventListener('submit', async (e) => {
                 alert(data.message);
             }
         })
+        .catch(error => console.error(error));
 
 
 
