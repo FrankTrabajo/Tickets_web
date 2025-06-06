@@ -3,9 +3,14 @@ import { centrarMapa, pintarSite } from "./map.js";
 function getEvent(){
     const id = getIdFromPath();
     console.log("Entra");
+
+    let evento = null;
+
     fetch(`/api/event/details/${id}`)
         .then(response => response.json())
         .then(data => {
+            evento = data.evento;
+
             document.getElementById("imagenEvento").src = data.evento.imagen || "../img/eventos/banner_no_img.png";
             document.getElementById("eventTitle").textContent = data.evento.nombre;
             document.getElementById("eventDescription").textContent = data.evento.descripcion;
@@ -30,6 +35,21 @@ function getEvent(){
             centrarMapa(data.evento.lugar.lat, data.evento.lugar.lon);
             pintarSite([data.evento.lugar.lat, data.evento.lugar.lon], data.evento.lugar.nombre);
 
+            const btnComprar = document.querySelector('.comprar-btn');
+            const entradasDisponibles = document.getElementById("eventTickets").textContent;
+            btnComprar.disabled = entradasDisponibles === "No disponibles";
+
+            fetch("/check-auth")
+            .then(response => response.json())
+            .then(data => {
+                btnComprar.addEventListener("click", () => {
+                if (!data.logueado) {
+                    window.location.href = "/login";
+                } else {
+                    window.location.href = `../vistaEntradas/${evento._id}`;
+                }
+                });
+            });
         })
         .catch(error => console.error("ERROR:", error));
 }

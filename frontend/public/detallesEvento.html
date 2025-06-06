@@ -19,7 +19,24 @@
         body {
             background-color: #0d0e36;
             color: #333;
-            padding: 1em;
+        }
+
+        .main-header {
+            background-color: #28285e;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            top: 0;
+            z-index: 100;
+            }
+
+        .main-header .logo {
+            height: 40px;
+            width: auto;
+            max-height: 50px;
         }
 
         .btn.btn-secondary {
@@ -123,6 +140,40 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
         }
 
+        .main-footer {
+            background-color: #28285e;
+            color: #ccc;
+            text-align: center;
+            padding: 1rem 2rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #444;
+            margin-top: 3rem;
+        }
+
+        .main-footer p {
+            margin: 0.3rem 0;
+        }
+
+        .comprar-btn {
+            margin-top: 10px;
+            margin:10px;
+            padding: 0.5em 1em;
+            background-color: #ff5f6d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            gap: 8px;
+        }
+
+        .comprar-btn button {
+            width: 100%;
+        }
+
+        .comprar-btn:hover {
+            background-color: #e1414e;
+        }
+
         @media (max-width: 768px) {
             .event-banner {
                 height: 280px;
@@ -153,6 +204,9 @@
     </style>
 </head>
 <body class="'p-4">
+    <header class="main-header">
+        <img src="../assets/tickelyLogo.png" alt="Logo Tickely" class="logo">
+    </header>
     <nav class="mb-4 p-3">
         <button class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
     </nav>
@@ -206,8 +260,16 @@
                 <div class="detail-title">Ubicación en mapa</div>
                 <div id="map" style="height: 200px; background: #eee; border-radius: 8px; margin-top: 10px;"></div>
             </div>
+            <button class="comprar-btn">Comprar</button>
         </div>
     </div>
+
+    <footer class="main-footer">
+        <p>© 2025 Tickely - Proyecto TFG</p>
+        <p>Participantes: Laura García Yuste, Naiara Peralta Acevedo, Francisco Pedro García Gomez</p>
+        <p>IES Juan de la Cierva</p>
+    </footer>
+
 </body>
 <script type="module" src="/js/details.js" defer></script>
 </html>

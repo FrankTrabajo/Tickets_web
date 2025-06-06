@@ -246,8 +246,19 @@ nav button:hover {
   color: #ffa5ac;
 }
 
+.main-footer {
+  background-color: #28285e;
+  color: #ccc;
+  text-align: center;
+  padding: 1rem 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #444;
+  margin-top: 3rem;
+}
 
-/* ...existing code... */
+.main-footer p {
+  margin: 0.3rem 0;
+}
 
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 900px) {
