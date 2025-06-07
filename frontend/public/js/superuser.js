@@ -187,6 +187,12 @@ function check_auth() {
         .catch(error => console.error("ERROR: " + error));
 }
 
+const cerrarSesionBtn = document.getElementById('cerrarSesion');
+cerrarSesionBtn.addEventListener('click', async () => {
+  await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
+  window.location.href = '/';
+});
+
 // Inicializar
 document.addEventListener("DOMContentLoaded", () => {
     check_auth();
