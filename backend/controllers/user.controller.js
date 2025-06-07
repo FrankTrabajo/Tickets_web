@@ -2,6 +2,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const bcryptjs = require('bcryptjs');
 
 
 dotenv.config();
@@ -156,7 +157,7 @@ const resetPassword = async (req, res) => {
             return res.status(400).json({ message: "Token inválido o expirado", ok: false });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await bcryptjs.hash(password, 12);
         user.password = hashedPassword;
         user.resetToken = undefined;
         user.tokenExpiry = undefined;
