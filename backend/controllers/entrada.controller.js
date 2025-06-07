@@ -16,13 +16,24 @@ const getEntradasUsuario = async(req, res) => {
         .populate('id_evento')
         .lean();
 
-        const resultado = entradas.map(ticket =>({
-            codigo: ticket.codigo,
-            evento: ticket.id_evento.nombre,
-            lugar: ticket.id_evento.lugar.nombre,
-            fecha: ticket.id_evento.fecha,
-            precio: parseFloat(ticket.precio)
-        }));
+        
+        if (!Array.isArray(entradas)) {
+            console.error("La respuesta de Ticket.find no es un array:", entradas);
+            return res.status(500).json({ message: "Error interno: entradas no son un array" });
+        }
+        
+        const resultado = entradas.map(ticket =>{
+             const evento = ticket.id_evento || {};
+            const lugar = evento.lugar || {};
+
+            return {
+                codigo: ticket.codigo,
+                evento: evento.nombre,
+                lugar: lugar.nombre,
+                fecha: evento.fecha,
+                precio: parseFloat(ticket.precio)
+            };
+        });
 
         res.json(resultado);
     } catch (error) {

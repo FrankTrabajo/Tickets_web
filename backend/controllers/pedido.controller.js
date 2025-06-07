@@ -41,24 +41,40 @@ const getPedidoUsuario = async(req, res)=>{
             .populate('id_evento')
             .lean();
 
+                 const items = tickets.map(ticket => {
+                let nombreEvento = 'Evento no disponible';
+                let fechaEvento = 'Fecha no disponible';
+
+                if (ticket.id_evento && ticket.id_evento.nombre) {
+                    nombreEvento = ticket.id_evento.nombre;
+                }
+
+                if (ticket.id_evento && ticket.id_evento.fecha) {
+                    fechaEvento = ticket.id_evento.fecha;
+                }
+
+                return {
+                    evento: nombreEvento,
+                    fecha: fechaEvento,
+                    precio: parseFloat(ticket.precio)
+                };
+            });
+
             resultado.push({
                 id: pedido._id,
                 fecha: pedido.fecha_pedido,
                 total: parseFloat(pedido.total),
-                items: tickets.map(ticket=> ({
-                    evento: ticket.id_evento.nombre,
-                    fecha: ticket.id_evento.fecha,
-                    precio: parseFloat(ticket.precio)
-                }))
+                items: items
             });
         }
 
         res.json(resultado);
     } catch (error) {
+        console.error("Error en getPedidoUsuario:", error); 
         res.status(500).json({message: 'Error al obtener pedidos'});
     }
 };
 
-module.exports = {
-    getPedidoUsuario
-};
+module.exports = {getPedidoUsuario};
+
+
