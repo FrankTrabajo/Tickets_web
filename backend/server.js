@@ -53,6 +53,10 @@ app.get("/register", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'register.html'));
 });
 
+app.get("/super-admin-dashboard", (req,res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'superAdminDashboard.html'));
+})
+
 app.get("/admin_dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'admin.html'));
 });
@@ -130,6 +134,19 @@ app.get("/check-admin", (req, res) => {
     } catch (error) {
         console.error("Token inválido:", error);
         res.status(401).json({ admin: false });
+    }
+});
+
+app.get("/check-superadmin", (req, res) => {
+    const token = req.cookies.authToken;
+    if (!token) return res.status(401).json({ admin: false });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.json({ super_admin: decoded.rol.includes('SUPER_ADMIN') });
+    } catch (error) {
+        console.error("Token inválido:", error);
+        res.status(401).json({ super_admin: false });
     }
 });
 

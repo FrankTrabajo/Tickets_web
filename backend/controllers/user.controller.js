@@ -95,7 +95,7 @@ const registerUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = User.find({});
+        const users = await User.find({});
         return res.status(201).json({ users });
     } catch (error) {
         console.error("ERROR: No se pudo obtener los usuarios");
@@ -104,35 +104,53 @@ const getAllUsers = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    try {
+    
         const token = req.cookies.authToken;
         if (!token) {
-            return res.status(401).json({ message: "No autorizado" });
+            return res.status(401).json({ message: "No autorizado", ok: false });
         }
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.userId;
         const rol = decoded.rol;
-        const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
-
-        if(rol !== "SUPER_ADMIN"){
-            return res.status(401).json({ message: "No autorizado" });
+        console.log(decoded);
+        if(!rol.includes("SUPER_ADMIN")){
+            return res.status(401).json({ message: "No autorizado", ok: false });
+            
         }
         // Verificar si el evento existe y pertenece al usuario
-        const evento = await Evento.findOne({ _id: eventoId, creador: userId });
-        if (!evento) {
-            return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
+        await User.findByIdAndDelete(req.params.id);
+        console.log("USUARIO ELIMINADO");
+        return res.status(200).json({ message: "Usuario eliminado correctamente" , ok: true});
+
+
+}
+
+const updateUser = async (req,res) => {
+    try {
+        const { email, rol } = req.body;
+        const updateFields = {};
+
+        if(email){
+            updateFields.email = email;
         }
 
-        if (evento.imagen_id && !evento.imagen.includes("banner_no_img")) {
-            await cloudinary.uploader.destroy(evento.imagen_id);
+        if(rol){
+            updateFields.rol = rol;
         }
 
-        // Eliminar el evento
-        await Evento.deleteOne({ _id: eventoId });
-        res.status(200).json({ message: "Evento eliminado correctamente" });
+        const usuarioActualizado = await User.findOneAndUpdate(
+            req.params.id,
+            updateFields,
+            {new: true, runValidators: true}
+        ).select('-password -resetToken -tokenExpiry');
 
+        if(usuarioActualizado){
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        return res.status(200).json({ usuarioActualizado });
     } catch (error) {
-        res.status(500).json({ message: "Error al eliminar el evento" });
+        console.error("Error al modificar usuario:", error);
+        return res.status(500).json({ message: "Error al modificar el usuario" });
     }
 }
 
@@ -143,17 +161,14 @@ const resetPassword = async (req, res) => {
         const { password, password2 } = req.body;
 
         if (password !== password2) {
-            console.log("ERROR CON LAS CONTRASEÑAS", password, password2);
             return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
         }
-        console.log("TOKEN EXTRAÍDO:", token);
 
         const user = await User.findOne({
             resetToken: token
         });
 
         if (!user) {
-            console.log("ERROR AL NO ENCONTRAR AL USUARIO", user);
             return res.status(400).json({ message: "Token inválido o expirado", ok: false });
         }
 
@@ -205,6 +220,8 @@ module.exports = {
     logoutUser,
     registerUser,
     getAllUsers,
+    updateUser,
+    deleteUser,
     resetPassword,
     forgotPassword
 }

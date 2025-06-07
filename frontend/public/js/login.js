@@ -1,13 +1,13 @@
 /**
  * Funcion que nos crea el formulario de login
  */
-function loginForm(){
+function loginForm() {
     let formContainer = document.getElementById('form-container');
     let h1Login = document.createElement('h1');
     h1Login.textContent = "Login";
     formContainer.appendChild(h1Login);
     let form = document.getElementById('login-form');
-    let labelEmail = document.createElement('label'); 
+    let labelEmail = document.createElement('label');
     labelEmail.textContent = "Correo electrónico";
     let inputEmail = document.createElement('input');
     inputEmail.type = 'email';
@@ -15,7 +15,7 @@ function loginForm(){
     inputEmail.id = 'email';
     inputEmail.placeholder = "Correo electrónico";
 
-    let labelPassword = document.createElement('label'); 
+    let labelPassword = document.createElement('label');
     labelPassword.textContent = "Contraseña";
     let inputPassword = document.createElement('input');
     inputPassword.type = 'password';
@@ -35,7 +35,7 @@ function loginForm(){
     iconEye.className = 'bi bi-eye';
     togglePassword.appendChild(iconEye);
 
-    togglePassword.addEventListener('click', function() {
+    togglePassword.addEventListener('click', function () {
         if (inputPassword.type === 'password') {
             inputPassword.type = 'text';
             iconEye.className = 'bi bi-eye-slash';
@@ -49,7 +49,7 @@ function loginForm(){
     inputSubmit.type = "submit";
     inputSubmit.id = 'submit';
     inputSubmit.value = "Iniciar sesión";
-    inputSubmit.addEventListener('click', function(e){
+    inputSubmit.addEventListener('click', function (e) {
         e.preventDefault();
         loginUser();
     });
@@ -97,12 +97,12 @@ loginForm();
  * Función que  nos envía los datos del login al servidor y 
  * nos permite manejar la autenticación del usuario.
  */
-function loginUser(){
+function loginUser() {
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const pError = document.getElementById('pError');
-    if(!email || !password){
+    if (!email || !password) {
         mostrarError("Todos los campos son obligatorios");
         return;
     }
@@ -117,35 +117,48 @@ function loginUser(){
         }),
         credentials: 'include'
     })
-    .then(message => message.json())
-    .then(data => {
-        if(data.message === 'Login correcto'){
-            fetch("/check-admin", {
-                method: 'GET',
-                credentials: "include"
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.admin){
-                    window.location.href = "/admin_dashboard";
-                }else{
-                    window.location.href = "/";
-                }
-            })
-            .catch(error => console.error("ERROR: " + error));
-        }else{
-            mostrarError("Error al iniciar sesion, compruebe su contraseña y su email");
-            return;
-        }
-    })
-    .catch(err => console.error(err));
+        .then(message => message.json())
+        .then(data => {
+            if (data.message === 'Login correcto') {
+                fetch("/check-superadmin", {
+                    method: 'GET',
+                    credentials: "include"
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.super_admin) {
+                            window.location.href = "/super-admin-dashboard";
+                        } else {
+                            fetch("/check-admin", {
+                                method: 'GET',
+                                credentials: "include"
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.admin) {
+                                        window.location.href = "/admin_dashboard";
+                                    } else {
+                                        window.location.href = "/";
+                                    }
+                                })
+                                .catch(error => console.error("ERROR: " + error));
+                        }
+                    })
+                    .catch(error => console.error("ERROR: " + error));
+
+            } else {
+                mostrarError("Error al iniciar sesion, compruebe su contraseña y su email");
+                return;
+            }
+        })
+        .catch(err => console.error(err));
 }
 
 /**
  * Funcion que nos muestra un mensaje de error si es que lo hay 
  * @param {string} mensaje 
  */
-function mostrarError(mensaje){
+function mostrarError(mensaje) {
     let pError = document.getElementById('pError');
     pError.classList.remove('hide');
     pError.classList.add('error');
@@ -156,16 +169,16 @@ async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.logueado) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.logueado) {
+                window.location.href = '/login';
+            }
+        })
+        .catch(error => {
+            console.error("Error al verificar autenticación:", error);
             window.location.href = '/login';
-        }
-    })
-    .catch(error => {
-        console.error("Error al verificar autenticación:", error);
-        window.location.href = '/login';
-    });
+        });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
