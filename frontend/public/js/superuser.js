@@ -7,11 +7,17 @@ function getUsers() {
     })
         .then(response => response.json())
         .then(data => {
-            users = data.users;
+            users = data.users.filter(user => {
+                const roles = Array.isArray(user.rol) ? user.rol : [];
+                return !roles.includes("SUPER_ADMIN");
+            });
+
+            console.log(users);
             renderUsers();
         })
         .catch(error => console.error(error));
 }
+
 
 function cargarEventos() {
     return fetch("/api/event/get_all_events")
