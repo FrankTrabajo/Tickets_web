@@ -5,3 +5,4 @@ const {getEntradasUsuario} = require('../controllers/entrada.controller');
 router.get('/', getEntradasUsuario);
 
 module.exports = router;
+

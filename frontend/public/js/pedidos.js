@@ -7,6 +7,7 @@ function getPedidos() {
     })
     .then(res => res.json())
     .then(pedidos => {
+        
         const container = document.getElementById("pedidos-container");
         container.innerHTML = "";
 

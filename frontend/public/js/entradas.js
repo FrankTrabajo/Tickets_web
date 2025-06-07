@@ -21,6 +21,7 @@ function getEntradas() {
             card.classList.add("card");
 
             card.innerHTML = `
+            
                 <h3>${entrada.evento}</h3>
                 <p><strong>Lugar:</strong> ${entrada.lugar}</p>
                 <p><strong>Fecha:</strong> ${new Date(entrada.fecha).toLocaleDateString()}</p>

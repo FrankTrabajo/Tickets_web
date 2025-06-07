@@ -59,4 +59,6 @@ const getPedidoUsuario = async(req, res)=>{
     }
 };
 
-module.exports = {getPedidoUsuario};
+module.exports = {
+    getPedidoUsuario
+};

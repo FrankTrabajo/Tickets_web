@@ -33,3 +33,4 @@ const getEntradasUsuario = async(req, res) => {
 module.exports = {
     getEntradasUsuario
 };
+
