@@ -8,14 +8,13 @@ function getUsers() {
         .then(response => response.json())
         .then(data => {
             users = data.users;
-            console.log(data);
             renderUsers();
         })
         .catch(error => console.error(error));
 }
 
 function cargarEventos() {
-    fetch("/api/event/get_all_events")
+    return fetch("/api/event/get_all_events")
         .then(res => res.json())
         .then(data => {
             eventos = data;
@@ -33,59 +32,58 @@ function renderUsers() {
         return bIsAdmin - aIsAdmin;
     });
 
-    sortedUsers.forEach((user, index) => {
+    sortedUsers.forEach((user) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${user.nombre}</td>
           <td>${user.email}</td>
           <td>
-            <span id="rol-${index}">${user.rol.join(', ')}</span>
-            <select id="select-rol-${index}" multiple class="edit-input" style="display:none;">
+            <span id="rol-${user._id}">${user.rol.join(', ')}</span>
+            <select id="select-rol-${user._id}" multiple class="edit-input" style="display:none;">
               <option value="USER" ${user.rol.includes("USER") ? "selected" : ""}>USER</option>
               <option value="ADMIN" ${user.rol.includes("ADMIN") ? "selected" : ""}>ADMIN</option>
             </select>
           </td>
           <td>
-            <button class="btn" onclick="deleteUser('${user._id}', ${index})">Eliminar</button>
-            <button class="btn" onclick="toggleEdit(${index})">Editar</button>
-            ${Array.isArray(user.rol) && user.rol.includes('ADMIN') ? `<button class="btn" onclick="toggleEvents(${index}, '${user._id}')">Mostrar Eventos</button>` : ''}
+            <button class="btn" onclick="deleteUser('${user._id}')">Eliminar</button>
+            <button class="btn" onclick="toggleEdit('${user._id}')">Editar</button>
+            ${Array.isArray(user.rol) && user.rol.includes('ADMIN') ? `<button class="btn" onclick="toggleEvents('${user._id}')">Mostrar Eventos</button>` : ''}
           </td>
         `;
         tbody.appendChild(tr);
 
         const dropdown = document.createElement("tr");
-        dropdown.id = `events-${index}`;
+        dropdown.id = `events-${user._id}`;
         dropdown.className = "event-dropdown";
         dropdown.style.display = "none";
-        dropdown.innerHTML = `<td colspan="4" id="events-container-${index}"></td>`;
+        dropdown.innerHTML = `<td colspan="4" id="events-container-${user._id}"></td>`;
         tbody.appendChild(dropdown);
     });
 }
 
-function toggleEdit(index) {
-    const spanRol = document.getElementById(`rol-${index}`);
-    const selectRol = document.getElementById(`select-rol-${index}`);
+function toggleEdit(userId) {
+    const spanRol = document.getElementById(`rol-${userId}`);
+    const selectRol = document.getElementById(`select-rol-${userId}`);
 
     if (selectRol.style.display === "none") {
         selectRol.style.display = "inline";
         spanRol.style.display = "none";
         selectRol.focus();
-        selectRol.onblur = () => saveUserChanges(index);
+        selectRol.onblur = () => saveUserChanges(userId);
     } else {
         selectRol.style.display = "none";
         spanRol.style.display = "inline";
     }
 }
 
-function saveUserChanges(index) {
-    const selectRol = document.getElementById(`select-rol-${index}`);
-
-    // Obtener roles seleccionados
+function saveUserChanges(userId) {
+    const selectRol = document.getElementById(`select-rol-${userId}`);
     const selectedRoles = Array.from(selectRol.selectedOptions).map(opt => opt.value);
 
-    const user = users[index];
+    const userIndex = users.findIndex(u => u._id === userId);
+    const user = users[userIndex];
 
-    fetch(`/api/user/update_user/${user._id}`, {
+    fetch(`/api/user/update-user/${user._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rol: selectedRoles })
@@ -95,7 +93,7 @@ function saveUserChanges(index) {
             return res.json();
         })
         .then(updatedUser => {
-            users[index] = updatedUser;
+            users[userIndex] = updatedUser;
             renderUsers();
         })
         .catch(err => {
@@ -104,8 +102,7 @@ function saveUserChanges(index) {
         });
 }
 
-
-function deleteUser(userId, index) {
+function deleteUser(userId) {
     if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
 
     fetch(`/api/user/delete-user/${userId}`, {
@@ -119,7 +116,6 @@ function deleteUser(userId, index) {
             } else {
                 alert("Ha habido un problema");
             }
-
         })
         .catch(err => {
             alert("Error eliminando usuario");
@@ -127,13 +123,11 @@ function deleteUser(userId, index) {
         });
 }
 
-function toggleEvents(index, userId) {
-    const dropdownRow = document.getElementById(`events-${index}`);
-    const container = document.getElementById(`events-container-${index}`);
+function toggleEvents(userId) {
+    const dropdownRow = document.getElementById(`events-${userId}`);
+    const container = document.getElementById(`events-container-${userId}`);
 
     if (dropdownRow.style.display === "none" || !dropdownRow.style.display) {
-        // Mostrar eventos
-        // Filtrar eventos del usuario actual
         const userEvents = eventos.filter(e => e.creador === userId || e.creador._id === userId);
 
         if (userEvents.length === 0) {
@@ -143,21 +137,18 @@ function toggleEvents(index, userId) {
                 <div class="event-item" style="border: 1px solid #ccc; margin: 5px 0; padding: 5px;">
                     <strong>${event.nombre}</strong><br>
                     <p>${event.descripcion}</p>
-                    <button onclick="deleteEvent('${event._id}', ${index})">Eliminar Evento</button>
+                    <button onclick="deleteEvent('${event._id}', '${userId}')">Eliminar Evento</button>
                 </div>
             `).join('');
         }
 
         dropdownRow.style.display = "table-row";
     } else {
-        // Ocultar eventos
         dropdownRow.style.display = "none";
     }
 }
 
-
-
-function deleteEvent(eventId, userIndex) {
+function deleteEvent(eventId, userId) {
     if (!confirm("¿Seguro que quieres eliminar este evento?")) return;
 
     fetch(`/api/event/delete_event/${eventId}`, {
@@ -165,17 +156,16 @@ function deleteEvent(eventId, userIndex) {
     })
         .then(res => {
             if (!res.ok) throw new Error("Error al eliminar evento");
-            // Recargar eventos
-            cargarEventos().then(() => {
-                toggleEvents(userIndex, users[userIndex]._id); // cerrar y abrir para actualizar la lista
-            });
+            return cargarEventos();
+        })
+        .then(() => {
+            toggleEvents(userId); // recargar eventos del usuario
         })
         .catch(err => {
             alert("Error eliminando evento");
             console.error(err);
         });
 }
-
 
 function check_auth() {
     fetch("/check-superadmin", {
@@ -185,13 +175,13 @@ function check_auth() {
         .then(response => response.json())
         .then(data => {
             if (!data.super_admin) {
-                window.location.href = "/login"
+                window.location.href = "/login";
             }
         })
         .catch(error => console.error("ERROR: " + error));
 }
 
-// Inicializar la carga
+// Inicializar
 document.addEventListener("DOMContentLoaded", () => {
     check_auth();
     getUsers();

@@ -126,33 +126,30 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req,res) => {
     try {
-        const { email, rol } = req.body;
+        const { rol } = req.body;
         const updateFields = {};
-
-        if(email){
-            updateFields.email = email;
-        }
 
         if(rol){
             updateFields.rol = rol;
         }
 
         const usuarioActualizado = await User.findOneAndUpdate(
-            req.params.id,
+            { _id: req.params.id },  // <-- filtro como objeto
             updateFields,
-            {new: true, runValidators: true}
+            { new: true, runValidators: true }
         ).select('-password -resetToken -tokenExpiry');
 
-        if(usuarioActualizado){
+        if (!usuarioActualizado) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        return res.status(200).json({ usuarioActualizado });
+        return res.status(200).json(usuarioActualizado);
     } catch (error) {
         console.error("Error al modificar usuario:", error);
         return res.status(500).json({ message: "Error al modificar el usuario" });
     }
 }
+
 
 
 const resetPassword = async (req, res) => {
