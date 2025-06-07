@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Usuario Tickely</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .event-dropdown {
+            display: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px dashed #999;
+        }
+
+        .event {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #ddd;
+        }
+
+        .edit-input {
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Bienvenido super usuario</h2>
+
+    <table id="tablaUsuarios">
+        <thead>
+            <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="bodyusuarios">
+        </tbody>
+    </table>
+
+</body>
+<script src="/js/superuser.js" ></script>
+</html>

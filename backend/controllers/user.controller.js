@@ -92,30 +92,46 @@ const registerUser = async (req, res) => {
 };
 
 
+const getAllUsers = async (req,res) => {
+    try {
+        const users = User.find({});
+        return res.status(201).json({ users });
+    } catch (error) {
+        console.error("ERROR: No se pudo obtener los usuarios");
+        return res.status(500).json({ message: "Error, no se pudo obtener los usuarios" });
+    }
+}
+
+
 const resetPassword = async (req, res) => {
-    const { token } = req.params;
-    const { password, password2 } = req.body;
+    try {
+        const { token } = req.params;
+        const { password, password2 } = req.body;
 
-    if(password !== password2){
-        return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
+        if (password !== password2) {
+            return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
+        }
+
+        const user = await User.findOne({
+            resetToken: token
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: "Token inválido o expirado", ok: false });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.tokenExpiry = undefined;
+        await user.save();
+
+        return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
+    } catch (error) {
+        console.log("ERROR: Hubo un error al intentar recuperar la contraseña");
+        return res.status(500).json({ message: "Hubo un error al intentar recuperar la contraseña", ok: false });
     }
 
-    const user = await User.findOne({
-        resetToken: token,
-        tokenExpiry: { $gt: Date.now() }
-    });
-
-    if(!user){
-        return res.status(400).json({ message: "Token inválido o expirado", ok: false });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    user.password = hashedPassword;
-    user.resetToken = undefined;
-    user.tokenExpiry = undefined;
-    await user.save();
-
-    return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
 }
 
 const forgotPassword = async (req, res) => {
@@ -128,7 +144,6 @@ const forgotPassword = async (req, res) => {
 
     const token = crypto.randomBytes(32).toString('hex');
     user.resetToken = token;
-    user.tokenExpiry = Date.now() + 3600000; // 1 hora
     await user.save();
 
     const resetUrl = `https://www.ticketsweb.es/reset-password/${token}`;
@@ -155,6 +170,7 @@ module.exports = {
     loginUser,
     logoutUser,
     registerUser,
+    getAllUsers,
     resetPassword,
     forgotPassword
 }
