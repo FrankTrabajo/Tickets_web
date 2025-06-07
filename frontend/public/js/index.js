@@ -7,6 +7,10 @@ logoutBtn.className = "cerrar-btn";
 const perfilImg = document.getElementById('perfilImg');
 const buscarEvento = document.getElementById('buscarEvento');
 
+const menuUsuarioAside = document.getElementById('menuUsuarioAside');
+const cerrarMenuUsuario = document.getElementById('cerrarMenuUsuario');
+const bienvenidoUsuario = document.getElementById('bienvenidoUsuario');
+
 let eventosCargados = [];
 
 function checkUser() {
@@ -20,6 +24,18 @@ function checkUser() {
         hideItems([loginBtn, registerBtn]);
         showItems([logoutBtn, perfilImg]);
       }
+
+       let nombreUsuario = "Usuario";
+      
+      if (data.usuario) {
+        if (data.usuario.includes('@')) {
+          nombreUsuario = data.usuario.split('@')[0];
+        } else {
+          nombreUsuario = data.usuario;
+        }
+      }
+        bienvenidoUsuario.textContent = `¡Bienvenid@, ${nombreUsuario}!`;
+
     });
 }
 
@@ -44,6 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleAside = () => {
     aside.classList.toggle('hidden');
   };
+
+   perfilImg.addEventListener('click', () => {
+      menuUsuarioAside.classList.remove('hidden');
+    });
+
+    cerrarMenuUsuario.addEventListener('click', () => {
+      menuUsuarioAside.classList.add('hidden');
+    });
 
   cargarEventos();
 
