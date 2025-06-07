@@ -9,15 +9,152 @@
   href="https://unpkg.com/leaflet/dist/leaflet.css"
 />
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  html {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body {
+    background-color: #0d0e36;
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-header {
+    background-color: #28285e;
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    top: 0;
+    z-index: 100;
+  }
+
+  .main-header .logo {
+    height: 50px;
+    width: auto;
+    max-height: 50px;
+    transition: transform 0.3s ease;
+  }
+
+  .main-header .logo:hover {
+    transform: scale(1.1);
+  }
+
+  .btn.btn-secondary {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+    background-color: white;
+    color: #ff5f6d;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 1rem; 
+  }
+
+  .btn.btn-secondary:hover {
+    background-color: #f1eaea;
+  }
+
+  .main-footer {
+    background-color: #28285e;
+    color: #ccc;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #444;
+    margin-top: auto;
+  }
+
+  .main-footer p {
+    margin: 0.3rem 0;
+  }
   #mapContainer {
     height: 100vh;
     width: 100%;
   }
+
+  @media (max-width: 768px) {
+    .main-header {
+      flex-direction: row;
+      padding: 0.5rem 0.8rem;
+    }
+
+    .main-header > div {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-header > div:first-child {
+      justify-content: flex-start;
+    }
+
+    .main-header > div:nth-child(2) {
+      justify-content: center;
+    }
+
+    .main-header > div:last-child {
+      justify-content: flex-end;
+    }
+
+    .main-header .logo {
+      height: 36px;
+      max-height: 36px;
+    }
+
+    .btn.btn-secondary {
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      margin: 0; /* quitar margen que ensancha */
+    }
+
+    .main-footer {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .main-footer p {
+      margin: 0.2rem 0;
+    }
+}
+
 </style>
 </head>
 <body>
+  <header class="main-header">
+    <div style="flex: 1; display: flex; justify-content: flex-start;">
+      <button class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
+    </div>
+  
+    <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+      <a href="/" style="display: inline-block;">
+        <img src="../assets/tickelyLogo.png" alt="Logo Tickely" class="logo">
+      </a>
+    </div>
+  
+    <div style="flex: 1;"></div>
+  </header>
   <div id="mapContainer"></div>
-
+  <footer class="main-footer">
+    <p>© 2025 Tickely - Proyecto TFG</p>
+    <p>Participantes: Laura García Yuste, Naiara Peralta Acevedo, Francisco Pedro García Gomez</p>
+    <p>IES Juan de la Cierva</p>
+  </footer>
 </body>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="/js/mapaEventos.js" defer></script>
