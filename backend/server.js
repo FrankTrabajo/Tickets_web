@@ -31,9 +31,14 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 const userRoute = require('./routes/userRoute');
 const eventRoute = require('./routes/eventRoute');
 const compraRoute = require("./routes/compraRoute.js");
+const entradaRoute = require('./routes/entradaRoute.js');
+const pedidoRoute = require('./routes/pedidoRoute.js');
+
 app.use('/api/user', userRoute);
 app.use("/api/event", eventRoute);
 app.use("/api/compra", compraRoute);
+app.use("/api/entradas", entradaRoute);
+app.use("/api/pedidos", pedidoRoute);
 
 // Rutas de vistas
 app.get('/', (req, res) => {
@@ -91,6 +96,15 @@ app.get("/reset-password/:token", (req,res) => {
 app.get("/mapa-eventos", (req,res)  => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'mapaEventos.html'));
 })
+
+app.get("/entradas", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'entradas.html'));
+});
+
+app.get("/pedido", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'pedido.html'));
+});
+
 
 // Rutas de autenticación
 app.get("/check-auth", (req, res) => {

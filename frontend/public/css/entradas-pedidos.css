@@ -1,0 +1,124 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #023e8a;
+}
+
+h1 {
+    color: #03045e;
+}
+
+.card-grid,
+.pedido-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card,
+.pedido {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 300px;
+}
+
+.card h3,
+.pedido h3 {
+    margin-top: 0;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.3rem;
+    text-transform: capitalize;
+}
+
+/* Tarjeta individual de pedidos por día */
+.tarjeta-pedido {
+    border: 2px solid black;
+    padding: 1rem;
+    margin-right: 1rem;
+    width: 260px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: white;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* Fecha de pedido */
+.tarjeta-pedido h3 {
+    font-size: 1rem;
+    font-weight: normal;
+    margin-bottom: 0.8rem;
+    color: black;
+}
+
+#pedidos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    color: #333;
+}
+
+.tarjeta-dia {
+    background-color: white;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 400px;
+    font-family: monospace;
+    white-space: pre-line;
+}
+
+.tarjeta-dia p {
+    margin: 0.3rem 0;
+    color: #333;
+}
+
+.tarjeta-dia .total {
+    font-weight: bold;
+    margin-top: 1rem;
+    color: black;
+}
