@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #ff5f6d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+header h1 {
+    font-size: 1.8rem;
+}
+
+#cerrarSesion {
+    background-color: #ff5f6d;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#cerrarSesion:hover {
+    background-color: #d73442;
+}
+
+.container {
+    max-width: 1400px;
+    width: 95%;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+#tablaUsuarios {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+}
+
+#tablaUsuarios th,
+#tablaUsuarios td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f9c6ca;
+}
+
+#tablaUsuarios th {
+    background-color: #f9c6ca;
+    color: #d73442;
+    font-weight: bold;
+}
+
+#tablaUsuarios td:last-child {
+    white-space: nowrap;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 0.4rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #b7b7b7;
+}
+
+
+.main-footer {
+    background-color: #eeeeee;
+    color: #818181;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #9b9b9b;
+    margin-top: auto;
+}
+
+.main-footer p {
+    margin: 0.3rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    #cerrarSesion {
+        width: 100%;
+        text-align: center;
+    }
+
+    #tablaUsuarios {
+        display: block;
+        overflow-x: auto;
+        min-width: 100%;
+    }
+
+    #tablaUsuarios th,
+    #tablaUsuarios td {
+        white-space: nowrap;
+    }
+}
