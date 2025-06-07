@@ -137,11 +137,12 @@ const deleteUser = async (req, res) => {
 
 
 const resetPassword = async (req, res) => {
-    try {
+    
         const { token } = req.params;
         const { password, password2 } = req.body;
 
         if (password !== password2) {
+            console.log("ERROR CON LAS CONTRASEÑAS", password, password2);
             return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
         }
         console.log("TOKEN EXTRAÍDO:", token);
@@ -151,6 +152,7 @@ const resetPassword = async (req, res) => {
         });
 
         if (!user) {
+            console.log("ERROR AL NO ENCONTRAR AL USUARIO", user);
             return res.status(400).json({ message: "Token inválido o expirado", ok: false });
         }
 
@@ -161,10 +163,7 @@ const resetPassword = async (req, res) => {
         await user.save();
 
         return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
-    } catch (error) {
-        console.log("ERROR: Hubo un error al intentar recuperar la contraseña", error.message);
-        return res.status(500).json({ message: "Hubo un error al intentar recuperar la contraseña", ok: false });
-    }
+ 
 
 }
 
