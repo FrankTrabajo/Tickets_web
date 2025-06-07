@@ -6,7 +6,7 @@ formularioReset.addEventListener('submit', async (e) => {
     const urlParams = new URLSearchParams(window.location.pathname);
     const token = window.location.pathname.split('/reset-password/')[1];
 
-
+    console.log(token);
     const password = formularioReset.password.value;
     const password2 = formularioReset.password2.value;
 

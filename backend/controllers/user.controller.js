@@ -92,13 +92,46 @@ const registerUser = async (req, res) => {
 };
 
 
-const getAllUsers = async (req,res) => {
+const getAllUsers = async (req, res) => {
     try {
         const users = User.find({});
         return res.status(201).json({ users });
     } catch (error) {
         console.error("ERROR: No se pudo obtener los usuarios");
         return res.status(500).json({ message: "Error, no se pudo obtener los usuarios" });
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const token = req.cookies.authToken;
+        if (!token) {
+            return res.status(401).json({ message: "No autorizado" });
+        }
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.userId;
+        const rol = decoded.rol;
+        const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
+
+        if(rol !== "SUPER_ADMIN"){
+            return res.status(401).json({ message: "No autorizado" });
+        }
+        // Verificar si el evento existe y pertenece al usuario
+        const evento = await Evento.findOne({ _id: eventoId, creador: userId });
+        if (!evento) {
+            return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
+        }
+
+        if (evento.imagen_id && !evento.imagen.includes("banner_no_img")) {
+            await cloudinary.uploader.destroy(evento.imagen_id);
+        }
+
+        // Eliminar el evento
+        await Evento.deleteOne({ _id: eventoId });
+        res.status(200).json({ message: "Evento eliminado correctamente" });
+
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar el evento" });
     }
 }
 
@@ -111,6 +144,7 @@ const resetPassword = async (req, res) => {
         if (password !== password2) {
             return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
         }
+        console.log("TOKEN EXTRAÍDO:", token);
 
         const user = await User.findOne({
             resetToken: token
