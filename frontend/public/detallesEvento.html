@@ -16,9 +16,18 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        html{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
         body {
             background-color: #0d0e36;
             color: #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .main-header {
@@ -147,7 +156,7 @@
             padding: 1rem 2rem;
             font-size: 0.9rem;
             border-top: 1px solid #444;
-            margin-top: 3rem;
+            margin-top: auto;
         }
 
         .main-footer p {
@@ -205,7 +214,9 @@
 </head>
 <body class="'p-4">
     <header class="main-header">
-        <img src="../assets/tickelyLogo.png" alt="Logo Tickely" class="logo">
+        <a href="/" style="display: inline-block;">
+            <img src="../assets/tickelyLogo.png" alt="Logo Tickely" class="logo">
+        </a>
     </header>
     <nav class="mb-4 p-3">
         <button class="btn btn-secondary" onclick="window.history.back()">← Volver</button>
