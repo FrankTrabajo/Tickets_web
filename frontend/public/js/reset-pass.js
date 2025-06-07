@@ -17,6 +17,7 @@ formularioReset.addEventListener('submit', async (e) => {
     })
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             if (data.ok) {
                 alert("Contraseña actualizada correctamente");
                 window.location.href = "/login";

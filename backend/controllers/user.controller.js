@@ -162,7 +162,7 @@ const resetPassword = async (req, res) => {
 
         return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
     } catch (error) {
-        console.log("ERROR: Hubo un error al intentar recuperar la contraseña");
+        console.log("ERROR: Hubo un error al intentar recuperar la contraseña", error.message);
         return res.status(500).json({ message: "Hubo un error al intentar recuperar la contraseña", ok: false });
     }
 
