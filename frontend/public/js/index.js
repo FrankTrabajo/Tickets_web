@@ -25,8 +25,8 @@ function checkUser() {
         showItems([logoutBtn, perfilImg]);
       }
 
-       let nombreUsuario = "Usuario";
-      
+      let nombreUsuario = "Usuario";
+
       if (data.usuario) {
         if (data.usuario.includes('@')) {
           nombreUsuario = data.usuario.split('@')[0];
@@ -34,7 +34,7 @@ function checkUser() {
           nombreUsuario = data.usuario;
         }
       }
-        bienvenidoUsuario.textContent = `¡Bienvenid@, ${nombreUsuario}!`;
+      bienvenidoUsuario.textContent = `¡Bienvenid@, ${nombreUsuario}!`;
 
     });
 }
@@ -56,20 +56,39 @@ const aside = document.getElementById('filtroAside');
 document.addEventListener('DOMContentLoaded', () => {
   checkUser();
 
-  
+
   const toggleAside = () => {
     aside.classList.toggle('hidden');
     menuUsuarioAside.classList.add('hidden');
   };
 
-    perfilImg.addEventListener('click', () => {
-      menuUsuarioAside.classList.remove('hidden');
-      aside.classList.add('hidden');
-    });
+  perfilImg.addEventListener('click', () => {
+    fetch("/check-superadmin")
+      .then(response => response.json())
+      .then(data => {
+        if (data.super_admin) {
+          window.location.href = "/super-admin-dashboard"
+        } else {
+          fetch("/check-admin")
+            .then(response => response.json())
+            .then(data => {
+              if (data.admin) {
+                window.location.href = "/admin_dashboard"
+              } else {
+                menuUsuarioAside.classList.remove('hidden');
+                aside.classList.add('hidden');
+              }
+            })
+            .catch(error => { console.error(error) });
+        }
+      })
 
-    cerrarMenuUsuario.addEventListener('click', () => {
-      menuUsuarioAside.classList.add('hidden');
-    });
+
+  });
+
+  cerrarMenuUsuario.addEventListener('click', () => {
+    menuUsuarioAside.classList.add('hidden');
+  });
 
   cargarEventos();
 
@@ -168,7 +187,7 @@ function mostrarEventos(lista) {
           }
         });
       });
-    
+
     botonesDiv.appendChild(btnVerMas);
     botonesDiv.appendChild(btnComprar);
     info.appendChild(botonesDiv);
@@ -219,7 +238,7 @@ function acortarLugar(nombre) {
 //Evento del mapa
 const mapaEvento = document.getElementById('mapa-evento');
 mapaEvento.addEventListener('click', () => {
-  window.location.href= "/mapa-eventos";
+  window.location.href = "/mapa-eventos";
 });
 
 mapaEvento.addEventListener('mouseover', () => {

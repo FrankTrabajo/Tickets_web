@@ -81,12 +81,12 @@ const registerUser = async (req, res) => {
 
         const { password, ...userData } = newUser.toObject();
 
-        res.status(201).json(userData);
+        res.status(201).json({userData, ok: true});
 
     } catch (error) {
         console.log("ERROR: Error en el registro", error);
         if (error.code === 11000) {
-            return res.status(400).json({ message: "El email ya está registrado", ok: true });
+            return res.status(400).json({ message: "El email ya está registrado", ok: false });
         }
         res.status(500).json({ message: error.message });
     }

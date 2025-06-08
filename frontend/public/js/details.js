@@ -1,4 +1,5 @@
 import { centrarMapa, pintarSite } from "./map.js";
+import { hideItems, showItems } from "./utils.js";
 
 function getEvent(){
     const id = getIdFromPath();
@@ -85,10 +86,11 @@ function getAllComments(){
         }
 
         comentarios.forEach(comentario => {
+            console.log(comentario);
             const div = document.createElement('div');
             div.classList.add("comment");
 
-            const nombreUsuario = centrarMapa.id_usuario?.nombre || "Usuario desconocido";
+            const nombreUsuario = comentario.id_usuario?.nombre || "Usuario desconocido";
             div.innerHTML = `<p><b>${nombreUsuario}:</b></p>
                                 <p>${comentario.comentario}</p>
                                 <p>Valoración: ${"⭐".repeat(comentario.valoracion)} (${comentario.valoracion}/5)</p>
@@ -100,8 +102,21 @@ function getAllComments(){
         console.error(error);
     })
 }
+const boton_compra = document.getElementById('comprar-btn');
+function checkAdmin(){
+    fetch("/check-admin")
+    .then(response => response.json())
+    .then(data => {
+        if(data.admin){
+            hideItems([boton_compra]);
+        }else{
+            showItems([boton_compra]);
+        }
+    })
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    checkAdmin();
     getEvent();
     getAllComments();
 });
