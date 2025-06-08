@@ -33,12 +33,15 @@ const eventRoute = require('./routes/eventRoute');
 const compraRoute = require("./routes/compraRoute.js");
 const entradaRoute = require('./routes/entradaRoute.js');
 const pedidoRoute = require('./routes/pedidoRoute.js');
+const comentarioRoute = require('./routes/comentarioRoute.js');
 
 app.use('/api/user', userRoute);
 app.use("/api/event", eventRoute);
 app.use("/api/compra", compraRoute);
 app.use("/api/entradas", entradaRoute);
 app.use("/api/pedidos", pedidoRoute);
+app.use('/api/comentarios', comentarioRoute);
+
 
 // Rutas de vistas
 app.get('/', (req, res) => {
@@ -108,6 +111,7 @@ app.get("/entradas", (req, res) => {
 app.get("/pedido", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'pedido.html'));
 });
+
 
 
 

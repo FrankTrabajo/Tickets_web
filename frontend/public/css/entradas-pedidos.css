@@ -122,3 +122,49 @@ h2 {
     margin-top: 1rem;
     color: black;
 }
+
+.valoracion {
+    margin-top: 12px;
+}
+
+.estrellas {
+    display: flex;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.estrella {
+    color: lightgray;
+    transition: color 0.2s;
+    padding: 2px;
+}
+
+.estrella.seleccionada {
+    color: orange;
+}
+
+.valoracion textarea {
+    width: 100%;
+    resize: vertical;
+    font-size: 14px;
+    padding: 6px;
+    margin-bottom: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+}
+
+.valoracion .enviar-btn {
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.valoracion .enviar-btn:hover {
+    background-color: #023e8a;
+}
