@@ -28,8 +28,7 @@ function getEntradas() {
                 <p><strong>Lugar:</strong> ${entrada.lugar}</p>
                 <p><strong>Fecha:</strong> ${new Date(entrada.fecha).toLocaleDateString()}</p>
                 <p><strong>Precio:</strong> ${entrada.precio.toFixed(2)} €</p>
-
-                <--mensaje de error si falta comentario o estrellas-->
+                                
                 <div class="mensaje-error" style="color: red; font-size: 0.9rem; margin-top: 5px;"></div>
                 
                 <div class="valoracion" data-codigo="${entrada.codigo}">
