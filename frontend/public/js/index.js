@@ -59,10 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const toggleAside = () => {
     aside.classList.toggle('hidden');
+    menuUsuarioAside.classList.add('hidden');
   };
 
-   perfilImg.addEventListener('click', () => {
+    perfilImg.addEventListener('click', () => {
       menuUsuarioAside.classList.remove('hidden');
+      aside.classList.add('hidden');
     });
 
     cerrarMenuUsuario.addEventListener('click', () => {
