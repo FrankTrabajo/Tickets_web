@@ -1,4 +1,5 @@
 const Comentario = require('../models/Comentario');
+const Evento = require('../models/Evento');
 const jsonwebtoken = require('jsonwebtoken');
 
 const crearComentario = async(req, res) => {
@@ -12,15 +13,20 @@ const crearComentario = async(req, res) => {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const id_usuario = decoded.userId;
         
-        const {id_evento, comentario, valoracion} = req.body;
+        const {evento, comentario, valoracion} = req.body;
 
-        if(!id_evento || !comentario || !valoracion){
+        if(!evento || !comentario || !valoracion){
             return res.status(400).json({message: "Por favor rellena los campos obligatorios"});
+        }
+
+        const eventoEncontrado = await Evento.findOne({ nombre: evento });
+        if (!eventoEncontrado) {
+            return res.status(404).json({ message: "Evento no encontrado" });
         }
 
         const nuevoComentario = new Comentario({
             id_usuario,
-            id_evento,
+            id_evento: eventoEncontrado._id,
             comentario,
             valoracion
         });
@@ -33,7 +39,56 @@ const crearComentario = async(req, res) => {
     }
 };
 
+const obtenerComentariosDelUsuario = async(req, res) => {
+    try {
+       const token = req.cookies.authToken;
+        if(!token){
+            res.status(401).json({message: "No autorizado"});
+            return;
+        }
+        
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+        const id_usuario = decoded.userId;
+        
+        const comentarios = await Comentario.find({ id_usuario })
+        .populate('id_evento', 'nombre fecha') 
+        .sort({ _id: -1 }) 
+        .lean();
+
+        const comentariosFinal = [];
+
+        for(let i=0; i<comentarios.length;i++){
+            const comentario = comentarios[i];
+            
+            const nuevoComentario = {
+                _id: comentario._id,
+                comentario: comentario.comentario,
+                valoracion: comentario.valoracion,
+                createdAt: comentario.createdAt
+            };
+
+            if (comentario.id_evento && comentario.id_evento.nombre) {
+                nuevoComentario.nombreEvento = comentario.id_evento.nombre;
+            } else {
+                nuevoComentario.nombreEvento = "Evento desconocido";
+            }
+
+            if (comentario.id_evento && comentario.id_evento.fecha) {
+                nuevoComentario.fechaEvento = comentario.id_evento.fecha;
+            }
+
+            comentariosFinal.push(nuevoComentario);
+        }
+            
+        res.json(comentariosFinal);
+        
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener los comentarios" });
+    }
+}
+
 
 module.exports = {
-    crearComentario
+    crearComentario,
+    obtenerComentariosDelUsuario
 };

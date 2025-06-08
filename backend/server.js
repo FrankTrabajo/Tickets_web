@@ -112,6 +112,10 @@ app.get("/pedido", (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public', 'pedido.html'));
 });
 
+app.get("/comentarios/usuario", (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public', 'comentarios.html'));
+});
+
 
 
 

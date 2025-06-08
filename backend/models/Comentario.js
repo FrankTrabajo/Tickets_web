@@ -10,7 +10,8 @@ const comentarioSchema = new mongoose.Schema(
 
     {
         collection: 'comentarios',
-        versionKey: false
+        versionKey: false, 
+        timestamps: { createdAt: true, updatedAt: false }
     }
 
 );
