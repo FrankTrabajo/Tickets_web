@@ -21,17 +21,16 @@ function getEntradas() {
         entradas.forEach(entrada => {
             const card = document.createElement("div");
             card.classList.add("card");
-
+            console.log(entrada);
             card.innerHTML = `
-            
                 <h3>${entrada.evento}</h3>
                 <p><strong>Lugar:</strong> ${entrada.lugar}</p>
                 <p><strong>Fecha:</strong> ${new Date(entrada.fecha).toLocaleDateString()}</p>
                 <p><strong>Precio:</strong> ${entrada.precio.toFixed(2)} €</p>
-                                
+                <div class="qr" style="margin-top: 10px;"></div>                
                 <div class="mensaje-error" style="color: red; font-size: 0.9rem; margin-top: 5px;"></div>
                 
-                <div class="valoracion" data-codigo="${entrada.codigo}">
+                <div class="valoracion" data-codigo="${entrada.codigo}" data-evento="${entrada.id_evento}">
                     <div class="estrellas">
                     ${[1,2,3,4,5].map(num => `<span class="estrella" data-valor="${num}">&#9733;</span>`).join('')}
                     </div>
@@ -41,6 +40,14 @@ function getEntradas() {
                 `;
 
             container.appendChild(card);
+
+            new QRCode(card.querySelector(".qr"), {
+                text: entrada.codigo,
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
+            });
 
         });
     })
@@ -53,8 +60,8 @@ document.addEventListener('click', function (e) {
   if (e.target.classList.contains('estrella')) {
     const valor = parseInt(e.target.getAttribute('data-valor'));
     const estrellas = e.target.parentElement.querySelectorAll('.estrella');
-    
-    //Para pintar las estrellas 
+
+    // Para pintar las estrellas
     estrellas.forEach((estrella, i) => {
       estrella.classList.toggle('seleccionada', i < valor);
     });
@@ -68,42 +75,54 @@ document.addEventListener('click', function (e) {
     const comentario = contenedor.querySelector('textarea').value.trim();
     const id_evento = contenedor.getAttribute('data-evento');
     const mensajeError = contenedor.parentElement.querySelector('.mensaje-error');
-
+    console.log(id_evento);
     mensajeError.textContent = '';
 
-    // Si falta alguna parte (comentario o estrellas), muestra el error
+    // Validación básica
     if (estrellas === 0 || comentario === '') {
-      mensajeError.textContent = 'Por favor selecciona una valoracion y escribe una reseña';
+      mensajeError.textContent = 'Por favor selecciona una valoración y escribe una reseña';
       return;
     }
 
-    //si todo esta ok se guarda el comentario 
-    fetch('/api/comentarios', {
-        method: 'POST',
-        headers: {
-            'Content-Type' : 'application/json'
-        },
-        credentials: 'include',
+    if (!id_evento) {
+      mensajeError.textContent = 'Error: no se encontró el ID del evento.';
+      return;
+    }
 
-        body: JSON.stringify({
-            id_evento,
-            comentario,
-            valoracion: estrellas
-        })
+    // Enviar comentario al backend
+    fetch('/api/comentarios/new-comment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        evento: id_evento,  // Fíjate que en el backend usas "evento" (nombre), no "id_evento". Si necesitas enviar id_evento, revisa backend.
+        comentario,
+        valoracion: estrellas
+      })
     })
-    .then(res => res.json())
+    .then(async res => {
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Error al enviar el comentario');
+      }
+      return res.json();
+    })
     .then(data => {
-        alert("Gracias por tu valoracion");
-        // Limpio  los campos después de enviar
-        contenedor.querySelector('textarea').value = '';
-        estrellasElem.querySelectorAll('.estrella').forEach(el => el.classList.remove('seleccionada'));
-        estrellasElem.removeAttribute('data-seleccion');
+      alert("Gracias por tu valoración");
+      // Limpio campos
+      contenedor.querySelector('textarea').value = '';
+      estrellasElem.querySelectorAll('.estrella').forEach(el => el.classList.remove('seleccionada'));
+      estrellasElem.removeAttribute('data-seleccion');
     })
     .catch(error => {
-        alert("No se pudo realizar la valoracion");
-    })
+      mensajeError.textContent = error.message;
+      alert("No se pudo realizar la valoración");
+    });
   }
 });
+
 
 
 async function checkAuth() {

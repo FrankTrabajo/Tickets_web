@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { crearComentario } = require ('../controllers/comentario.controller');
+const { crearComentario, getAllComments } = require ('../controllers/comentario.controller');
 const { obtenerComentariosDelUsuario } = require ('../controllers/comentario.controller');
 
-router.post('/', crearComentario);
+router.post('/new-comment', crearComentario);
 router.get('/usuario', obtenerComentariosDelUsuario);
+
+router.get("/get-all-comments", getAllComments);
 
 module.exports = router;
 

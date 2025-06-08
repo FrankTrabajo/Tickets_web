@@ -1,5 +1,5 @@
 const multer = require('multer');
-const { storage } = require('./cloudinary'); // Importas el storage de Cloudinary
+const { storage } = require('./cloudinary'); // Se importa cloudinary en la variable storage
 
 // Filtro opcional
 const fileFilter = (req, file, cb) => {

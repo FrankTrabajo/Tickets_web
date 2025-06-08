@@ -27,6 +27,7 @@ const getEntradasUsuario = async(req, res) => {
             const lugar = evento.lugar || {};
 
             return {
+                id_evento: evento._id,
                 codigo: ticket.codigo,
                 evento: evento.nombre,
                 lugar: lugar.nombre,

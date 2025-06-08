@@ -72,6 +72,36 @@ function getIdFromPath() {
 }
 
 
+function getAllComments(){
+    fetch("/api/comentarios/get-all-comments")
+    .then(response => response.json())
+    .then(data => {
+        let comentarios = data.comentarios;
+        let contenedor = document.getElementById('users-comments');
+        contenedor.innerHTML = "";
+        if(!comentarios || comentarios.length === 0){
+            contenedor.innerHTML = "<p>No hay comentarios aún.</p>";
+            return;
+        }
+
+        comentarios.forEach(comentario => {
+            const div = document.createElement('div');
+            div.classList.add("comment");
+
+            const nombreUsuario = centrarMapa.id_usuario?.nombre || "Usuario desconocido";
+            div.innerHTML = `<p><b>${nombreUsuario}:</b></p>
+                                <p>${comentario.comentario}</p>
+                                <p>Valoración: ${"⭐".repeat(comentario.valoracion)} (${comentario.valoracion}/5)</p>
+                                <hr>`; 
+            contenedor.appendChild(div);
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     getEvent();
+    getAllComments();
 });
