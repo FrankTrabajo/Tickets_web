@@ -56,7 +56,7 @@ const obtenerComentariosDelUsuario = async(req, res) => {
         .populate('id_evento', 'nombre fecha') 
         .sort({ _id: -1 }) 
         .lean();
-
+        console.log(comentarios);
         const comentariosFinal = [];
 
         for(let i=0; i<comentarios.length;i++){
@@ -95,8 +95,6 @@ const getAllComments = async (req,res) => {
     let comentarios = await Comentario.find({})
     .populate('id_usuario', 'nombre');
 
-    console.log(comentarios);
-
     if(!comentarios){
         return res.status(404).json({ message: "No se encontró ningun comentario", ok: false });
     }
@@ -105,9 +103,18 @@ const getAllComments = async (req,res) => {
 
 }
 
+const getAllCommnetsEvents = async (req,res) => {
+    const { idEvento } = req.params;
+
+    const comentarios = await Comentario.find({ id_evento: idEvento })
+    .populate("id_usuario", "nombre");
+    return res.status(200).json({ comentarios });
+}
+
 
 module.exports = {
     crearComentario,
     obtenerComentariosDelUsuario,
-    getAllComments
+    getAllComments,
+    getAllCommnetsEvents
 };

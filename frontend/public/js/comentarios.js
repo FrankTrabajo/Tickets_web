@@ -25,12 +25,13 @@ function getComentarios() {
         const mesStr = fechaObj.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
 
         if (!agrupadosPorMes[mesStr]) agrupadosPorMes[mesStr] = [];
-
+        console.log(comentario);
         agrupadosPorMes[mesStr].push({
           fecha: fechaStr,
           evento: comentario.nombre_evento || "Evento desconocido",
           texto: comentario.comentario,
-          valoracion: comentario.valoracion
+          valoracion: comentario.valoracion,
+          nombreEvento: comentario.nombreEvento
         });
       });
 
@@ -41,11 +42,12 @@ function getComentarios() {
         container.appendChild(titulo);
 
         agrupadosPorMes[mes].forEach(resena => {
+          console.log(resena);
           const tarjeta = document.createElement("div");
           tarjeta.classList.add("tarjeta-dia");
 
           tarjeta.innerHTML = `
-            <p><strong>Fecha:</strong> ${resena.fecha} &nbsp;&nbsp; <strong>Entrada:</strong> ${resena.evento}</p>
+            <p><strong>Fecha:</strong> ${resena.fecha} &nbsp;&nbsp; <strong>Entrada:</strong> ${resena.nombreEvento}</p>
             <p><strong>Comentario:</strong></p>
             <p>${resena.texto}</p>
             <p><strong>Valoración:</strong> ${renderEstrellas(resena.valoracion)}</p>

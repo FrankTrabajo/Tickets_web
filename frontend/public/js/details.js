@@ -72,9 +72,11 @@ function getIdFromPath() {
     return pathParts[pathParts.length - 1]; // Último segmento
 }
 
+const id_evento = getIdFromPath();
 
-function getAllComments(){
-    fetch("/api/comentarios/get-all-comments")
+function getAllCommentsEvent(){
+    console.log(id_evento);
+    fetch(`/api/comentarios/get-all-comments-event/${id_evento}`)
     .then(response => response.json())
     .then(data => {
         let comentarios = data.comentarios;
@@ -118,5 +120,5 @@ function checkAdmin(){
 document.addEventListener('DOMContentLoaded', () => {
     checkAdmin();
     getEvent();
-    getAllComments();
+    getAllCommentsEvent();
 });
