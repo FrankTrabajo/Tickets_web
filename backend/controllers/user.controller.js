@@ -153,32 +153,28 @@ const updateUser = async (req,res) => {
 
 
 const resetPassword = async (req, res) => {
-    
-        const { token } = req.params;
-        const { password, password2 } = req.body;
+  const { token } = req.params;
+  const { password, password2 } = req.body;
 
-        if (password !== password2) {
-            return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
-        }
+  if (password !== password2) {
+    return res.status(400).json({ message: "Las contraseñas no coinciden", ok: false });
+  }
 
-        const user = await User.findOne({
-            resetToken: token
-        });
+  const user = await User.findOne({ resetToken: token });
 
-        if (!user) {
-            return res.status(400).json({ message: "Token inválido o expirado", ok: false });
-        }
+  if (!user) {
+    return res.status(400).json({ message: "Token inválido o expirado", ok: false });
+  }
 
-        const hashedPassword = await bcryptjs.hash(password, 12);
-        user.password = hashedPassword;
-        user.resetToken = undefined;
-        user.tokenExpiry = undefined;
-        await user.save();
+  user.password = password;
+  user.resetToken = undefined;
+  user.tokenExpiry = undefined;
 
-        return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
- 
+  await user.save(); 
 
-}
+  return res.status(201).json({ message: "Contraseña actualizada correctamente", ok: true });
+};
+
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;

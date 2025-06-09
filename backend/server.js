@@ -4,7 +4,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+
 dotenv.config();
+
 const cors = require('cors');
 
 
