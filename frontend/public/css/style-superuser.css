@@ -99,7 +99,6 @@ header h1 {
     background-color: #b7b7b7;
 }
 
-
 .main-footer {
     background-color: #eeeeee;
     color: #818181;
@@ -112,6 +111,48 @@ header h1 {
 
 .main-footer p {
     margin: 0.3rem 0;
+}
+
+.event-item {
+    border: 2px solid #ff5f6d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: #fbfbfb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-item strong {
+    font-size: 1.1rem;
+    color: #d73442;
+}
+
+.event-item p {
+    margin: 0.5rem 0 1rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.event-item button {
+    padding: 0.4rem 0.9rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff5f6d;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.event-item button:hover {
+    background-color: #d73442;
 }
 
 /* Responsive */
