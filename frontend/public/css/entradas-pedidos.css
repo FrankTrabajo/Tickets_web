@@ -1,170 +1,142 @@
-body {
-    font-family: Arial, sans-serif;
+* {
     margin: 0;
-    padding: 20px;
-    background-color: #f7f7f7;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-nav {
-    margin-bottom: 20px;
+html {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    background-color: #0077b6;
+body {
+    background-color: #0d0e36;
     color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    position: relative;
+}
+
+.main-header {
+    background-color: #28285e;
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 100;
+}
+
+.main-header .logo {
+    display: block;
+    height: 50px;
+    max-height: 50px;
+    transition: transform 0.3s ease;
+}
+
+.main-header .logo:hover {
+    transform: scale(1.1);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn.btn-secondary {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+    background-color: white;
+    color: #ff5f6d;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
+    font-weight: bold;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #023e8a;
+.btn.btn-secondary:hover {
+    background-color: #f1eaea;
+}
+
+.btn-volver {
+    margin: 1.5rem 0 0 2rem;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    align-self: flex-start;
+    max-width: fit-content;
 }
 
 h1 {
-    color: #03045e;
+    font-size: 2rem;
+    margin: 2rem;
+    color: #ff5f6d;
 }
 
-.card-grid,
-.pedido-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.card,
-.pedido {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 300px;
-}
-
-.card h3,
-.pedido h3 {
-    margin-top: 0;
-}
-
-ul {
-    padding-left: 20px;
-}
-
-li {
-    margin-bottom: 5px;
-}
-
-h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 0.3rem;
-    text-transform: capitalize;
-}
-
-
-.tarjeta-pedido {
-    border: 2px solid black;
-    padding: 1rem;
-    margin-right: 1rem;
-    width: 260px;
-    display: inline-block;
-    vertical-align: top;
-    background-color: white;
-    box-shadow: none;
-    border-radius: 0;
-}
-
-
-.tarjeta-pedido h3 {
-    font-size: 1rem;
-    font-weight: normal;
-    margin-bottom: 0.8rem;
-    color: black;
-}
-
-#pedidos-container {
+#comentarios-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    padding: 1rem 2rem;
+}
+
+.comentarios-list .card {
+    background-color: #1c1c50;
     padding: 1rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-    margin-top: 2rem;
-    color: #333;
-}
-
-.tarjeta-dia {
-    background-color: white;
-    padding: 1.2rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    width: 100%;
-    max-width: 400px;
-    font-family: monospace;
-    white-space: pre-line;
-}
-
-.tarjeta-dia p {
-    margin: 0.3rem 0;
-    color: #333;
-}
-
-.tarjeta-dia .total {
-    font-weight: bold;
-    margin-top: 1rem;
-    color: black;
-}
-
-.valoracion {
-    margin-top: 12px;
-}
-
-.estrellas {
-    display: flex;
-    font-size: 24px;
-    cursor: pointer;
-    margin-bottom: 5px;
-}
-
-.estrella {
-    color: lightgray;
-    transition: color 0.2s;
-    padding: 2px;
-}
-
-.estrella.seleccionada {
-    color: orange;
-}
-
-.valoracion textarea {
-    width: 100%;
-    resize: vertical;
-    font-size: 14px;
-    padding: 6px;
-    margin-bottom: 6px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-family: inherit;
-}
-
-.valoracion .enviar-btn {
-    background-color: #0077b6;
+    border: 1px solid #444;
     color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
 }
 
-.valoracion .enviar-btn:hover {
-    background-color: #023e8a;
+.comentarios-list .card h3 {
+    color: #ff5f6d;
+    margin-bottom: 0.5rem;
+}
+
+.comentarios-list .card p {
+    color: #ccc;
+    font-size: 0.95rem;
+}
+
+.main-footer {
+    background-color: #28285e;
+    color: #ccc;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #444;
+    margin-top: auto;
+}
+
+.main-footer p {
+    margin: 0.3rem 0;
+}
+
+/* Responsive para botones y título */
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-buttons {
+        margin-top: 1rem;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        margin: 1.5rem 1rem;
+    }
 }

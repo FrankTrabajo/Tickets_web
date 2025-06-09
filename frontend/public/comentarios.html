@@ -6,16 +6,28 @@
   <link rel="stylesheet" href="/css/entradas-pedidos.css">
 </head>
 <body>
-  <nav>
-    <button onclick="location.href='entradas.html'">Mis entradas</button>
-     <button onclick="location.href='pedido.html'">Mis pedidos</button> 
-    <button onclick="location.href='index.html'">Volver atrás</button>
-  </nav>
+  <header class="main-header" style="justify-content: space-between; padding: 0.5rem 2rem;">
+    <div class="header-left">
+      <a href="/" style="display: inline-block;">
+        <img src="../assets/tickelyLogo.png" alt="Logo Tickely" class="logo" />
+      </a>
+    </div>
+    <div class="header-buttons">
+      <button onclick="location.href='pedido.html'" class="btn btn-secondary">Mis pedidos</button>
+      <button onclick="location.href='entradas.html'" class="btn btn-secondary">Mis entradas</button>
+    </div>
+  </header>
+
+  <button class="btn btn-secondary btn-volver" onclick="location.href='index.html'">Volver atrás</button>
 
   <h1>Mis reseñas</h1>
   <div id="comentarios-container" class="comentarios-list"></div>
 
- 
+  <footer class="main-footer">
+    <p>© 2025 Tickely - Proyecto TFG</p>
+    <p>Participantes: Laura García Yuste, Naiara Peralta Acevedo, Francisco Pedro García Gomez</p>
+    <p>IES Juan de la Cierva</p>
+  </footer>
 </body>
 <script src="/js/comentarios.js"></script>
 </html>
