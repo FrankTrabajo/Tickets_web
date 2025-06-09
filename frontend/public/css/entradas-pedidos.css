@@ -1,3 +1,4 @@
+/* Tu CSS original */
 * {
     margin: 0;
     padding: 0;
@@ -55,7 +56,8 @@ body {
     gap: 1rem;
 }
 
-.btn.btn-secondary {
+.btn.btn-secondary,
+button {
     font-size: 1.1rem;
     padding: 12px 24px;
     background-color: white;
@@ -66,7 +68,8 @@ body {
     cursor: pointer;
 }
 
-.btn.btn-secondary:hover {
+.btn.btn-secondary:hover,
+button:hover {
     background-color: #f1eaea;
 }
 
@@ -84,30 +87,138 @@ h1 {
     color: #ff5f6d;
 }
 
-#comentarios-container {
+h2 {
+    font-size: 1.5rem;
+    color: white;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.3rem;
+    text-transform: capitalize;
+}
+
+.card-grid,
+.pedido-list {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 20px;
     padding: 1rem 2rem;
 }
 
-.comentarios-list .card {
+.card,
+.pedido {
     background-color: #1c1c50;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 300px;
     border: 1px solid #444;
     color: white;
 }
 
-.comentarios-list .card h3 {
+.card h3,
+.pedido h3 {
+    margin-top: 0;
     color: #ff5f6d;
-    margin-bottom: 0.5rem;
 }
 
-.comentarios-list .card p {
+.card p,
+.pedido p,
+li {
     color: #ccc;
     font-size: 0.95rem;
+}
+
+.tarjeta-pedido {
+    background-color: #1c1c50;
+    border: 2px solid #444;
+    padding: 1rem;
+    margin-right: 1rem;
+    width: 260px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: none;
+    border-radius: 8px;
+    color: white;
+}
+
+.tarjeta-pedido h3 {
+    font-size: 1rem;
+    font-weight: normal;
+    margin-bottom: 0.8rem;
+    color: #ff5f6d;
+}
+
+.tarjeta-dia {
+    background-color: #1c1c50;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #444;
+    width: 100%;
+    max-width: 400px;
+    font-family: monospace;
+    white-space: pre-line;
+    color: white;
+}
+
+.tarjeta-dia p {
+    margin: 0.3rem 0;
+    color: #ccc;
+}
+
+.tarjeta-dia .total {
+    font-weight: bold;
+    margin-top: 1rem;
+    color: white;
+}
+
+.valoracion {
+    margin-top: 12px;
+}
+
+.estrellas {
+    display: flex;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.estrella {
+    color: lightgray;
+    transition: color 0.2s;
+    padding: 2px;
+}
+
+.estrella.seleccionada {
+    color: orange;
+}
+
+.valoracion textarea {
+    width: 100%;
+    resize: vertical;
+    font-size: 14px;
+    padding: 6px;
+    margin-bottom: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    background-color: #1c1c50;
+    color: white;
+}
+
+.valoracion .enviar-btn {
+    background-color: white;
+    color: #ff5f6d;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.valoracion .enviar-btn:hover {
+    background-color: #f1eaea;
 }
 
 .main-footer {
@@ -124,7 +235,7 @@ h1 {
     margin: 0.3rem 0;
 }
 
-/* Responsive para botones y título */
+/* Responsive */
 @media (max-width: 768px) {
     .main-header {
         flex-direction: column;
@@ -139,4 +250,80 @@ h1 {
         font-size: 1.6rem;
         margin: 1.5rem 1rem;
     }
+}
+
+#comentarios-container {
+    padding: 0 3rem;
+}
+
+#comentarios-container h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 2px solid #444;
+    padding: 1rem 2rem;
+    font-size: 1.7rem;
+    color: #ff5f6d;
+}
+
+#comentarios-container .tarjeta-dia {
+    max-width: 700px;
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+#pedidos-container h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.4rem;
+    font-size: 1.7rem;
+    color: #ff5f6d;
+    width: 100%;
+}
+
+#pedidos-container .tarjeta-dia {
+    max-width: 500px;
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+}
+
+.valoracion textarea {
+    width: 100%;
+    resize: vertical;
+    font-size: 15px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #555;
+    font-family: inherit;
+    background-color: #1c1c50;
+    color: #eee;
+    line-height: 1.5;
+}
+
+.valoracion .enviar-btn {
+    background-color: white;
+    color: #ff5f6d;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.valoracion .enviar-btn:hover {
+    background-color: #f1eaea;
+}
+
+.card p {
+    color: #ddd;
+    font-size: 1.05rem;
+    line-height: 1.6;
 }

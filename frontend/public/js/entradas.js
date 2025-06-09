@@ -50,6 +50,12 @@ function getEntradas() {
             });
 
         });
+
+        document.querySelectorAll('#entradas-container .card h3').forEach(h3 => {
+          if(h3.textContent.trim() === "undefined") {
+            h3.parentElement.style.display = "none";
+          }
+        });
     })
     .catch(error => {
         console.error("Error al cargar entradas:", error);
