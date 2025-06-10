@@ -139,8 +139,10 @@ document.querySelector('.event-table tbody').addEventListener('click', (e) => {
             .then(response => response.json())
             .then(data => {
                 alert(data.message);
+                window.location.reload();
                 getEventos(); // Actualiza la lista de eventos después de eliminar
                 getEstadisticasUsuario(); // Actualiza las estadísticas después de eliminar
+                
             })
             .catch(error => {
                 console.error("Error al eliminar el evento:", error);

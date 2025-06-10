@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcryptjs = require('bcryptjs');
 
-
 dotenv.config();
 
 //* ----------- AQUI HAY USUARIOS CLIENTES Y ADMINISTRADORES DE EVENTOS -------------
@@ -12,6 +11,11 @@ dotenv.config();
 
 //* ---- LOGIN -----
 const User = require('../models/User.js');
+const Evento = require('../models/Evento.js');
+const Pedido = require('../models/Pedido.js');
+const Pago = require('../models/Pago.js');
+const Ticket = require('../models/Ticket.js');
+const PedidoTicket = require('../models/PedidoTicket.js');
 
 /**
  * Esta función es la encargada del inicio de sesión, creando el token con la infromación del usuario y almacenándolo en las cookies.
@@ -130,25 +134,61 @@ const getAllUsers = async (req, res) => {
  * @returns 
  */
 const deleteUser = async (req, res) => {
-    
-        const token = req.cookies.authToken;
-        if (!token) {
-            return res.status(401).json({ message: "No autorizado", ok: false });
-        }
+    const token = req.cookies.authToken;
+    if (!token) {
+        return res.status(401).json({ message: "No autorizado", ok: false });
+    }
+
+    try {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        const rol = decoded.rol;
-        console.log(decoded);
-        if(!rol.includes("SUPER_ADMIN")){
-            return res.status(401).json({ message: "No autorizado", ok: false });
-            
+        const rolAuth = decoded.rol;
+
+        if (!rolAuth.includes("SUPER_ADMIN")) {
+            return res.status(403).json({ message: "Acceso denegado", ok: false });
         }
-        // Verificar si el evento existe y pertenece al usuario
-        await User.findByIdAndDelete(req.params.id);
-        console.log("USUARIO ELIMINADO");
-        return res.status(200).json({ message: "Usuario eliminado correctamente" , ok: true});
 
+        const userId = req.params.id;
 
-}
+        // 1. Buscar al usuario que se quiere eliminar
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado", ok: false });
+        }
+
+        const isAdmin = user.rol === "ADMIN";
+
+        if (isAdmin) {
+            // Si es admin, elimina sus eventos y todo lo relacionado
+            const eventos = await Evento.find({ creador: userId });
+            const eventoIds = eventos.map(evento => evento._id);
+
+            await Comentario.deleteMany({ id_evento: { $in: eventoIds } });
+            await Ticket.deleteMany({ id_evento: { $in: eventoIds } });
+            await Evento.deleteMany({ creador: userId });
+        } else {
+            // Si es usuario común, elimina sus compras, tickets y comentarios
+            const pedidos = await Pedido.find({ id_usuario: userId });
+            const pedidoIds = pedidos.map(p => p._id);
+
+            await Comentario.deleteMany({ id_usuario: userId });
+            await Ticket.deleteMany({ id_usuario: userId });
+            await PedidoTicket.deleteMany({ id_pedido: { $in: pedidoIds } });
+            await Pago.deleteMany({ id_pedido: { $in: pedidoIds } });
+            await Pedido.deleteMany({ id_usuario: userId });
+        }
+
+        // Finalmente, eliminar el usuario
+        await User.findByIdAndDelete(userId);
+
+        console.log("USUARIO Y RELACIONES ELIMINADAS");
+        return res.status(200).json({ message: "Usuario y sus datos eliminados correctamente", ok: true });
+
+    } catch (error) {
+        console.error("Error al eliminar usuario y sus relaciones:", error);
+        return res.status(500).json({ message: "Error al eliminar usuario", ok: false });
+    }
+};
+
 
 /**
  * Se encarga de actualizar a un usuario en especifico con los valores pasado por el cuerpo enviado desde el JavaScript.

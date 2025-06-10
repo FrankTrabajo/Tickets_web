@@ -2,7 +2,8 @@ const Evento = require("../models/Evento");
 const path = require('path');
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const Ticket = require("../models/Ticket");
+const Ticket = require("../models/Ticket.js");
+const Comentario = require("../models/Comentario.js");
 const { cloudinary } = require("../middlewares/cloudinary");
 
 
@@ -163,7 +164,7 @@ const getEvento = async (req, res) => {
  * @returns 
  */
 const removeEvent = async (req, res) => {
-    try {
+
         const token = req.cookies.authToken;
         if (!token) {
             return res.status(401).json({ message: "No autorizado" });
@@ -174,7 +175,7 @@ const removeEvent = async (req, res) => {
         const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
 
         // Verificar si el evento existe y pertenece al usuario
-        const evento = await Evento.findOne({ _id: eventoId, creador: userId });
+        const evento = await Evento.findById({ _id: eventoId});
         if (!evento) {
             return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
         }
@@ -183,13 +184,14 @@ const removeEvent = async (req, res) => {
             await cloudinary.uploader.destroy(evento.imagen_id);
         }
 
+        await Ticket.deleteMany({id_evento: eventoId});
+        await Comentario.deleteMany({id_evento: eventoId});
+
         // Eliminar el evento
         await Evento.deleteOne({ _id: eventoId });
-        res.status(200).json({ message: "Evento eliminado correctamente" });
+        res.status(200).json({ message: "Evento eliminado correctamente", ok: true });
 
-    } catch (error) {
-        res.status(500).json({ message: "Error al eliminar el evento" });
-    }
+
 }
 
 

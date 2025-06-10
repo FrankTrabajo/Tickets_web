@@ -186,7 +186,8 @@ function deleteEvent(eventId, userId) {
     if (!confirm("¿Seguro que quieres eliminar este evento?")) return;
 
     fetch(`/api/event/delete_event/${eventId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
     })
         .then(res => {
             if (!res.ok) throw new Error("Error al eliminar evento");
