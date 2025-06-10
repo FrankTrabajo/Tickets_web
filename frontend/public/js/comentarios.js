@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     getComentarios();
 });
+/**
+ * Se encarga de obtener todos los comentarios por usuario específico y mostrarlos en la web.
+ */
 function getComentarios() {
     fetch("/api/comentarios/usuario", {
         credentials: 'include'
@@ -64,13 +67,21 @@ function getComentarios() {
     });
 }
 
+/**
+ * Se encarga de mostrar las estrellas en función del valor recibido por la lectura del comentario.
+ * @param {Number} valor 
+ * @returns 
+ */
 function renderEstrellas(valor) {
   return [1, 2, 3, 4, 5]
     .map(i => (i <= valor ? "⭐" : "☆"))
     .join("");
 }
 
-
+/**
+ * Se encarga de hacer una peticion para saber si el usuario actual está autenticado o no.
+ * @returns 
+ */
 async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'

@@ -13,6 +13,12 @@ dotenv.config();
 //* ---- LOGIN -----
 const User = require('../models/User.js');
 
+/**
+ * Esta función es la encargada del inicio de sesión, creando el token con la infromación del usuario y almacenándolo en las cookies.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -40,7 +46,11 @@ const loginUser = async (req, res) => {
 };
 
 
-
+/**
+ * Esta conectante se encara de cerrar la sesión del usuario.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const logoutUser = async (req, res) => {
     try {
         res.clearCookie('authToken', {
@@ -53,7 +63,12 @@ const logoutUser = async (req, res) => {
     }
 };
 
-
+/**
+ * Esta constante es la encargada de crear nuevos usuarios y almacenarlos en la base de datos obteniendo los valores desde el formulario de registro.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const registerUser = async (req, res) => {
     try {
         const { nombre, email, password1, password2 } = req.body;
@@ -92,7 +107,12 @@ const registerUser = async (req, res) => {
     }
 };
 
-
+/**
+ * Obtengo todos los usuarios de la base de datos.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.find({});
@@ -103,6 +123,12 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+/**
+ * Es el encargado de eliminar un usuario en especifico.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const deleteUser = async (req, res) => {
     
         const token = req.cookies.authToken;
@@ -124,6 +150,12 @@ const deleteUser = async (req, res) => {
 
 }
 
+/**
+ * Se encarga de actualizar a un usuario en especifico con los valores pasado por el cuerpo enviado desde el JavaScript.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const updateUser = async (req,res) => {
     try {
         const { rol } = req.body;
@@ -151,7 +183,12 @@ const updateUser = async (req,res) => {
 }
 
 
-
+/**
+ * Se encarga de resetear la contraseña de un usuario en especifico obteniendo un token de identificación del usuario para poder realizar la operacion.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password, password2 } = req.body;
@@ -176,6 +213,13 @@ const resetPassword = async (req, res) => {
 };
 
 
+/**
+ * Esta función se encarga de realizar las operaciones necesarias para preparar al usuario cuya contraseña va a ser restablecida
+ * y envia un correo a esa persona que necesita cambiar su contraseña.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email }); // => Aqui comprobamos que el usuario existe

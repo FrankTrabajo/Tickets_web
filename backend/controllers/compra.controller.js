@@ -9,6 +9,13 @@ const QRCode = require('qrcode');
 const pdf = require('pdfkit')
 const nodemailer = require('nodemailer');
 
+/**
+ * Se encarga de realizar la compra de las entradas y todas sus funciones para crear el pedido, los tickets por usuario y codigo único
+ * además de crear los pdf con sus datos y qr correspondiente y envio de correo al usuario
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const compra = async (req,res) => {
     try {
         const { idEvento, tipoEntrada, cantidad, metodoPago } = req.body;

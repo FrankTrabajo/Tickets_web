@@ -1,6 +1,9 @@
 const Ticket = require('../models/Ticket.js');
 const jsonwebtoken = require('jsonwebtoken');
 
+/**
+ * Se encarga de obtener todas las entradas del usuario, obteniendo su id por el token que se almacena en la cookie.
+ */
 const getEntradasUsuario = async(req, res) => {
     try {
         const token = req.cookies.authToken;

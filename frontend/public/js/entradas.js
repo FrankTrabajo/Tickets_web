@@ -130,7 +130,10 @@ document.addEventListener('click', function (e) {
 });
 
 
-
+/**
+ * Se encarga de comprobar si el usuario está autenticado o no.
+ * @returns 
+ */
 async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'

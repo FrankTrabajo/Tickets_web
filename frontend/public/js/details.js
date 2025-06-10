@@ -1,6 +1,9 @@
 import { centrarMapa, pintarSite } from "./map.js";
 import { hideItems, showItems } from "./utils.js";
 
+/**
+ * Se obtiene un evento en específico y se encarga de pintar los datos necesarios y su infromación en la web.
+ */
 function getEvent(){
     const id = getIdFromPath();
     console.log("Entra");
@@ -55,18 +58,30 @@ function getEvent(){
         .catch(error => console.error("ERROR:", error));
 }
 
+/**
+ * Se encarga de formatear la fecha
+ * @param {Date} dateString 
+ * @returns 
+ */
 function formatDate(dateString){
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', options);
 }
-
+/**
+ * Se encarga de formatear la hora
+ * @param {Date} dateString 
+ * @returns 
+ */
 function formatTime(dateString){
     const date = new Date(dateString);
     return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit'});
 }
 
-
+/**
+ * Obtiene el id por URL y lo retorna
+ * @returns 
+ */
 function getIdFromPath() {
     const pathParts = window.location.pathname.split('/');
     return pathParts[pathParts.length - 1]; // Último segmento
@@ -74,6 +89,9 @@ function getIdFromPath() {
 
 const id_evento = getIdFromPath();
 
+/**
+ * Se encarga de obtener todos los comentarios de un evento en específico.
+ */
 function getAllCommentsEvent(){
     console.log(id_evento);
     fetch(`/api/comentarios/get-all-comments-event/${id_evento}`)
@@ -105,6 +123,10 @@ function getAllCommentsEvent(){
     })
 }
 const boton_compra = document.getElementById('comprar-btn');
+/**
+ * Se encarga de hacer la comprobación para saber si el usuario actual es un administrador o no y ahi tomar las medidas necesarias para mostraro no
+ * el boton de compra en la web.
+ */
 function checkAdmin(){
     fetch("/check-admin")
     .then(response => response.json())

@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     getPedidos();
 });
+
+/**
+ * Se encarga de obtener todos los pedido de la base de datos y pintarlos.
+ */
 function getPedidos() {
     fetch("/api/pedidos", {
         credentials: 'include'
@@ -108,7 +112,10 @@ function getPedidos() {
 }
 
 
-
+/**
+ * Se encarga de comprobar si el usuario actual está autenticado.
+ * @returns 
+ */
 async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'

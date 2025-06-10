@@ -6,7 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-
+/**
+ * Se encarga de obtener todos los eventos y pintarlos mediante SVG.
+ * @param {String} id 
+ */
 function getEvent(id) {
     const tooltip = document.getElementById('tooltip');
     const svg = document.getElementById("mapaZonas");
@@ -77,6 +80,17 @@ function getEvent(id) {
         });
 }
 
+/**
+ * Agrega las zonas de las entradas de los evento.
+ * @param {SVG} zona 
+ * @param {Number} x 
+ * @param {Number} y 
+ * @param {Number} width 
+ * @param {Number} height 
+ * @param {String} id 
+ * @param {SVG} svg 
+ * @param {String} tooltip 
+ */
 function agregarZona(zona, x, y, width, height, id, svg, tooltip) {
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rect.setAttribute("x", x);
@@ -121,7 +135,10 @@ function agregarZona(zona, x, y, width, height, id, svg, tooltip) {
     svg.appendChild(rect);
 }
 
-
+/**
+ * Se encarga de comprobar si el usuario actual está autenticado o no, en caso de que no lo esté lo lleva al login.
+ * @returns 
+ */
 async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'

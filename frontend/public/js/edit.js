@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+/**
+ * Se encarga de autenticar si el usuario está logueado o no.
+ */
 function checkToken() {
     fetch("/check-auth")
         .then(response => response.json())
@@ -46,6 +49,9 @@ function checkToken() {
         });
 }
 
+/**
+ * Se encarga de pintar el mapa.
+ */
 function drawMap() {
     map = L.map('map').setView([lat || 40.4168, lon || -3.7038], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -80,6 +86,10 @@ function drawMap() {
     });
 }
 
+/**
+ * Se encarga de pintar los datos necesarios del evento en esepcífico que se va a editar.
+ * @param {String} id 
+ */
 function getEvent(id) {
     fetch(`/api/event/details/${id}`)
         .then(response => response.json())
@@ -104,6 +114,9 @@ function getEvent(id) {
         .catch(error => console.error("ERROR al obtener evento:", error));
 }
 
+/** 
+ * Se encarga de enviar los datos para crear la actualización del evento.
+*/
 function updateEvent(id) {
     fetch('/check-auth')
         .then(response => response.json())

@@ -8,6 +8,12 @@ const { cloudinary } = require("../middlewares/cloudinary");
 
 dotenv.config();
 
+/**
+ * Esta constante tiene configurado los pasos para crear un nuevo evento con los datos obtenido del formulario para crear un nuevo evento.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const newEvent = async (req, res) => {
     try {
         // Parsear los campos que vienen como strings JSON
@@ -59,6 +65,13 @@ const newEvent = async (req, res) => {
     }
 };
 
+/**
+ * Tiene la configuración para poder actualizar un evento en especifico obteniendo el id del evento que se va amodificar por el parámetro id
+ * y los datos a actualizar de ese evento desde el cuerpo de la llamada desde el script.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const updateEvent = async (req, res) => {
     try {
         const { nombre, descripcion, fecha, capacidad } = req.body;
@@ -123,7 +136,12 @@ const updateEvent = async (req, res) => {
     }
 };
 
-
+/**
+ * Se encarga de obtener un evento en especifico obteniendo ese id por parámetros.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getEvento = async (req, res) => {
     try {
         const eventoId = req.params.id;
@@ -138,6 +156,12 @@ const getEvento = async (req, res) => {
     }
 }
 
+/**
+ * Se encarga de eliminar un evento, obteniendo ese id por parámetro id.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const removeEvent = async (req, res) => {
     try {
         const token = req.cookies.authToken;
@@ -169,7 +193,12 @@ const removeEvent = async (req, res) => {
 }
 
 
-
+/**
+ * Obtiene todos los eventos por usuario, buscando en la base de datos todos esos eventos creados por un usario en especifico.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const get_all_events_from_user = async (req, res) => {
     try {
         //Los datos de los usuarios se obtienen de la cookie authToken
@@ -192,6 +221,12 @@ const get_all_events_from_user = async (req, res) => {
     }
 }
 
+/**
+ * Obtiene todas las estadisticas de un usuario, haciendo una evaluación y un cálculo entre las compras y los tickets vendidos cada uno de los eventos.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getEstadisticasUsuario = async (req, res) => {
     try {
         const token = req.cookies.authToken;
@@ -221,6 +256,11 @@ const getEstadisticasUsuario = async (req, res) => {
     }
 }
 
+/**
+ * Obtiene todos los eventos creados.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getAllEvents = async (req, res) => {
   try {
     const eventos = await Evento.find({});

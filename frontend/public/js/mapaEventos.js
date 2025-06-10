@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 });
 
+/**
+ * Se encarga de crear un mapa por defecto.
+ */
 function initMapDefault() {
     map = L.map('mapContainer').setView([40.4168, -3.7038], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -41,6 +44,9 @@ function initMapDefault() {
     cargarEventos();
 }
 
+/**
+ * Se encarga de cargar los eventos de la base de datos.
+ */
 async function cargarEventos() {
     fetch("/api/event/get_all_events")
         .then(response => response.json())
@@ -54,6 +60,10 @@ async function cargarEventos() {
         });
 }
 
+/**
+ * Se encarga de pintar los eventos en el mapa y en el popup mostrar el nombre del evento, la imagen y un enlace para ver los detalles
+ * del evento.
+ */
 function pintarEventosMapa() {
     eventosCargados.forEach(evento => {
         const imagenHtml = evento.imagen

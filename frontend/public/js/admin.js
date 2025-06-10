@@ -7,6 +7,9 @@ new_event_btn.addEventListener('click', (e) => {
     window.location.href = "/admin_dashboard/new_event";
 });
 
+/**
+ * Se encarga de obtener las estadísticas de los usuarios y mostrarlas en la web creando un gráfico usando la libreria chart.js
+ */
 function getEstadisticasUsuario() {
     fetch('/api/event/get_estadisticas_usuario', {
         credentials: 'include'
@@ -69,6 +72,9 @@ function getEstadisticasUsuario() {
 eventosAgrupados.forEach(evento => {
     eventosPorId[evento._id] = evento;
 });
+/**
+ * Se encarga de relizar una llamada fetch a nuestra api para obtener todos los eventos de un usuario en especifico.
+ */
 function getEventos() {
     fetch('/api/event/get_all_events_from_user', {
         credentials: 'include'
@@ -149,7 +155,11 @@ document.querySelector('.event-table tbody').addEventListener('click', (e) => {
     }
     
 });
-  
+
+/**
+ * Se encarga de hacer una peticion para saber si el usuario actual está autenticado o no.
+ * @returns 
+ */
 async function checkAuth() {
     return fetch('/check-auth', {
         credentials: 'include'

@@ -1,6 +1,9 @@
 let users = [];
 let eventos = [];
 
+/**
+ * Se encarga de obtener todos los usuarios de la base de datos.
+ */
 function getUsers() {
     fetch("/api/user/get_all_users", {
         credentials: "include"
@@ -18,8 +21,11 @@ function getUsers() {
         .catch(error => console.error(error));
 }
 
-
-function cargarEventos() {
+/**
+ * Se encarga de cargar todos los eventos de la base de datos.
+ * @returns 
+ */
+async function cargarEventos() {
     return fetch("/api/event/get_all_events")
         .then(res => res.json())
         .then(data => {
@@ -28,6 +34,9 @@ function cargarEventos() {
         .catch(err => console.error("Error cargando eventos:", err));
 }
 
+/**
+ * Lo que hace es pintar los usuarios y dependiendo de su rol muestra los eventos que ha creado o no.
+ */
 function renderUsers() {
     const tbody = document.getElementById("bodyusuarios");
     tbody.innerHTML = "";
@@ -67,6 +76,10 @@ function renderUsers() {
     });
 }
 
+/**
+ * Se encarga de mostrar los datos de los eventos.
+ * @param {String} userId 
+ */
 function toggleEdit(userId) {
     const spanRol = document.getElementById(`rol-${userId}`);
     const selectRol = document.getElementById(`select-rol-${userId}`);
@@ -82,6 +95,10 @@ function toggleEdit(userId) {
     }
 }
 
+/**
+ * Se encarga de enviar los datos de la actualización a la api para que gestione el cambio y la actualizacion del usuario en la base de datos.
+ * @param {String} userId 
+ */
 function saveUserChanges(userId) {
     const selectRol = document.getElementById(`select-rol-${userId}`);
     const selectedRoles = Array.from(selectRol.selectedOptions).map(opt => opt.value);
@@ -108,6 +125,11 @@ function saveUserChanges(userId) {
         });
 }
 
+/**
+ * Se encarga de eliminar un usuario pasándole su id y llamando a la api.
+ * @param {String} userId 
+ * @returns 
+ */
 function deleteUser(userId) {
     if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
 
@@ -154,6 +176,12 @@ function toggleEvents(userId) {
     }
 }
 
+/**
+ * Se encarga de eliminar un evento el cual esté relacionado con el id del usuario y el id del evento.
+ * @param {String} eventId 
+ * @param {String} userId 
+ * @returns 
+ */
 function deleteEvent(eventId, userId) {
     if (!confirm("¿Seguro que quieres eliminar este evento?")) return;
 
@@ -173,6 +201,9 @@ function deleteEvent(eventId, userId) {
         });
 }
 
+/**
+ * Comprueba si el usuario actual es super administrado, si no lo es, le manda al login.
+ */
 function check_auth() {
     fetch("/check-superadmin", {
         method: 'GET',

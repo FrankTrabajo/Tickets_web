@@ -104,7 +104,9 @@ buscarEvento.addEventListener('keyup', () => {
   mostrarEventos(filtrados);
 });
 
-
+/**
+ * Se encarga de obtener todos los eventos y pintarlos en la web
+ */
 function cargarEventos() {
   fetch("/api/event/get_all_events")
     .then(res => res.json())
@@ -116,6 +118,10 @@ function cargarEventos() {
     .catch(err => console.error("Error cargando eventos:", err));
 }
 
+/**
+ * Se encarga de mostrar todos los eventos pasados por lista.
+ * @param {Array} lista 
+ */
 function mostrarEventos(lista) {
   const contenedor = document.querySelector(".eventos");
   contenedor.innerHTML = "";
@@ -196,6 +202,10 @@ function mostrarEventos(lista) {
   });
 }
 
+/**
+ * Se encarga de filtrar los eventos por lugar para luego mostrar los lugares de los eventos.
+ * @param {Object} eventos 
+ */
 function filtrado(eventos) {
   const lugares = new Set();
   eventos.forEach(e => {

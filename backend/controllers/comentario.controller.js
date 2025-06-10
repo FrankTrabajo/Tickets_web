@@ -2,6 +2,12 @@ const Comentario = require('../models/Comentario');
 const Evento = require('../models/Evento');
 const jsonwebtoken = require('jsonwebtoken');
 
+/**
+ * Esta constante se encarga de crear los comentarios de la web
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const crearComentario = async(req, res) => {
 
         const token = req.cookies.authToken;
@@ -41,6 +47,13 @@ const crearComentario = async(req, res) => {
 
 };
 
+/**
+ * De lo que se encarga esta constante es de obtener todos los comentarios por un usuario, obteniendo el id del usuario por token y luego
+ * busa en la base de datos los comentarios con su id
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const obtenerComentariosDelUsuario = async(req, res) => {
     try {
        const token = req.cookies.authToken;
@@ -89,7 +102,12 @@ const obtenerComentariosDelUsuario = async(req, res) => {
     }
 }
 
-
+/**
+ * La constante se encarga de obtener todos los comentarios de la base dedatos.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getAllComments = async (req,res) => {
 
     let comentarios = await Comentario.find({})
@@ -103,6 +121,12 @@ const getAllComments = async (req,res) => {
 
 }
 
+/**
+ * La constante se encarga de obtener todos los comentarios de un evento en especifico.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getAllCommnetsEvents = async (req,res) => {
     const { idEvento } = req.params;
 

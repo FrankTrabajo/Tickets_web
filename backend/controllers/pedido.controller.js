@@ -3,6 +3,12 @@ const Ticket = require ('../models/Ticket.js');
 const PedidoTicket = require('../models/PedidoTicket.js');
 const jsonwebtoken = require ('jsonwebtoken');
 
+/**
+ * Obtiene todos los pedido de un usuario en específico
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getPedidoUsuario = async(req, res)=>{
     try {
         const token = req.cookies.authToken;
