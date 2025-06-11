@@ -34,17 +34,21 @@ const newEvent = async (req, res) => {
             return res.status(400).json({ message: 'La capacidad total de entradas no puede superar la capacidad del evento' });
         }
 
-        
+
         let img = '';
         let img_public_id = '';
-        if(!req.file) {
-            img = `https://res.cloudinary.com/djw6bi2vz/image/upload/v1234567890/eventos/banner_no_img.png`;
+        if (!req.file) {
+            const cloudinary = require('cloudinary').v2;
+            img = cloudinary.url('banner_no_img_noqxax.png'); // sin carpeta "eventos"
+            img_public_id = "banner_no_img_noqxax.png"; // igual, sin carpeta
+
+
         } else {
             img = req.file.path; // esta es la URL pública de Cloudinary
             img_public_id = req.file.filename;
         }
 
-        
+
 
         const nuevoEvento = new Evento({
             nombre,
@@ -62,7 +66,7 @@ const newEvent = async (req, res) => {
         res.status(201).json({ mensaje: "Evento creado correctamente", evento: nuevoEvento, ok: true });
     } catch (e) {
         console.error("Error al crear evento:", e);
-        res.status(500).json({ error: e.message || 'Error al guardar el evento' , ok: false  });
+        res.status(500).json({ error: e.message || 'Error al guardar el evento', ok: false });
     }
 };
 
@@ -165,31 +169,31 @@ const getEvento = async (req, res) => {
  */
 const removeEvent = async (req, res) => {
 
-        const token = req.cookies.authToken;
-        if (!token) {
-            return res.status(401).json({ message: "No autorizado" });
-        }
+    const token = req.cookies.authToken;
+    if (!token) {
+        return res.status(401).json({ message: "No autorizado" });
+    }
 
-        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.userId;
-        const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+    const eventoId = req.params.id; // Obtener el ID del evento de los parámetros de la URL
 
-        // Verificar si el evento existe y pertenece al usuario
-        const evento = await Evento.findById({ _id: eventoId});
-        if (!evento) {
-            return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
-        }
+    // Verificar si el evento existe y pertenece al usuario
+    const evento = await Evento.findById({ _id: eventoId });
+    if (!evento) {
+        return res.status(404).json({ message: "Evento no encontrado o no autorizado" });
+    }
 
-        if(evento.imagen_id && !evento.imagen.includes("banner_no_img")){
-            await cloudinary.uploader.destroy(evento.imagen_id);
-        }
+    if (evento.imagen_id && !evento.imagen.includes("banner_no_img")) {
+        await cloudinary.uploader.destroy(evento.imagen_id);
+    }
 
-        await Ticket.deleteMany({id_evento: eventoId});
-        await Comentario.deleteMany({id_evento: eventoId});
+    await Ticket.deleteMany({ id_evento: eventoId });
+    await Comentario.deleteMany({ id_evento: eventoId });
 
-        // Eliminar el evento
-        await Evento.deleteOne({ _id: eventoId });
-        res.status(200).json({ message: "Evento eliminado correctamente", ok: true });
+    // Eliminar el evento
+    await Evento.deleteOne({ _id: eventoId });
+    res.status(200).json({ message: "Evento eliminado correctamente", ok: true });
 
 
 }
@@ -264,26 +268,26 @@ const getEstadisticasUsuario = async (req, res) => {
  * @param {*} res 
  */
 const getAllEvents = async (req, res) => {
-  try {
-    const eventos = await Evento.find({});
-    res.status(200).json(eventos);
-  } catch (error) {
-    console.error("Error al obtener todos los eventos:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
-  }
+    try {
+        const eventos = await Evento.find({});
+        res.status(200).json(eventos);
+    } catch (error) {
+        console.error("Error al obtener todos los eventos:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
 };
 
 const getEventByIdPublic = async (req, res) => {
-  try {
-    const evento = await Evento.findById(req.params.id);
-    if (!evento) {
-      return res.status(404).json({ message: "Evento no encontrado" });
+    try {
+        const evento = await Evento.findById(req.params.id);
+        if (!evento) {
+            return res.status(404).json({ message: "Evento no encontrado" });
+        }
+        res.status(200).json(evento);
+    } catch (error) {
+        console.error("Error al obtener evento por id:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
     }
-    res.status(200).json(evento);
-  } catch (error) {
-    console.error("Error al obtener evento por id:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
-  }
 };
 
 
@@ -293,7 +297,7 @@ module.exports = {
     getEvento,
     get_all_events_from_user,
     getEstadisticasUsuario,
-    removeEvent, 
+    removeEvent,
     getAllEvents,
     getEventByIdPublic
 }

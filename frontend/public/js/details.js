@@ -4,7 +4,7 @@ import { hideItems, showItems } from "./utils.js";
 /**
  * Se obtiene un evento en específico y se encarga de pintar los datos necesarios y su infromación en la web.
  */
-function getEvent(){
+function getEvent() {
     const id = getIdFromPath();
     console.log("Entra");
 
@@ -14,8 +14,12 @@ function getEvent(){
         .then(response => response.json())
         .then(data => {
             evento = data.evento;
+            console.log(data.evento.imagen);
+            const imagen = data.evento.imagen && data.evento.imagen.trim() !== ""
+                ? data.evento.imagen
+                : "../img/eventos/banner_no_img.png";
 
-            document.getElementById("imagenEvento").src = data.evento.imagen || "../img/eventos/banner_no_img.png";
+            document.getElementById("imagenEvento").src = imagen;
             document.getElementById("eventTitle").textContent = data.evento.nombre;
             document.getElementById("eventDescription").textContent = data.evento.descripcion;
             document.getElementById("eventDate").textContent = formatDate(data.evento.fecha);
@@ -34,7 +38,7 @@ function getEvent(){
                 document.getElementById("eventPrice").textContent = "N/A";
             }
 
-                
+
             // Inicializar mapa (requiere API de Google Maps o similar)
             centrarMapa(data.evento.lugar.lat, data.evento.lugar.lon);
             pintarSite([data.evento.lugar.lat, data.evento.lugar.lon], data.evento.lugar.nombre);
@@ -44,16 +48,16 @@ function getEvent(){
             btnComprar.disabled = entradasDisponibles === "No disponibles";
 
             fetch("/check-auth")
-            .then(response => response.json())
-            .then(data => {
-                btnComprar.addEventListener("click", () => {
-                if (!data.logueado) {
-                    window.location.href = "/login";
-                } else {
-                    window.location.href = `../vistaEntradas/${evento._id}`;
-                }
+                .then(response => response.json())
+                .then(data => {
+                    btnComprar.addEventListener("click", () => {
+                        if (!data.logueado) {
+                            window.location.href = "/login";
+                        } else {
+                            window.location.href = `../vistaEntradas/${evento._id}`;
+                        }
+                    });
                 });
-            });
         })
         .catch(error => console.error("ERROR:", error));
 }
@@ -63,7 +67,7 @@ function getEvent(){
  * @param {Date} dateString 
  * @returns 
  */
-function formatDate(dateString){
+function formatDate(dateString) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', options);
@@ -73,9 +77,9 @@ function formatDate(dateString){
  * @param {Date} dateString 
  * @returns 
  */
-function formatTime(dateString){
+function formatTime(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit'});
+    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
 
 /**
@@ -92,51 +96,51 @@ const id_evento = getIdFromPath();
 /**
  * Se encarga de obtener todos los comentarios de un evento en específico.
  */
-function getAllCommentsEvent(){
+function getAllCommentsEvent() {
     console.log(id_evento);
     fetch(`/api/comentarios/get-all-comments-event/${id_evento}`)
-    .then(response => response.json())
-    .then(data => {
-        let comentarios = data.comentarios;
-        let contenedor = document.getElementById('users-comments');
-        contenedor.innerHTML = "";
-        if(!comentarios || comentarios.length === 0){
-            contenedor.innerHTML = "<p>No hay comentarios aún.</p>";
-            return;
-        }
+        .then(response => response.json())
+        .then(data => {
+            let comentarios = data.comentarios;
+            let contenedor = document.getElementById('users-comments');
+            contenedor.innerHTML = "";
+            if (!comentarios || comentarios.length === 0) {
+                contenedor.innerHTML = "<p>No hay comentarios aún.</p>";
+                return;
+            }
 
-        comentarios.forEach(comentario => {
-            console.log(comentario);
-            const div = document.createElement('div');
-            div.classList.add("comment");
+            comentarios.forEach(comentario => {
+                console.log(comentario);
+                const div = document.createElement('div');
+                div.classList.add("comment");
 
-            const nombreUsuario = comentario.id_usuario?.nombre || "Usuario desconocido";
-            div.innerHTML = `<p><b>${nombreUsuario}:</b></p>
+                const nombreUsuario = comentario.id_usuario?.nombre || "Usuario desconocido";
+                div.innerHTML = `<p><b>${nombreUsuario}:</b></p>
                                 <p>${comentario.comentario}</p>
                                 <p>Valoración: ${"⭐".repeat(comentario.valoracion)} (${comentario.valoracion}/5)</p>
-                                <hr>`; 
-            contenedor.appendChild(div);
-        });
-    })
-    .catch(error => {
-        console.error(error);
-    })
+                                <hr>`;
+                contenedor.appendChild(div);
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        })
 }
 const boton_compra = document.getElementById('comprar-btn');
 /**
  * Se encarga de hacer la comprobación para saber si el usuario actual es un administrador o no y ahi tomar las medidas necesarias para mostraro no
  * el boton de compra en la web.
  */
-function checkAdmin(){
+function checkAdmin() {
     fetch("/check-admin")
-    .then(response => response.json())
-    .then(data => {
-        if(data.admin){
-            hideItems([boton_compra]);
-        }else{
-            showItems([boton_compra]);
-        }
-    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.admin) {
+                hideItems([boton_compra]);
+            } else {
+                showItems([boton_compra]);
+            }
+        })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
