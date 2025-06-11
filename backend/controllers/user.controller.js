@@ -12,6 +12,7 @@ dotenv.config();
 //* ---- LOGIN -----
 const User = require('../models/User.js');
 const Evento = require('../models/Evento.js');
+const Comentario = require('../models/Comentario.js');
 const Pedido = require('../models/Pedido.js');
 const Pago = require('../models/Pago.js');
 const Ticket = require('../models/Ticket.js');
@@ -139,7 +140,7 @@ const deleteUser = async (req, res) => {
         return res.status(401).json({ message: "No autorizado", ok: false });
     }
 
-    try {
+    
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         const rolAuth = decoded.rol;
 
@@ -183,10 +184,6 @@ const deleteUser = async (req, res) => {
         console.log("USUARIO Y RELACIONES ELIMINADAS");
         return res.status(200).json({ message: "Usuario y sus datos eliminados correctamente", ok: true });
 
-    } catch (error) {
-        console.error("Error al eliminar usuario y sus relaciones:", error);
-        return res.status(500).json({ message: "Error al eliminar usuario", ok: false });
-    }
 };
 
 
